@@ -10,4 +10,4 @@ def encryptPassword(password):
 
 def checkPassword(password, passwordHash):
     return bcrypt.check_password_hash(passwordHash, password)
-
+ 
