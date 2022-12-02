@@ -8,7 +8,7 @@ Edicifios = Table("edificio", meta,
     Column("ctaReferencia", String(255)), 
     Column("nombreEdificio", String(255)), 
     Column("referencia", String(255)), 
-    Column("adjunto", String(10000)), 
+    Column("adjunto", String(1000000000)), 
     Column("data_creatd", DateTime), 
     Column("data_update", DateTime)
 )

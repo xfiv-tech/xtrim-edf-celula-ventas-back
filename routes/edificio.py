@@ -3,6 +3,7 @@ from database.db import db
 from model.edificio import Edicifios
 from schemas.edificio import Edificio
 from datetime import datetime
+from model.administrador import Administradores
 
 from starlette.status import HTTP_204_NO_CONTENT
 
@@ -12,7 +13,18 @@ edificios = APIRouter()
 @edificios.get("/edificios", tags=["edificios"])
 async def get_edificios():
     try:
-        query = Edicifios.select()
+        query = Edicifios.join(Administradores).select().with_only_columns([
+            Edicifios.c.idAdministrador, 
+            Administradores.c.nombreAdministrador,
+            Edicifios.c.coordenadas, 
+            Edicifios.c.ctaReferencia, 
+            Edicifios.c.nombreEdificio, 
+            Edicifios.c.referencia, 
+            Edicifios.c.adjunto, 
+            Edicifios.c.data_creatd, 
+            Edicifios.c.data_update, 
+            ])
+
         return db.execute(query).fetchall()
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -33,7 +45,7 @@ async def create_edificio(edificio: Edificio):
 
     new_edificio = {
         "idAdministrador": edificio.idAdministrador,
-        "coordenadas": f"https://maps.google.com/?q=${latitud},${longitud}",
+        "coordenadas": f"https://maps.google.com/?q={latitud},{longitud}",
         "ctaReferencia": edificio.ctaReferencia,
         "nombreEdificio": edificio.nombreEdificio,
         "referencia": edificio.referencia,
