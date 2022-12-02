@@ -2,6 +2,7 @@ from fastapi import APIRouter, Response, Depends, HTTPException, status
 from database.db import db
 from model.usuario import Usuarios
 from schemas.usuario import Usuario
+from schemas.usuarioList import UsuarioList
 from schemas.login import Login
 from datetime import datetime
 
@@ -16,21 +17,40 @@ f = Fernet(key)
 
 usuarios = APIRouter()
 
-@usuarios.get("/usuarios", tags=["usuarios"])
+@usuarios.post("/usuarios", tags=["usuarios"])
 async def get_usuarios():
     try:
         query = Usuarios.select()
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        return {
+            "code": "0",
+            "data": data,
+            "message": "Edificio actualizado correctamente"
+        }
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
 
 
-@usuarios.get("/usuarios/{id}", tags=["usuarios"])
-async def get_usuario(id: int):
-    return db.execute(Usuarios.select().where(Usuarios.c.id == id)).first()
+@usuarios.post("/usuarios_lista", tags=["usuarios"])
+async def get_usuario(usuarioID: UsuarioList):
+    try:
+        data = db.execute(Usuarios.select().where(Usuarios.c.id == usuarioID.id)).first()
+        return {
+            "code": "0",
+            "data": data,
+            "message": "Edificio actualizado correctamente"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
 
 
-@usuarios.post("/usuarios", tags=["usuarios"])
+@usuarios.post("/usuarios_crear", tags=["usuarios"])
 async def create_usuario(usuario: Usuario):
     new_user = {
         "nombreCompleto": usuario.nombreCompleto,
@@ -39,16 +59,23 @@ async def create_usuario(usuario: Usuario):
         "password": encryptPassword(usuario.password),
         "data_creatd": datetime.now(),
     }
-    print(new_user)
     try:
         db.execute(Usuarios.insert().values(new_user))
-        return db.execute(Usuarios.select()).fetchall()
+        data = db.execute(Usuarios.select()).fetchall()
+        return {
+            "code": "0",
+            "data": data,
+            "message": "Edificio actualizado correctamente"
+        }
     except Exception as e:
-        return {"error": str(e.args)}
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
 
 
-@usuarios.put("/usuarios/{id}", tags=["usuarios"])
-async def update_usuario(id: int, usuario: Usuario):
+@usuarios.put("/usuarios_actualizar", tags=["usuarios"])
+async def update_usuario(usuario: Usuario):
     try:
         if len(usuario.password) == 0:
             db.execute(
@@ -57,7 +84,7 @@ async def update_usuario(id: int, usuario: Usuario):
                     email=usuario.email,
                     usuario=usuario.usuario,
                     data_update=datetime.now(),
-                ).where(Usuarios.c.id == id)
+                ).where(Usuarios.c.id == usuario.id)
             )
         else:
             db.execute(
@@ -69,22 +96,28 @@ async def update_usuario(id: int, usuario: Usuario):
                     password=encryptPassword(usuario.password),
                     data_update=datetime.now(),
                 )
-                .where(Usuarios.c.id == id)
+                .where(Usuarios.c.id == usuario.id)
             )
         return db.execute(Usuarios.select()).fetchall()
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
     
 
 
 
-@usuarios.delete("/usuarios/{id}", status_code=status.HTTP_204_NO_CONTENT, tags=["usuarios"])
-async def delete_usuario(id: int):
+@usuarios.delete("/usuarios_eliminar", status_code=status.HTTP_204_NO_CONTENT, tags=["usuarios"])
+async def delete_usuario(usuarioID: UsuarioList):
     try:
-        db.execute(Usuarios.delete().where(Usuarios.c.id == id))
-        return Response(status_code=HTTP_204_NO_CONTENT)
+        db.execute(Usuarios.delete().where(Usuarios.c.id == usuarioID.id))
+        return {}
     except Exception as e:
-        return {"error": str(e.args)}
+        raise {
+            "code": "-1",
+            "data": str(e)
+        }
 
 
 @usuarios.post("/login", tags=["login"])
@@ -96,21 +129,24 @@ async def login(datos: Login):
         if len(user) > 0:
             if decr_data == True:
                 return {
-                    "success": True,
-                    "user": user,
+                    "code": "0",
+                    "data": user,
+                    "message": "Login correcto"
                 }
             else:
                 return {
-                    "success": False,
+                    "code": "-1",
+                    "data": [],
                     "message": "Contraseña incorrecta"
                 }
         else:
             return {
-                "success": False,
+                "code": "-1",
+                "data": [],
                 "message": "Usuario no existe"
             }
     except Exception as e:
-        return {
-            "success": False,
-            "error": e
-        }
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
