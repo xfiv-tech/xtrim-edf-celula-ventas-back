@@ -3,7 +3,7 @@ from sqlalchemy import Integer, String, DateTime, Boolean, ForeignKey
 from database.db import meta, db
 
 Administradores = Table("administradores", meta, 
-    Column("id", Integer, primary_key=True), 
+    Column("id", Integer, primary_key=True, autoincrement=True), 
     Column("nombreAdministrador", String(255)), 
     Column("cedula", String(255), unique=True), 
     Column("email", String(255), unique=True), 
