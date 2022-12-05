@@ -106,7 +106,7 @@ async def update_edificio(edificio: Edificio):
         db.execute(
             Edicifios.update().values(
                 idAdministrador=edificio.idAdministrador,
-                coordenadas=f"https://maps.google.com/?q=${latitud},${longitud}",
+                coordenadas=f"https://maps.google.com/?q={latitud},{longitud}",
                 ctaReferencia=edificio.ctaReferencia,
                 nombreEdificio=edificio.nombreEdificio,
                 referencia=edificio.referencia,
