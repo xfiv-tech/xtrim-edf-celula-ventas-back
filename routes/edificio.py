@@ -15,6 +15,7 @@ edificios = APIRouter()
 async def get_edificios():
     try:
         query = Edicifios.join(Administradores).select().with_only_columns([
+            Edicifios.c.id,
             Edicifios.c.idAdministrador, 
             Administradores.c.nombreAdministrador,
             Edicifios.c.coordenadas, 
@@ -44,6 +45,7 @@ async def edificioID(edificioID: EdificioList):
         print(edificioID.id)
         # query = db.execute(Edicifios.select().where(Edicifios.c.id == edificioID.id)).first()
         query = Edicifios.join(Administradores).select().with_only_columns([
+            Edicifios.c.id,
             Edicifios.c.idAdministrador,
             Administradores.c.nombreAdministrador,
             Edicifios.c.coordenadas,

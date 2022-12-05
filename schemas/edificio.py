@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 class Edificio(BaseModel):
+    id: Optional[int]
     idAdministrador: int
     coordenadas: str
     ctaReferencia: str
