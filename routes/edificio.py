@@ -130,7 +130,7 @@ async def update_edificio(edificio: Edificio):
 @edificios.delete("/edificios_eliminar", tags=["edificios"])
 async def delete_edificio(edificioID: EdificioList):
     try:
-        db.execute(Edicifios.delete().where(Edicifios.c.idAdministrador == edificioID.id))
+        db.execute(Edicifios.delete().where(Edicifios.c.id == edificioID.id))
         return {
             "code": "0",
             "data": Response(status_code=HTTP_204_NO_CONTENT),
