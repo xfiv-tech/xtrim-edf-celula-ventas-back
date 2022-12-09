@@ -4,6 +4,9 @@ from pydantic import BaseModel
 class Edificio(BaseModel):
     id: Optional[int]
     idAdministrador: int
+    id_edificio: Optional[str]
+    sector: str
+    ciudad: str
     coordenadas: str
     ctaReferencia: str
     nombreEdificio: str

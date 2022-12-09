@@ -18,7 +18,10 @@ async def get_edificios():
             Edicifios.c.id,
             Edicifios.c.idAdministrador, 
             Administradores.c.nombreAdministrador,
-            Edicifios.c.coordenadas, 
+            Edicifios.c.id_edificio,
+            Edicifios.c.sector,
+            Edicifios.c.ciudad,
+            Edicifios.c.coordenadas,
             Edicifios.c.ctaReferencia, 
             Edicifios.c.nombreEdificio, 
             Edicifios.c.referencia, 
@@ -48,6 +51,9 @@ async def edificioID(edificioID: EdificioList):
             Edicifios.c.id,
             Edicifios.c.idAdministrador,
             Administradores.c.nombreAdministrador,
+            Edicifios.c.id_edificio,
+            Edicifios.c.sector,
+            Edicifios.c.ciudad,
             Edicifios.c.coordenadas,
             Edicifios.c.ctaReferencia,
             Edicifios.c.nombreEdificio,
@@ -76,6 +82,9 @@ async def create_edificio(edificio: Edificio):
 
     new_edificio = {
         "idAdministrador": edificio.idAdministrador,
+        "id_edificio": edificio.id_edificio,
+        "sector": edificio.sector,
+        "ciudad": edificio.ciudad,
         "coordenadas": f"https://maps.google.com/?q={latitud},{longitud}",
         "ctaReferencia": edificio.ctaReferencia,
         "nombreEdificio": edificio.nombreEdificio,
@@ -106,6 +115,9 @@ async def update_edificio(edificio: Edificio):
         db.execute(
             Edicifios.update().values(
                 idAdministrador=edificio.idAdministrador,
+                id_edificio=edificio.id_edificio,
+                sector=edificio.sector,
+                ciudad=edificio.ciudad,
                 coordenadas=f"https://maps.google.com/?q={latitud},{longitud}",
                 ctaReferencia=edificio.ctaReferencia,
                 nombreEdificio=edificio.nombreEdificio,

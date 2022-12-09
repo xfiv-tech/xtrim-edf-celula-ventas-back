@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from routes.usuario import usuarios
 from routes.admin import administradores
 from routes.edificio import edificios
+from routes.reporte import reporte
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -22,3 +23,6 @@ app.add_middleware(
 app.include_router(usuarios)
 app.include_router(administradores)
 app.include_router(edificios)
+app.include_router(reporte)
+# from fastapi import FastAPI
+
