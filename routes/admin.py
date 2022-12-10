@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Response, Depends, HTTPException, status
 from database.db import db
 from model.administrador import Administradores
+from model.edificio import Edicifios
 from schemas.administrador import Administrador
 from schemas.adminstradorList import AdministradorList
+from schemas.adminCedula import AdminCedula
 from datetime import datetime
 
 from starlette.status import HTTP_204_NO_CONTENT
@@ -97,6 +99,37 @@ async def delete_administrador(adminID: AdministradorList):
             "code": "0",
             "data": [],
             "message": "Administrador eliminado correctamente"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+
+@administradores.post("/administradores_cedula", tags=["administradores"])
+async def get_administrador_cedula(admCedula: AdminCedula):
+    try:
+        query = Administradores.join(Edicifios).select().where(
+            Administradores.c.cedula == admCedula.cedula).with_only_columns([
+            Edicifios.c.id,
+            Edicifios.c.idAdministrador, 
+            Administradores.c.nombreAdministrador,
+            Administradores.c.cedula,
+            Administradores.c.email,
+            Edicifios.c.id_edificio,
+            Edicifios.c.sector,
+            Edicifios.c.ciudad,
+            Edicifios.c.coordenadas,
+            Edicifios.c.ctaReferencia, 
+            Edicifios.c.nombreEdificio, 
+            Edicifios.c.referencia, 
+            Edicifios.c.adjunto, 
+        ])
+        data = db.execute(query).fetchall()
+        return {
+            "code": "0",
+            "data": data,
+            "message": "Administrador listado correctamente"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
