@@ -1,10 +1,14 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
 from routes.usuario import usuarios
 from routes.admin import administradores
 from routes.edificio import edificios
 from routes.reporte import reporte
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
+Token = os.getenv("Xtrim_token")
 
 app = FastAPI(
     title="XTRIM API",

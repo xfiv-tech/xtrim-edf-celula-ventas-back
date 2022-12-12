@@ -9,13 +9,17 @@ from datetime import datetime
 from cryptography.fernet import Fernet
 from function.encrytPassword import encryptPassword, checkPassword
 from starlette.status import HTTP_204_NO_CONTENT
+from middleware.validacionToken import ValidacionToken
 
 
 
 key = Fernet.generate_key()
 f = Fernet(key)
 
-usuarios = APIRouter()
+usuarios = APIRouter(
+    route_class=ValidacionToken,
+    tags=["Usuarios"],
+)
 
 @usuarios.post("/usuarios", tags=["usuarios"])
 async def get_usuarios():

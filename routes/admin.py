@@ -6,11 +6,15 @@ from schemas.administrador import Administrador
 from schemas.adminstradorList import AdministradorList
 from schemas.adminCedula import AdminCedula
 from datetime import datetime
+from middleware.validacionToken import ValidacionToken
 
 from starlette.status import HTTP_204_NO_CONTENT
 
 
-administradores = APIRouter()
+administradores = APIRouter(
+    route_class=ValidacionToken,
+    tags=["Administradores"],
+)
 
 @administradores.post("/administradores", tags=["administradores"])
 async def get_administradores():

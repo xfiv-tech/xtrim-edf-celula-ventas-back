@@ -5,11 +5,16 @@ from schemas.edificio import Edificio
 from schemas.edificioList import EdificioList
 from datetime import datetime
 from model.administrador import Administradores
+from middleware.validacionToken import ValidacionToken
 
 from starlette.status import HTTP_204_NO_CONTENT
 
 
-edificios = APIRouter()
+edificios = APIRouter(
+    route_class=ValidacionToken,
+    tags=["Edificios"],
+)
+
 
 @edificios.post("/edificios", tags=["edificios"])
 async def get_edificios():
@@ -25,6 +30,7 @@ async def get_edificios():
             Edicifios.c.ctaReferencia, 
             Edicifios.c.nombreEdificio, 
             Edicifios.c.referencia, 
+            Edicifios.c.responsable,
             Edicifios.c.adjunto, 
             Edicifios.c.data_creatd, 
             Edicifios.c.data_update, 
@@ -58,6 +64,7 @@ async def edificioID(edificioID: EdificioList):
             Edicifios.c.ctaReferencia,
             Edicifios.c.nombreEdificio,
             Edicifios.c.referencia,
+            Edicifios.c.responsable,
             Edicifios.c.adjunto,
             Edicifios.c.data_creatd,
             Edicifios.c.data_update,
@@ -81,6 +88,7 @@ async def create_edificio(edificio: Edificio):
     longitud = edificio.coordenadas.split(",")[1]
 
     new_edificio = {
+        "id_usuario": edificio.id_usuario,
         "idAdministrador": edificio.idAdministrador,
         "id_edificio": edificio.id_edificio,
         "sector": edificio.sector,
@@ -89,6 +97,7 @@ async def create_edificio(edificio: Edificio):
         "ctaReferencia": edificio.ctaReferencia,
         "nombreEdificio": edificio.nombreEdificio,
         "referencia": edificio.referencia,
+        "responsable":edificio.responsable,
         "adjunto": edificio.adjunto,
         "data_creatd": datetime.now(),
     }
@@ -122,6 +131,7 @@ async def update_edificio(edificio: Edificio):
                 ctaReferencia=edificio.ctaReferencia,
                 nombreEdificio=edificio.nombreEdificio,
                 referencia=edificio.referencia,
+                responsable=edificio.responsable,
                 adjunto=edificio.adjunto,
                 data_update=datetime.now(),
             ).where(Edicifios.c.idAdministrador == edificio.id)

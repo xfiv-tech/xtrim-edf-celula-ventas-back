@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class Edificio(BaseModel):
     id: Optional[int]
+    id_usuario: int
     idAdministrador: int
     id_edificio: Optional[str]
     sector: str
@@ -10,7 +11,13 @@ class Edificio(BaseModel):
     coordenadas: str
     ctaReferencia: str
     nombreEdificio: str
+    responsable: str
     referencia: str
     adjunto: Optional[str]
     data_creatd: Optional[str]
     data_update: Optional[str]
+
+
+
+class EdificioIDusuario(BaseModel):
+    id_usuario: int

@@ -4,6 +4,7 @@ from database.db import meta, db
 
 Edicifios = Table("edificio", meta, 
     Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("id_usuario", Integer),
     Column("idAdministrador", Integer, ForeignKey("administradores.id")),
     Column("coordenadas", String(255)),
     Column("id_edificio", Text(4294967295)),
@@ -12,6 +13,7 @@ Edicifios = Table("edificio", meta,
     Column("ctaReferencia", String(255)), 
     Column("nombreEdificio", String(255)), 
     Column("referencia", String(255)), 
+    Column("responsable", String(255)), 
     Column("adjunto", Text(4294967295)), 
     Column("data_creatd", DateTime), 
     Column("data_update", DateTime)
