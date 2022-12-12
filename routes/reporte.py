@@ -68,3 +68,36 @@ async def get_reporte():
             "code": "-1",
             "data": str(e)
         })
+
+
+@reporte.post("/reporte", tags=["reporte"])
+async def get_reporte_list():
+    try:
+        query = Edicifios.join(Administradores).select().with_only_columns([
+        Edicifios.c.id,
+        Edicifios.c.idAdministrador,
+        Administradores.c.nombreAdministrador,
+        Administradores.c.email,
+        Edicifios.c.id_edificio,
+        Edicifios.c.sector,
+        Edicifios.c.ciudad,
+        Edicifios.c.coordenadas,
+        Edicifios.c.ctaReferencia,
+        Edicifios.c.nombreEdificio,
+        Edicifios.c.referencia,
+        Edicifios.c.adjunto,
+        Edicifios.c.data_creatd,
+        Edicifios.c.data_update,
+        ])
+        data = db.execute(query).fetchall()
+
+        return {
+            "code": "0",
+            "data": data,
+            "message": "listados correctamente"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
