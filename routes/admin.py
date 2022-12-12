@@ -11,10 +11,7 @@ from middleware.validacionToken import ValidacionToken
 from starlette.status import HTTP_204_NO_CONTENT
 
 
-administradores = APIRouter(
-    route_class=ValidacionToken,
-    tags=["Administradores"],
-)
+administradores = APIRouter(route_class=ValidacionToken)
 
 @administradores.post("/administradores", tags=["administradores"])
 async def get_administradores():
@@ -126,6 +123,7 @@ async def get_administrador_cedula(admCedula: AdminCedula):
             Edicifios.c.coordenadas,
             Edicifios.c.ctaReferencia, 
             Edicifios.c.nombreEdificio, 
+            Edicifios.c.responsable, 
             Edicifios.c.referencia, 
             Edicifios.c.adjunto, 
         ])
