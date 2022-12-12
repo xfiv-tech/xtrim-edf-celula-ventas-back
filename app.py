@@ -4,6 +4,7 @@ from routes.admin import administradores
 from routes.edificio import edificios
 from routes.reporte import reporte
 from fastapi.middleware.cors import CORSMiddleware
+import uuid
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -23,6 +24,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# app.include_router(usuarios,generate_unique_id_function=uuid.uuid1())
+# app.include_router(administradores, generate_unique_id_function=uuid.uuid1())
+# app.include_router(edificios, generate_unique_id_function=uuid.uuid1())
+# app.include_router(reporte, generate_unique_id_function=uuid.uuid1())
 
 app.include_router(usuarios)
 app.include_router(administradores)

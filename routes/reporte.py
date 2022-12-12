@@ -10,6 +10,7 @@ from middleware.validacionToken import ValidacionToken
 
 from openpyxl import Workbook 
 
+reporte = APIRouter()
 reporte = APIRouter(route_class=ValidacionToken)
 
 def get_tdd_excel_workbook(): 
