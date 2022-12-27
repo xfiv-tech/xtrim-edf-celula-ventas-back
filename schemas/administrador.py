@@ -8,5 +8,6 @@ class Administrador(BaseModel):
     email: str
     telefono: str
     telefono_opt: str
+    edificios: Optional[dict]
     data_creatd: Optional[str]
     data_update: Optional[str]

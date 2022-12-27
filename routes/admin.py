@@ -112,7 +112,7 @@ async def get_administrador_cedula(admCedula: AdminCedula):
     try:
         data = db.execute(Administradores.select().where(Administradores.c.cedula == admCedula.cedula)).first()
         dataE = db.execute(Edicifios.select().where(Edicifios.c.idAdministrador == data.id)).fetchall()
-        data.edificios = dataE
+        data['edificios'] = dataE
         return {
             "code": "0",
             "data": data,
