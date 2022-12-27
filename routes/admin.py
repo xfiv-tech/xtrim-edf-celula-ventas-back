@@ -110,24 +110,9 @@ async def delete_administrador(adminID: AdministradorList):
 @administradores.post("/administradores_cedula", tags=["administradores"])
 async def get_administrador_cedula(admCedula: AdminCedula):
     try:
-        query = Administradores.join(Edicifios).select().where(
-            Administradores.c.cedula == admCedula.cedula).with_only_columns([
-            Edicifios.c.id,
-            Edicifios.c.idAdministrador, 
-            Administradores.c.nombreAdministrador,
-            Administradores.c.cedula,
-            Administradores.c.email,
-            Edicifios.c.id_edificio,
-            Edicifios.c.sector,
-            Edicifios.c.ciudad,
-            Edicifios.c.coordenadas,
-            Edicifios.c.ctaReferencia, 
-            Edicifios.c.nombreEdificio, 
-            Edicifios.c.responsable, 
-            Edicifios.c.referencia, 
-            Edicifios.c.adjunto, 
-        ])
-        data = db.execute(query).fetchall()
+        data = db.execute(Administradores.select().where(Administradores.c.cedula == admCedula.cedula)).first()
+        dataE = db.execute(Edicifios.select().where(Edicifios.c.idAdministrador == data.id)).fetchall()
+        data['edificios'] = dataE
         return {
             "code": "0",
             "data": data,
