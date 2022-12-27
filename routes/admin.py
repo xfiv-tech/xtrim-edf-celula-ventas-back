@@ -112,10 +112,21 @@ async def get_administrador_cedula(admCedula: AdminCedula):
     try:
         data = db.execute(Administradores.select().where(Administradores.c.cedula == admCedula.cedula)).first()
         dataE = db.execute(Edicifios.select().where(Edicifios.c.idAdministrador == data.id)).fetchall()
-        data['edificios'] = dataE
+        info = {
+            "id": data.id,
+            "nombreAdministrador": data.nombreAdministrador,
+            "cedula": data.cedula,
+            "email": data.email,
+            "telefono": data.telefono,
+            "telefono_opt": data.telefono_opt,
+            "edificios": dataE,
+            "data_creatd": data.data_creatd,
+            "data_update": data.data_update
+        }
+    
         return {
             "code": "0",
-            "data": data,
+            "data": info,
             "message": "Administrador listado correctamente"
         }
     except Exception as e:

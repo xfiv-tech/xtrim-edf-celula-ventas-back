@@ -10,7 +10,7 @@ class Edificio(BaseModel):
     ciudad: str
     coordenadas: str
     ctaReferencia: str
-    cedulaReferencia: str
+    cedulaReferencia: Optional[str]
     nombreEdificio: str
     responsable: str
     referencia: str
