@@ -7,7 +7,7 @@ class Administrador(BaseModel):
     cedula: str
     email: str
     telefono: str
-    telefono_opt: str
+    telefono_opt: Optional[str]
     edificios: Optional[dict]
     data_creatd: Optional[str]
     data_update: Optional[str]
