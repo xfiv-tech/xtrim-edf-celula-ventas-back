@@ -1,3 +1,9 @@
+git add .
+
+git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
+
+git push
+
 export SHORT_COMMIT=$(git log -1 --pretty="%H" | cut -b -8)
 export DOCKER_IMAGE_VERSION="dev_${SHORT_COMMIT}"
 # export DOCKER_IMAGE_VERSION="dev_12356"
