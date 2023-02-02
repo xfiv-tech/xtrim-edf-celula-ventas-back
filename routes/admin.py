@@ -111,7 +111,7 @@ async def delete_administrador(adminID: AdministradorList):
 async def get_administrador_cedula(admCedula: AdminCedula):
     try:
         data = db.execute(Administradores.select().where(Administradores.c.cedula == admCedula.cedula)).first()
-        dataE = db.execute(Edicifios.select().w.where(Edicifios.c.idAdministrador == data.id)).fetchall()
+        dataE = db.execute(Edicifios.select().where(Edicifios.c.idAdministrador == data.id)).fetchall()
         edificios = []
         for i in dataE:
             edificios.append({
