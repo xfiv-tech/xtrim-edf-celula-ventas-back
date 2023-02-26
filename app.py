@@ -17,9 +17,8 @@ app = FastAPI(
     title="XTRIM API",
     description="A simple API to manage contacts",
     version="1.0.0",
-    docs_url="/back_edificios_dev/docs",
-    redoc_url="/back_edificios_dev/redoc",
-    openapi_url="/back_edificios_dev/openapi.json",
+    # docs_url="/back_edificios_dev/docs",
+    # openapi_url="/back_edificios_dev/openapi.json",
     servers=[
         {
             "url": "https://xtrim-global.intelnexo.com/back_edificios_dev/",
@@ -30,7 +29,9 @@ app = FastAPI(
             "description": "Development server"
         }
     ],
-    
+    openapi_prefix="/back_edificios_dev",
+
+
 )
 
 app.add_middleware(
