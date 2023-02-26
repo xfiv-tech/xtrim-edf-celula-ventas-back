@@ -18,6 +18,8 @@ app = FastAPI(
     description="A simple API to manage contacts",
     version="1.0.0",
     docs_url="/back_edificios_dev/docs",
+    redoc_url="/back_edificios_dev/redoc",
+    openapi_url="/back_edificios_dev/openapi.json",
 )
 
 app.add_middleware(
