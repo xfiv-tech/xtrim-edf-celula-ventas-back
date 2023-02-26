@@ -21,7 +21,7 @@ app = FastAPI(
     openapi_prefix="/back_edificios_dev",
     root_path="/back_edificios_dev",
     root_path_in_servers=True,
-    
+     
 
 
 )

@@ -131,11 +131,21 @@ async def login(datos: Login):
         user = db.execute(query).first()
         print(user)
         decr_data = checkPassword(datos.password, user[5])
+        
         if len(user) > 0:
             if decr_data == True:
+                true_user = {
+                    "id": user[0],
+                    "id_rol": user[1],
+                    "nombreCompleto": user[2],
+                    "email": user[3],
+                    "usuario": user[4],
+                    "data_creatd": user[6],
+                    "data_update": user[7],
+                }
                 return {
                     "code": "0",
-                    "data": user,
+                    "data": true_user,
                     "message": "Login correcto"
                 }
             else:
