@@ -129,7 +129,8 @@ async def login(datos: Login):
     try:
         query = Usuarios.select().where(Usuarios.c.email == datos.email)
         user = db.execute(query).first()
-        decr_data = checkPassword(datos.password, user[4])
+        print(user)
+        decr_data = checkPassword(datos.password, user[5])
         if len(user) > 0:
             if decr_data == True:
                 return {

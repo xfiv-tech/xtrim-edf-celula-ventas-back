@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException
+from middleware.validacionToken import ValidacionToken
 from routes.usuario import usuarios
 from routes.admin import administradores
 from routes.edificio import edificios
@@ -17,11 +18,10 @@ app = FastAPI(
     title="XTRIM API",
     description="A simple API to manage contacts",
     version="1.0.0",
-    # docs_url="/back_edificios_dev/docs",
-    # openapi_url="/back_edificios_dev/openapi.json",
     openapi_prefix="/back_edificios_dev",
     root_path="/back_edificios_dev",
-    root_path_in_servers=True
+    root_path_in_servers=True,
+    
 
 
 )
