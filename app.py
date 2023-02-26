@@ -4,6 +4,7 @@ from routes.admin import administradores
 from routes.edificio import edificios
 from routes.reporte import reporte
 from routes.roles import roles
+from routes.menu import menu
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
 from dotenv import load_dotenv
@@ -36,6 +37,7 @@ app.include_router(administradores)
 app.include_router(edificios)
 app.include_router(reporte)
 app.include_router(roles)
+app.include_router(menu)
 
 # from fastapi import FastAPI
 

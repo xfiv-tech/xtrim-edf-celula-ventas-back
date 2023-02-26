@@ -1,12 +1,14 @@
 from middleware.validacionToken import ValidacionToken
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException
 from model.ModelSchema.menu import MenuBase, SubmenuBase
-from model.submenu import Submenus
 from model.menu import Menus
+from model.submenu import Submenus
 from database.db import db
 
-menu = FastAPI(route_class=ValidacionToken)
-
+menu = APIRouter(
+    route_class=ValidacionToken,
+    tags=["Menu"],
+)
 
 @menu.get("/menu", tags=["menu"])
 async def get_menu():
@@ -47,9 +49,6 @@ async def post_menu(menu: MenuBase):
             "code": "-1",
             "data": str(e)
         })
-
-
-
 
 
 
