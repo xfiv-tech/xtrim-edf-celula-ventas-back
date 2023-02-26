@@ -17,6 +17,7 @@ app = FastAPI(
     title="XTRIM API",
     description="A simple API to manage contacts",
     version="1.0.0",
+    docs_url="/back_edificios_dev/docs",
 )
 
 app.add_middleware(
