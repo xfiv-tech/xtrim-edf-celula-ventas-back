@@ -19,18 +19,8 @@ app = FastAPI(
     version="1.0.0",
     # docs_url="/back_edificios_dev/docs",
     # openapi_url="/back_edificios_dev/openapi.json",
-    servers=[
-        {
-            "url": "https://xtrim-global.intelnexo.com/back_edificios_dev/",
-            "description": "Production server"
-        },
-        {
-            "url": "http://localhost:8000/back_edificios_dev/",
-            "description": "Development server"
-        }
-    ],
     openapi_prefix="/back_edificios_dev",
-    root_path="/back_edificios_dev"
+    root_path="/back_edificios_dev",
     root_path_in_servers=True
 
 
