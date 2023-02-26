@@ -20,6 +20,17 @@ app = FastAPI(
     docs_url="/back_edificios_dev/docs",
     redoc_url="/back_edificios_dev/redoc",
     openapi_url="/back_edificios_dev/openapi.json",
+    servers=[
+        {
+            "url": "https://xtrim-global.intelnexo.com/back_edificios_dev/",
+            "description": "Production server"
+        },
+        {
+            "url": "http://localhost:8000/back_edificios_dev/",
+            "description": "Development server"
+        }
+    ],
+    
 )
 
 app.add_middleware(
