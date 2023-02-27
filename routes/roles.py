@@ -50,7 +50,7 @@ async def get_rol():
 async def update_rol(rol: RoleBase):
     try:
         data = db.execute(Roles.update().where(Roles.c.id_roles == rol.id).values(
-            nombre=rol.rol,
+            rol=rol.rol,
             descripcion=rol.descripcion
         ))
         return {
