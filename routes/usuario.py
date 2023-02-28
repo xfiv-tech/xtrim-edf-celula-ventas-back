@@ -134,7 +134,6 @@ async def login(datos: Login):
         print(user)
         decr_data = checkPassword(datos.password, user[5])
         menu = Menus.join(Submenus, Menus.c.id_menus == Submenus.c.id_menus).select().where(Menus.c.id_roles == user[1])
-        
         if len(user) > 0:
             if decr_data == True:
                 true_user = {
