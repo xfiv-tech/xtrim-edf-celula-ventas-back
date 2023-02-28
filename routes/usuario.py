@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Response, Depends, HTTPException, status
 from database.db import db
+from model.menu import Menus
+from model.submenu import Submenus
 from model.usuario import Usuarios
 from schemas.usuario import Usuario
 from schemas.usuarioList import UsuarioList
@@ -131,6 +133,7 @@ async def login(datos: Login):
         user = db.execute(query).first()
         print(user)
         decr_data = checkPassword(datos.password, user[5])
+        menu = Menus.join(Submenus, Menus.c.id_menus == Submenus.c.id_menus).select().where(Menus.c.id_roles == user[1])
         
         if len(user) > 0:
             if decr_data == True:
@@ -142,6 +145,7 @@ async def login(datos: Login):
                     "usuario": user[4],
                     "data_creatd": user[6],
                     "data_update": user[7],
+                    "menu": db.execute(menu).fetchall()
                 }
                 return {
                     "code": "0",
