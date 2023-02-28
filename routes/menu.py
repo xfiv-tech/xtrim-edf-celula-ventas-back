@@ -5,9 +5,7 @@ from model.menu import Menus
 from model.submenu import Submenus
 from database.db import db
 
-menu = APIRouter(
-    route_class=ValidacionToken
-)
+menu = APIRouter(route_class=ValidacionToken)
 
 @menu.get("/menu", tags=["menu"])
 async def get_menu():
@@ -88,7 +86,8 @@ async def put_submenu(submenu: SubmenuBase):
             "code": "-1",
             "data": str(e)
         })
-    
+
+
 @menu.delete("/submenu/{id}", tags=["menu"])
 async def delete_submenu(id: int):
     try:
