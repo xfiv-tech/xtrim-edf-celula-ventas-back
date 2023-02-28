@@ -6,8 +6,7 @@ from model.submenu import Submenus
 from database.db import db
 
 menu = APIRouter(
-    route_class=ValidacionToken,
-    tags=["Menu"],
+    route_class=ValidacionToken
 )
 
 @menu.get("/menu", tags=["menu"])

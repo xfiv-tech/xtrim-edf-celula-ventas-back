@@ -16,6 +16,6 @@ class MenuBase(BaseModel):
     menu: str
     path: Optional[str]
     icon: Optional[str]
-    submenus: List[SubmenuBase] = []
+    submenus: List[SubmenuBase]
 
 

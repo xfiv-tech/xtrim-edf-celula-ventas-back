@@ -13,17 +13,16 @@ import os
 load_dotenv()
 
 Token = os.getenv("Xtrim_token")
+DEV = os.getenv("DEV")
 
 app = FastAPI(
     title="XTRIM API",
     description="A simple API to manage contacts",
     version="1.0.0",
-    openapi_prefix="/back_edificios_dev",
-    root_path="/back_edificios_dev",
+    # openapi_prefix="/back_edificios_dev",
+
+    root_path=DEV == "PRO" if "/back_edificios_dev" else "",
     root_path_in_servers=True,
-     
-
-
 )
 
 app.add_middleware(
