@@ -27,9 +27,17 @@ def write_token(data: dict):
 def read_token(token: str):
     try:
         data = jwt.decode(token, SECRET, algorithms=["HS256"])
-        return data
+        return {
+            "data": data,
+            "status": 200
+        }
     except exceptions.ExpiredSignatureError:
-        return JSONResponse(status_code=401, content={"message": "Invalid Token"})
+        return {
+            "message": "Token Expired",
+            "status": 401
+        }
     except exceptions.DecodeError:
-        return JSONResponse(status_code=401, content={"message": "Invalid Token"})
-    
+        return {
+            "message": "Invalid Token",
+            "status": 401
+        }

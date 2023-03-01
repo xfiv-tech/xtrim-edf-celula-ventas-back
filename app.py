@@ -7,6 +7,7 @@ from routes.reporte import reporte
 from routes.roles import roles
 from routes.menu import menu
 from routes.login import login
+from routes.channel import channel
 
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
@@ -48,6 +49,7 @@ app.include_router(reporte)
 app.include_router(roles)
 app.include_router(menu)
 app.include_router(login)
+app.include_router(channel)
 
 # from fastapi import FastAPI
 

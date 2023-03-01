@@ -15,16 +15,21 @@ class ValidacionToken(APIRoute):
         def get_route_handler(self):
             original_route = super().get_route_handler()
             async def verify_token_middleware(request:Request):
-                token = request.headers['xtrim-api-key']
-                beare = request.headers['Authorization']
-                print(token)
-                print(beare)
-                validado = validarToken(token)
-                # beare_token = read_token(beare)
-                if validado:
-                    return await original_route(request)
+                channel = request.headers['channel']
+                if channel == "Web":
+                    beare = request.headers['Authorization']
+                    beare_token = read_token(beare.split(" ")[1])
+                    if beare_token["status"] == 200:
+                        return await original_route(request)
+                    else:
+                        return JSONResponse(content={"message": "Invalid Token"}, status_code=401)
                 else:
-                    return JSONResponse(content={"message": "Invalid Token"}, status_code=401)
+                    token = request.headers['xtrim-api-key']
+                    validado = validarToken(token)
+                    if validado:
+                        return await original_route(request)
+                    else:
+                        return JSONResponse(content={"message": "Invalid Token"}, status_code=401)
             return verify_token_middleware
     except Exception as e:
         raise HTTPException(status_code=405)
