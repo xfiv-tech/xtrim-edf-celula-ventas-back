@@ -6,10 +6,13 @@ from routes.edificio import edificios
 from routes.reporte import reporte
 from routes.roles import roles
 from routes.menu import menu
+from routes.login import login
+
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
 from dotenv import load_dotenv
 import os
+
 load_dotenv()
 
 Token = os.getenv("Xtrim_token")
@@ -44,6 +47,7 @@ app.include_router(edificios)
 app.include_router(reporte)
 app.include_router(roles)
 app.include_router(menu)
+app.include_router(login)
 
 # from fastapi import FastAPI
 

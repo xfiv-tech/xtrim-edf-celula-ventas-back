@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Response, Depends, HTTPException, status
 from database.db import db
+from function.function_jwt import write_token
 from model.menu import Menus
 from model.submenu import Submenus
 from model.usuario import Usuarios
@@ -18,10 +19,7 @@ from middleware.validacionToken import ValidacionToken
 key = Fernet.generate_key()
 f = Fernet(key)
 
-usuarios = APIRouter(
-    route_class=ValidacionToken,
-    tags=["Usuarios"],
-)
+usuarios = APIRouter(route_class=ValidacionToken)
 
 @usuarios.post("/usuarios", tags=["usuarios"])
 async def get_usuarios():
@@ -108,7 +106,7 @@ async def update_usuario(usuario: Usuario):
     except Exception as e:
         raise HTTPException(status_code=400, detail={
             "code": "-1",
-            "data": str(e)
+            "data": str(e.args)
         })
     
 
@@ -125,46 +123,3 @@ async def delete_usuario(usuarioID: UsuarioList):
             "data": str(e)
         }
 
-
-@usuarios.post("/login", tags=["login"])
-async def login(datos: Login):
-    try:
-        query = Usuarios.select().where(Usuarios.c.email == datos.email)
-        user = db.execute(query).first()
-        print(user)
-        decr_data = checkPassword(datos.password, user[5])
-        menu = Menus.join(Submenus, Menus.c.id_menus == Submenus.c.id_menus).select().where(Menus.c.id_roles == user[1])
-        if len(user) > 0:
-            if decr_data == True:
-                true_user = {
-                    "id": user[0],
-                    "id_rol": user[1],
-                    "nombreCompleto": user[2],
-                    "email": user[3],
-                    "usuario": user[4],
-                    "data_creatd": user[6],
-                    "data_update": user[7],
-                    "menu": db.execute(menu).fetchall()
-                }
-                return {
-                    "code": "0",
-                    "data": true_user,
-                    "message": "Login correcto"
-                }
-            else:
-                return {
-                    "code": "-1",
-                    "data": [],
-                    "message": "Contraseña incorrecta"
-                }
-        else:
-            return {
-                "code": "-1",
-                "data": [],
-                "message": "Usuario no existe"
-            }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
