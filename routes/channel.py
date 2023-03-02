@@ -47,9 +47,10 @@ async def CrearChannel(channel: ChanellModel):
 @channel.put("/channel", tags=["channel"])
 async def create_edificio(channel: ChanellModel):
     try:
+        db.execute(Channel.update().values(channel=channel.channel).where(Channel.c.id_channel == channel.id))
         return {
             "code": "0",
-            "data": db.execute(Channel.update().values(channel=channel.channel).where(Channel.c.id_channel == channel.id)).first(),
+            "data": db.execute(Channel.select().where(Channel.c.id_channel == channel.id)).first()
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -62,10 +63,9 @@ async def create_edificio(channel: ChanellModel):
 @channel.delete("/channel", tags=["channel"])
 async def update_channel(channel: ChanellModel):
     try:
-        query = Channel.delete().where(Channel.c.id_channel == channel.id)
+        db.execute(Channel.delete().where(Channel.c.id_channel == channel.id))
         return {
-            "code": "0",
-            "data": db.execute(query).first(),
+            "code": "0"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -121,10 +121,10 @@ async def Crearmando(mando: MandoModel):
 @channel.put("/mando", tags=["mando"])
 async def create_mando(mando: MandoModel):
     try:
-        query = Mando.update().values(mando=mando.mando).where(Mando.c.id_mando == mando.id)
+        db.execute(Mando.update().values(mando=mando.mando).where(Mando.c.id_mando == mando.id))
         return {
             "code": "0",
-            "data": db.execute(query).first(),
+            "data": db.execute(Mando.select().where(Mando.c.id_mando == mando.id)).first(),
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -136,14 +136,12 @@ async def create_mando(mando: MandoModel):
 @channel.delete("/mando", tags=["mando"])
 async def update_mando(mando: MandoModel):
     try:
-        query = Mando.delete().where(Mando.c.id_mando == mando.id)
+        db.execute(Mando.delete().where(Mando.c.id_mando == mando.id))
         return {
-            "code": "0",
-            "data": db.execute(query).first(),
+            "code": "0"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
             "code": "-1",
             "data": str(e)
         })
-
