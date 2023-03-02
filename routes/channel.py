@@ -34,10 +34,9 @@ async def get_channel():
 @channel.post("/crear_channel", tags=["channel"])
 async def CrearChannel(channel: ChanellModel):
     try:
-        query = Channel.insert().values(channel=channel.channel)
+        db.execute(Channel.insert().values(channel=channel.channel))
         return {
-            "code": "0",
-            "data": db.execute(query).first(),
+            "code": "0"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -48,11 +47,9 @@ async def CrearChannel(channel: ChanellModel):
 @channel.put("/channel", tags=["channel"])
 async def create_edificio(channel: ChanellModel):
     try:
-        print(channel.id)
-        query = Channel.update().values(channel=channel.channel).where(Channel.c.id_channel == channel.id)
         return {
             "code": "0",
-            "data": db.execute(query).first(),
+            "data": db.execute(Channel.update().values(channel=channel.channel).where(Channel.c.id_channel == channel.id)).first(),
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -111,11 +108,9 @@ async def get_mando():
 @channel.post("/mando", tags=["mando"])
 async def Crearmando(mando: MandoModel):
     try:
-        print(mando.id)
-        query = Mando.insert().values(mando=mando.mando)
+        db.execute(Mando.insert().values(mando=mando.mando))
         return {
-            "code": "0",
-            "data": db.execute(query).first(),
+            "code": "0"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -126,7 +121,6 @@ async def Crearmando(mando: MandoModel):
 @channel.put("/mando", tags=["mando"])
 async def create_mando(mando: MandoModel):
     try:
-        print(mando.id)
         query = Mando.update().values(mando=mando.mando).where(Mando.c.id_mando == mando.id)
         return {
             "code": "0",
