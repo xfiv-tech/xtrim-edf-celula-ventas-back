@@ -1,6 +1,39 @@
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey
 from database.db import meta, db
 
+
+Ciudad = Table("ciudad", meta,
+    Column("id_ciudad", Integer, primary_key=True, autoincrement=True),
+    Column("ciudad", String(255), unique=True),
+    Column("region", String(255)),
+)
+
+Operador = Table("operador", meta,
+    Column("id_operador", Integer, primary_key=True, autoincrement=True),
+    Column("operador", String(255), unique=True),
+)
+
+SistemaOperativo = Table("sistema_operativo", meta,
+    Column("id_sistema_operativo", Integer, primary_key=True, autoincrement=True),
+    Column("sistema_operativo", String(255), unique=True),
+)
+
+Estados = Table("estados", meta,
+    Column("id_estado", Integer, primary_key=True, autoincrement=True),
+    Column("estado", String(255), unique=True),
+)
+
+Genero = Table("genero", meta,
+    Column("id_genero", Integer, primary_key=True, autoincrement=True),
+    Column("genero", String(255), unique=True),
+)
+
+Modalidad = Table("modalidad", meta,
+    Column("id_modalidad", Integer, primary_key=True, autoincrement=True),
+    Column("modalidad", String(255), unique=True),
+)
+
+
 Channel = Table("channel", meta,
     Column("id_channel", Integer, primary_key=True, autoincrement=True),
     Column("channel", String(255), unique=True),
