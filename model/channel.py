@@ -70,7 +70,7 @@ RegistrarVendedor = Table("registrar_vendedor", meta,
     Column("fecha_salida", String(255)),
     Column("sector_residencia", String(255)),
     Column("email", String(255)),
-    Column("celula", String(255)),
+    Column("cedula", String(255)),
     Column("dias_inactivo", Integer),
 )
 

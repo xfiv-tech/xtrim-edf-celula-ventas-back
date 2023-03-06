@@ -50,7 +50,6 @@ async def post_registro(request: RegistrarVendedorModel):
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
             email=request.email,
-            cedula=request.cedula,
             dias_inactivo=request.dias_inactivo
         )
         data = db.execute(query)
@@ -89,7 +88,6 @@ async def put_registro(request: RegistrarVendedorModel):
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
             email=request.email,
-            cedula=request.cedula,
             dias_inactivo=request.dias_inactivo
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
         return {

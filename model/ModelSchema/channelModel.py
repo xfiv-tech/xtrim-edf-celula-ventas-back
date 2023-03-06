@@ -88,7 +88,7 @@ class RegistrarVendedorModel(BaseModel):
     fecha_salida: Optional[str]
     sector_residencia: str
     email: str
-    celula: str
+    cedula: str
     dias_inactivo: Optional[int]
 
 class ArrayRegistrarVendedorModel(BaseModel):
