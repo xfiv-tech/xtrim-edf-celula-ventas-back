@@ -93,3 +93,41 @@ class RegistrarVendedorModel(BaseModel):
 
 class ArrayRegistrarVendedorModel(BaseModel):
     data: List[RegistrarVendedorModel]
+
+
+class RegistrarDistribuidorModel(BaseModel):
+    id_registrar_distribuidor: Optional[int]
+    id_ciudad: int
+    id_estado: int
+    nombre_distribuidor: str
+    responsable: str
+    telefono: str
+    email: str
+    fecha_ingreso: str
+    fecha_salida: Optional[str]
+
+class ArrayRegistrarDistribuidor(BaseModel):
+    data: List[RegistrarDistribuidorModel]
+
+
+class RegistrarJefeModel(BaseModel):
+    id_jefe_venta: Optional[int]
+    id_mando: int
+    id_channel: int
+    id_ciudad: int
+    nombre_jefe: str
+
+class ArrayRegistrarJefeModel(BaseModel):
+    data: List[RegistrarJefeModel]
+
+
+class RegistrarAdministradorModel(BaseModel):
+    id_administrador: Optional[int]
+    id_mando: int
+    id_channel: int
+    id_ciudad: int
+    id_estado: int
+    nombre_administrador: str
+
+class ArrayRegistrarAdministradorModel(BaseModel):
+    data: List[RegistrarAdministradorModel]
