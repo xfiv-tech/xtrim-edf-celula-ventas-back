@@ -49,7 +49,7 @@ async def post_registro(request: RegistrarVendedorModel):
             meta_dolares=request.meta_dolares,
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
-            email=request.email
+            email=request.email,
             cedula=request.cedula,
             dias_inactivo=request.dias_inactivo
         )
