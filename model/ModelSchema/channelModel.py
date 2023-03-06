@@ -60,3 +60,36 @@ class ModalidadModel(BaseModel):
 
 class ArrayModalidadModel(BaseModel):
     data: List[ModalidadModel]
+
+
+class RegistrarVendedorModel(BaseModel):
+    id_registrar_vendedor: Optional[int]
+    id_channel: int
+    id_mando: int
+    id_ciudad: int
+    id_operador: int
+    id_sistema_operativo: int
+    id_estado: int
+    id_genero: int
+    id_modalidad: int
+    cedula: str
+    codigo_vendedor: str
+    usuario_equifax: str
+    nombre_vendedor: str
+    fecha_ingreso: str
+    id_gerente: int
+    id_gerente_ciudad: Optional[int]
+    id_jefe_venta: Optional[int]
+    id_lider_peloton: Optional[int]
+    ciudad_gestion: str
+    lider_check: Optional[bool]
+    meta_volumen: Optional[int]
+    meta_dolares: Optional[float]
+    fecha_salida: Optional[str]
+    sector_residencia: str
+    email: str
+    celula: str
+    dias_inactivo: Optional[int]
+
+class ArrayRegistrarVendedorModel(BaseModel):
+    data: List[RegistrarVendedorModel]

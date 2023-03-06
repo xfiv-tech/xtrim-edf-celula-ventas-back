@@ -479,3 +479,4 @@ async def delete_modalidad(modalidad: ModalidadModel):
             "code": "-1",
             "data": str(e)
         })
+    
