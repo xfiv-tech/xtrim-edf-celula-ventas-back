@@ -225,9 +225,9 @@ async def put_jefe_venta(request: RegistrarJefeModel):
             id_ciudad=request.id_ciudad,
             nombre_jefe=request.nombre_jefe
         ).where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta)
+        db.execute(query)
         return {
-            "code": "0",
-            "data": query
+            "code": "0"
         }
     except Exception as e:
         return {"error": str(e)}
@@ -283,16 +283,15 @@ async def post_administrador(request: RegistrarAdministradorModel):
 @registro.put("/actualizar_administrador", tags=["Administrador"])
 async def put_administrador(request: RegistrarAdministradorModel):
     try:
-        query = RegistroAdministrador.update().values(
+        db.execute(RegistroAdministrador.update().values(
             id_administrador=request.id_administrador,
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
             nombre_administrador=request.nombre_administrador
-        ).where(RegistroAdministrador.c.id_administrador == request.id_administrador)
+        ).where(RegistroAdministrador.c.id_administrador == request.id_administrador))
         return {
-            "code": "0",
-            "data": query
+            "code": "0"
         }
     except Exception as e:
         return {"error": str(e)}
@@ -348,15 +347,14 @@ async def post_gerente(request: RegistrarGerenteModel):
 @registro.put("/actualizar_gerente", tags=["Gerente"])
 async def put_gerente(request: RegistrarGerenteModel):
     try:
-        query = RegistrarGerente.update().values(
+        db.execute(RegistrarGerente.update().values(
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
             nombre_gerente=request.nombre_gerente
-        ).where(RegistrarGerente.c.id_gerente == request.id_gerente)
+        ).where(RegistrarGerente.c.id_gerente == request.id_gerente))
         return {
-            "code": "0",
-            "data": query
+            "code": "0"
         }
     except Exception as e:
         return {"error": str(e)}
