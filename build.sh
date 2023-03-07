@@ -3,7 +3,7 @@ git add .
 git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
 
 git push
-docker login -u "intelnexoec" -p "DiegoySophie2O22" docker.io
+docker login -u "intelnexoec" -p "dckr_pat_EY2hedAJR91hc9Vn9Hx6-qVpgg0"
 export SHORT_COMMIT=$(git log -1 --pretty="%H" | cut -b -8)
 export DOCKER_IMAGE_VERSION="dev_${SHORT_COMMIT}"
 
