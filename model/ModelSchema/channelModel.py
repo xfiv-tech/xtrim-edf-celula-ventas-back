@@ -112,7 +112,6 @@ class ArrayRegistrarDistribuidor(BaseModel):
 
 class RegistrarJefeModel(BaseModel):
     id_jefe_venta: Optional[int]
-    id_mando: int
     id_channel: int
     id_ciudad: int
     nombre_jefe: str
@@ -123,7 +122,6 @@ class ArrayRegistrarJefeModel(BaseModel):
 
 class RegistrarAdministradorModel(BaseModel):
     id_administrador: Optional[int]
-    id_mando: int
     id_channel: int
     id_ciudad: int
     id_estado: int
@@ -131,3 +129,14 @@ class RegistrarAdministradorModel(BaseModel):
 
 class ArrayRegistrarAdministradorModel(BaseModel):
     data: List[RegistrarAdministradorModel]
+
+
+class RegistrarGerenteModel(BaseModel):
+    id_gerente: Optional[int]
+    id_channel: int
+    id_ciudad: int
+    id_estado: int
+    nombre_gerente: str
+
+class ArrayRegistrarGerenteModel(BaseModel):
+    data: List[RegistrarGerenteModel]

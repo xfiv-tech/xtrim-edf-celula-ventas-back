@@ -86,51 +86,30 @@ RegistrarDistribuidor = Table("registrar_distribuidor", meta,
     Column("fecha_salida", String(255), nullable=True)
 )
 
+RegistrarGerente = Table("registrar_gerente", meta,
+    Column("id_gerente", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_estado", Integer, ForeignKey("estados.id_estado")),
+    Column("nombre_gerente", String(255))
+)
 
 RegistroJefeVentas = Table("registro_jefe_ventas", meta,
     Column("id_jefe_venta", Integer, primary_key=True, autoincrement=True),
-    Column("id_mando", Integer, ForeignKey("mando.id_mando")),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
     Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_estado", Integer, ForeignKey("estados.id_estado")),
+    Column("id_gerente", Integer, ForeignKey("registrar_gerente.id_gerente"), nullable=True, default=None),
     Column("nombre_jefe", String(255))
 )
 
 RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_administrador", Integer, primary_key=True, autoincrement=True),
-    Column("id_mando", Integer, ForeignKey("mando.id_mando")),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
     Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("nombre_administrador", String(255))
 )
-
-# RegistroLiderPeloton = Table("registro_lider_peloton", meta,
-#     Column("id_lider_peloton", Integer, primary_key=True, autoincrement=True),
-#     Column("id_mando", Integer, ForeignKey("mando.id_mando")),  
-#     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
-#     Column("nombre", String(255)),
-#     Column("apellido", String(255)),
-#     Column("telefono", String(255)),
-#     Column("email", String(255)),
-#     Column("celula", String(255)),
-#     Column("codigo", String(255)),
-#     Column("fecha", DateTime),
-#     Column("activo", Boolean),
-# )
-
-# RegistroVendedor = Table("registro_vendedor", meta,
-#     Column("id_vendedor", Integer, primary_key=True, autoincrement=True),
-#     Column("id_mando", Integer, ForeignKey("mando.id_mando")),
-#     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
-#     Column("nombre", String(255)),
-#     Column("apellido", String(255)),
-#     Column("telefono", String(255)),
-#     Column("email", String(255)),
-#     Column("celula", String(255)),
-#     Column("codigo", String(255)),
-#     Column("fecha", DateTime),
-#     Column("activo", Boolean),
-# )
 
 
 meta.create_all(db)
