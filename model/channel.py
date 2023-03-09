@@ -94,6 +94,23 @@ RegistrarGerente = Table("registrar_gerente", meta,
     Column("nombre_gerente", String(255))
 )
 
+RegistrarGerenteCiudad = Table("registrar_gerente_ciudad", meta,
+    Column("id_gerente_ciudad", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_estado", Integer, ForeignKey("estados.id_estado")),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("nombre_gerente_ciudad", String(255))
+)
+
+RegistrarAdminProyectos = Table("registrar_admin_proyectos", meta,
+    Column("id_admin_proyectos", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_estado", Integer, ForeignKey("estados.id_estado")),
+    Column("nombre_admin_proyectos", String(255))
+)
+
+
 RegistroJefeVentas = Table("registro_jefe_ventas", meta,
     Column("id_jefe_venta", Integer, primary_key=True, autoincrement=True),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
@@ -110,6 +127,10 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("nombre_administrador", String(255))
 )
+
+
+
+
 
 
 meta.create_all(db)

@@ -1,8 +1,8 @@
 from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, Request, HTTPException
-from model.ModelSchema.channelModel import RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteModel, RegistrarJefeModel, RegistrarVendedorModel
+from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.ModelSchema.menu import MenuBase, SubmenuBase
-from model.channel import RegistrarDistribuidor, RegistrarGerente, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
+from model.channel import RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
 from model.menu import Menus
 from model.submenu import Submenus
 from database.db import db
@@ -99,9 +99,9 @@ async def put_registro(request: RegistrarVendedorModel):
 
     
 @registro.delete("/eliminar_registro", tags=["Vendedor"])
-async def delete_registro(request: RegistrarVendedorModel):
+async def delete_registro(id_registrar_vendedor: int):
     try:
-        query = RegistrarVendedor.delete().where(RegistrarVendedor.id_registrar_vendedor == request.id_registrar_vendedor)
+        query = RegistrarVendedor.delete().where(RegistrarVendedor.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query)
         return {
             "code": "0",
@@ -170,9 +170,9 @@ async def put_distribuidor(request: RegistrarDistribuidorModel):
     
 
 @registro.delete("/eliminar_distribuidor", tags=["Distribuidor"])
-async def delete_distribuidor(request: RegistrarDistribuidorModel):
+async def delete_distribuidor(id_registrar_distribuidor: int):
     try:
-        query = RegistrarDistribuidor.delete().where(RegistrarDistribuidor.id_registrar_distribuidor == request.id_registrar_distribuidor)
+        query = RegistrarDistribuidor.delete().where(RegistrarDistribuidor.id_registrar_distribuidor == id_registrar_distribuidor)
         data = db.execute(query)
         return {
             "code": "0",
@@ -234,9 +234,9 @@ async def put_jefe_venta(request: RegistrarJefeModel):
     
 
 @registro.delete("/eliminar_jefe_venta", tags=["Jefe de Venta"])
-async def delete_jefe_venta(request: RegistrarJefeModel):
+async def delete_jefe_venta(id_jefe_venta: int):
     try:
-        query = RegistroJefeVentas.delete().where(RegistroJefeVentas.id_jefe_venta == request.id_jefe_venta)
+        query = RegistroJefeVentas.delete().where(RegistroJefeVentas.id_jefe_venta == id_jefe_venta)
         data = db.execute(query)
         return {
             "code": "0",
@@ -298,9 +298,9 @@ async def put_administrador(request: RegistrarAdministradorModel):
     
 
 @registro.delete("/eliminar_administrador", tags=["Administrador"])
-async def delete_administrador(request: RegistrarAdministradorModel):
+async def delete_administrador(id_administrador: int):
     try:
-        query = RegistroAdministrador.delete().where(RegistroAdministrador.id_administrador == request.id_administrador)
+        query = RegistroAdministrador.delete().where(RegistroAdministrador.id_administrador == id_administrador)
         data = db.execute(query)
         return {
             "code": "0",
@@ -361,13 +361,137 @@ async def put_gerente(request: RegistrarGerenteModel):
     
 
 @registro.delete("/eliminar_gerente", tags=["Gerente"])
-async def delete_gerente(request: RegistrarGerenteModel):
+async def delete_gerente(id_gerente: int):
     try:
-        query = RegistrarGerente.delete().where(RegistrarGerente.id_gerente == request.id_gerente)
+        query = RegistrarGerente.delete().where(RegistrarGerente.id_gerente == id_gerente)
         data = db.execute(query)
         return {
             "code": "0",
             "data": data
+        }
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+    
+
+#Registrar gerente de ciudad
+@registro.get("/listar_gerente_ciudad", tags=["Gerente de Ciudad"])
+async def get_gerente_ciudad():
+    try:
+        query = RegistrarGerenteCiudad.select()
+        data = db.execute(query).fetchall()
+        return {
+            "code": "0",
+            "data": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+@registro.post("/crear_gerente_ciudad", tags=["Gerente de Ciudad"])
+async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
+    try:
+        query = RegistrarGerenteCiudad.insert().values(
+            id_gerente_ciudad=request.id_gerente_ciudad,
+            id_channel=request.id_channel,
+            id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            nombre_gerente_ciudad=request.nombre_gerente_ciudad
+        )
+        data = db.execute(query)
+        return {
+            "code": "0",
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.put("/actualizar_gerente_ciudad", tags=["Gerente de Ciudad"])
+async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
+    try:
+        db.execute(RegistrarGerenteCiudad.update().values(
+            id_channel=request.id_channel,
+            id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            nombre_gerente_ciudad=request.nombre_gerente_ciudad
+        ).where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad))
+        return {
+            "code": "0"
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.delete("/eliminar_gerente_ciudad", tags=["Gerente de Ciudad"])
+async def delete_gerente_ciudad(id_gerente_ciudad: int):
+    try:
+        query = RegistrarGerenteCiudad.delete().where(RegistrarGerenteCiudad.id_gerente_ciudad == id_gerente_ciudad)
+        db.execute(query)
+        return {
+            "code": "0",
+        }
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+    
+
+#Administrador de proyectos
+
+@registro.get("/listar_administrador_proyectos", tags=["Administrador de Proyectos"])
+async def get_administrador_proyectos():
+    try:
+        query = RegistrarAdminProyectos.select()
+        data = db.execute(query).fetchall()
+        return {
+            "code": "0",
+            "data": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.post("/crear_administrador_proyectos", tags=["Administrador de Proyectos"])
+async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
+    try:
+        query = RegistrarAdminProyectos.insert().values(
+            id_admin_proyectos=request.id_admin_proyectos,
+            id_channel=request.id_channel,
+            id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            nombre_admin_proyectos=request.nombre_admin_proyectos
+        )
+        db.execute(query)
+        return {
+            "code": "0",
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.put("/actualizar_administrador_proyectos", tags=["Administrador de Proyectos"])
+async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
+    try:
+        db.execute(RegistrarAdminProyectos.update().values(
+            id_channel=request.id_channel,
+            id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            nombre_admin_proyectos=request.nombre_admin_proyectos
+        ).where(RegistrarAdminProyectos.c.id_admin_proyectos == request.id_admin_proyectos))
+        return {
+            "code": "0"
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.delete("/eliminar_administrador_proyectos", tags=["Administrador de Proyectos"])
+async def delete_administrador_proyectos(id_admin_proyectos: int):
+    try:
+        query = RegistrarAdminProyectos.delete().where(RegistrarAdminProyectos.id_admin_proyectos == id_admin_proyectos)
+        db.execute(query)
+        return {
+            "code": "0",
         }
     except Exception as e:
         return {

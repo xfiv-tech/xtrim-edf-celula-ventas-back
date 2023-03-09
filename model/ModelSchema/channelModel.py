@@ -140,3 +140,21 @@ class RegistrarGerenteModel(BaseModel):
 
 class ArrayRegistrarGerenteModel(BaseModel):
     data: List[RegistrarGerenteModel]
+
+class RegistrarGerenteCiudadModel(BaseModel):
+    id_gerente_ciudad: Optional[int]
+    id_channel: int
+    id_ciudad: int
+    id_estado: int
+    nombre_gerente_ciudad: str
+
+class ArrayRegistrarGerenteCiudadModel(BaseModel):
+    data: List[RegistrarGerenteCiudadModel]
+
+
+class RegistrarAdminProyectosModel(BaseModel):
+    id_admin_proyectos: Optional[int]
+    id_channel: int
+    id_ciudad: int
+    id_estado: int
+    nombre_admin_proyectos: str

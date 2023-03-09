@@ -28,6 +28,10 @@ app = FastAPI(
     #"https://incoming.xfiv.chat/whatsapp_cloud/api/v1/send/message" if PLATAFORMA == "DEV" != None else conversacion["data"]["path_conector"]
     root_path="/back_edificios_dev" if DEV == "PRO" else "/",
     root_path_in_servers=True,
+    authorizations={
+        
+    }
+    
 )
 
 app.add_middleware(
