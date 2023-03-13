@@ -158,3 +158,26 @@ class RegistrarAdminProyectosModel(BaseModel):
     id_ciudad: int
     id_estado: int
     nombre_admin_proyectos: str
+
+
+# Master - Details
+class CatalogModel(BaseModel):
+    id: Optional[int]
+    name: str
+    code: str
+    
+
+class ListCatalog(BaseModel):
+    data: List[CatalogModel]
+
+class CatalogDetailModel(BaseModel):
+    id: Optional[int]
+    name: str
+    code: str
+    level: Optional[int]
+    description: Optional[str]
+    catalog: int
+    
+
+class ListCatalogDetail(BaseModel):
+    data: List[CatalogDetailModel]

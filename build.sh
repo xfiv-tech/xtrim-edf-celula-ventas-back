@@ -1,10 +1,10 @@
-# git pull origin feat/addCatalogsAndEmployees
+git pull origin feat/addCatalogsAndEmployees
 
 git add .
 
 git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
 
-git push
+git push origin feat/addCatalogsAndEmployees
 
 docker login -u "intelnexoec" -p "dckr_pat_EY2hedAJR91hc9Vn9Hx6-qVpgg0"
 

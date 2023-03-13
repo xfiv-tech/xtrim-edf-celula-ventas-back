@@ -84,7 +84,7 @@ RegistrarDistribuidor = Table("registrar_distribuidor", meta,
     Column("email", String(255)),
     Column("fecha_ingreso", String(255)),
     Column("fecha_salida", String(255), nullable=True)
-)
+) 
 
 RegistrarGerente = Table("registrar_gerente", meta,
     Column("id_gerente", Integer, primary_key=True, autoincrement=True),
@@ -127,10 +127,5 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("nombre_administrador", String(255))
 )
-
-
-
-
-
 
 meta.create_all(db)
