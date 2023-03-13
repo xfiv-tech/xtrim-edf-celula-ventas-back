@@ -5,7 +5,6 @@ from model.catalogs import Catalog, CatalogDetail
 from schemas.searchList import SearchList
 from datetime import datetime
 from middleware.validacionToken import ValidacionToken
-from utils.HTTPResponse import response_400, response_data_200
 from starlette.status import HTTP_204_NO_CONTENT
 
 
