@@ -2,17 +2,6 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class AdministratorModel(BaseModel):
-    id: Optional[int]
-    city: int
-    user: int
-    status: int
-
-class ListAdministrator(BaseModel):
-    data: List[AdministratorModel]
-
-
-
 class CityModel(BaseModel):
     id: Optional[int]
     name: str
@@ -25,6 +14,17 @@ class CityModel(BaseModel):
 
 class ListCity(BaseModel):
     data: List[CityModel]
+
+
+class AdministratorModel(BaseModel):
+    id: Optional[int]
+    city: int
+    user: int
+    status: int
+
+class ListAdministrator(BaseModel):
+    data: List[AdministratorModel]
+
 
 
 class DistributorModel(BaseModel):
@@ -87,7 +87,7 @@ class ListSalesBoss(BaseModel):
 
 class SellerModel(BaseModel):
     id: Optional[int]
-    seller_id: int
+    seller: int
     equifax_user: Optional[str]
     city: int
     channel: int
@@ -98,9 +98,18 @@ class SellerModel(BaseModel):
     os: int
     status: int
     date_in_sales_dept: str
-    date_out_sales_dept: str
-    inactive_days: int
+    date_out_sales_dept: Optional[str]
+    inactive_days: Optional[int]
 
 
 class ListSeller(BaseModel):
     data: List[SellerModel]
+
+class LeaderSellerModel(BaseModel):
+    id: Optional[int]
+    leader: int
+    seller: int
+
+
+class ListLeaderSeller(BaseModel):
+    data: List[LeaderSellerModel]

@@ -10,8 +10,8 @@ Distributor = Table("sc_distributor", meta,
     Column("status", Integer, ForeignKey("catalog_detail.id")),
     Column("phone", String(255), nullable=True),
     Column("email", String(255), nullable=True),
-    Column("date_in", DateTime),
-    Column("date_out", DateTime)
+    Column("date_in", DateTime, nullable=False),
+    Column("date_out", DateTime, nullable=True),
 )
 
 

@@ -4,8 +4,8 @@ from database.db import meta, db
 
 SalesBoss = Table("sc_sales_boss", meta,
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("employee", Integer, ForeignKey("Employee.id")),
-    Column("city", Integer, ForeignKey("City.id"))
+    Column("employee", Integer, ForeignKey("sc_employee.id")),
+    Column("city", Integer, ForeignKey("sc_city.id"))
 )
 
 

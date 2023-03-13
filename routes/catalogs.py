@@ -62,12 +62,12 @@ async def update_catalog(catalog: CatalogModel):
 
 
 @catalogs.delete("/catalogo", tags=["Catalogos"])
-async def delete_catalog(catalog: CatalogModel):
+async def delete_catalog(search: SearchList):
     try:
         db.execute(Catalog.delete()
-            .where(Catalog.c.id == catalog.id))
+            .where(Catalog.c.id == search.id))
         return {
-            "code": "0"
+            "message": "Catalog successfully deleted"
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -90,7 +90,7 @@ async def get_catalogDetails():
 
 
 @catalogs.post("/detalle_catalogo", tags=["Detalle de catalogo"])
-async def add_catalog(catalogDetail: CatalogDetailModel):
+async def add_catalogDetail(catalogDetail: CatalogDetailModel):
     try:
         result = db.execute(CatalogDetail.insert()
             .values(name = catalogDetail.name,
@@ -108,10 +108,47 @@ async def add_catalog(catalogDetail: CatalogDetailModel):
             "data": str(e)
         })
 
+@catalogs.put("/detalle_catalogo", tags=["Detalle de catalogo"])
+async def update_catalogDetail(catalogDetail: CatalogDetailModel):
+    try:
+        db.execute(CatalogDetail.update()
+            .values(name = catalogDetail.name,
+                    code = catalogDetail.code,
+                    level = catalogDetail.level,
+                    description = catalogDetail.description,
+                    catalog = catalogDetail.catalog)
+            .where(CatalogDetail.c.id == catalogDetail.id))
+        return {
+            "code": "0",
+            "data": db.execute(CatalogDetail.select()
+                        .where(CatalogDetail.c.id == catalogDetail.id))
+                        .first(),
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+
+
+@catalogs.delete("/detalle_catalogo", tags=["Detalle de catalogo"])
+async def delete_catalogDetail(search: SearchList):
+    try:
+        db.execute(CatalogDetail.delete()
+            .where(CatalogDetail.c.id == search.id))
+        return {
+            "message": "Catalog Detail successfully deleted"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+
 
 #CATALOD DETAILS BY CATALOG ID
 @catalogs.get("/detalle_por_catalogo", tags=["Detalle de catalogo"])
-async def get_catalogDetails(search: SearchList):
+async def get_catalogDetailsById(search: SearchList):
     try:
         query = CatalogDetail.join(Catalog).select().where(CatalogDetail.c.catalog == search.id)
         data = db.execute(query).fetchall()

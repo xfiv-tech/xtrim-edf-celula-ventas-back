@@ -4,9 +4,10 @@ from database.db import meta, db
 
 Administrator = Table("sc_administrator", meta,
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("city", Integer, ForeignKey("City.id")),
-    Column("user", Integer, ForeignKey("Employee.id")),
-    Column("status", Integer, ForeignKey("CatalogDetail.id")),
+    Column("city", Integer, ForeignKey("sc_city.id")),
+    Column("user", Integer, ForeignKey("sc_employee.id")),
+    Column("status", Integer, ForeignKey("catalog_detail.id")),
+    Column("created_at", DateTime),
 )
 
 
