@@ -91,7 +91,6 @@ class SellerModel(BaseModel):
     equifax_user: Optional[str]
     city: int
     channel: int
-    is_leader: bool
     modality: int
     goal_volumen: int
     goal_dolars: float
