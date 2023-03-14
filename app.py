@@ -32,7 +32,6 @@ app = FastAPI(
     description="A simple API to manage contacts",
     version="1.0.0",
     # openapi_prefix="/back_edificios_dev",
-    #"https://incoming.xfiv.chat/whatsapp_cloud/api/v1/send/message" if PLATAFORMA == "DEV" != None else conversacion["data"]["path_conector"]
     root_path="/back_edificios_dev" if DEV == "PRO" else "/",
     root_path_in_servers=True,
     authorizations={
