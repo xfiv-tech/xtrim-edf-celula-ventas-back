@@ -6,9 +6,13 @@ COPY . /xtrim_edificio/
 
 COPY ./requirements.txt /xtrim_edificio/requirements.txt
 
-RUN apt install -y apparmor apturl && pip install -r requirements.txt
+RUN apk update && apk add --no-cache gcc musl-dev linux-headers
 
-# RUN pip install --no-cache-dir --upgrade -r /xtrim_edificio/requirements.txt
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev linux-headers
+
+# RUN apt install -y apparmor apturl && pip install -r requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /xtrim_edificio/requirements.txt
 
 RUN ls -la
 
