@@ -6,7 +6,7 @@ COPY . /xtrim_edificio/
 
 COPY ./requirements.txt /xtrim_edificio/requirements.txt
 
-# RUN pip install --no-cache-dir --upgrade -r /xtrim_edificio/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /xtrim_edificio/requirements.txt
 
 RUN ls -la
 
