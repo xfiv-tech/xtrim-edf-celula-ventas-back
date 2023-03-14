@@ -29,7 +29,7 @@ async def add_catalog(catalog: CatalogModel):
     try:
         result = db.execute(Catalog.insert()
             .values(name = catalog.name,
-                    code = catalog.code))
+                    code = (catalog.name).replace(" ", "_").upper()))
         return {
             "code": "0",
             "data": result
@@ -93,7 +93,7 @@ async def add_catalogDetail(catalogDetail: CatalogDetailModel):
     try:
         result = db.execute(CatalogDetail.insert()
             .values(name = catalogDetail.name,
-                    code = catalogDetail.code,
+                    code = (catalogDetail.name).replace(" ", "_").upper(),
                     level = catalogDetail.level,
                     description = catalogDetail.description,
                     catalog = catalogDetail.catalog))
@@ -112,7 +112,7 @@ async def update_catalogDetail(catalogDetail: CatalogDetailModel):
     try:
         db.execute(CatalogDetail.update()
             .values(name = catalogDetail.name,
-                    code = catalogDetail.code,
+                    code = (catalogDetail.name).replace(" ", "_").upper(),
                     level = catalogDetail.level,
                     description = catalogDetail.description,
                     catalog = catalogDetail.catalog)
@@ -146,13 +146,21 @@ async def delete_catalogDetail(search: SearchList):
 
 
 #CATALOD DETAILS BY CATALOG ID
-@catalogs.get("/detalle_por_catalogo", tags=["Detalle de catalogo"])
+@catalogs.post("/detalle_por_catalogo", tags=["Detalle de catalogo"])
 async def get_catalogDetailsById(search: SearchList):
     try:
-        query = CatalogDetail.join(Catalog).select().where(CatalogDetail.c.catalog == search.id)
-        data = db.execute(query).fetchall()
+        query = CatalogDetail.join(Catalog).select().with_only_columns([
+            CatalogDetail.c.id,
+            CatalogDetail.c.name,
+            CatalogDetail.c.code,
+            CatalogDetail.c.level,
+            CatalogDetail.c.description,
+            Catalog.c.name.label('catalog_name'),
+            Catalog.c.code.label('catalog_code')
+        ]).where(CatalogDetail.c.catalog == search.id)
         return {
-            "code": "Catalog Details",
-            "data": data }
+            "message": "Catalog detail retrieved successfully",
+            "data": db.execute(query).first(),
+        }
     except Exception as e:
         return {"error": str(e)}

@@ -164,7 +164,7 @@ class RegistrarAdminProyectosModel(BaseModel):
 class CatalogModel(BaseModel):
     id: Optional[int]
     name: str
-    code: str
+    code: Optional[str]
     
 
 class ListCatalog(BaseModel):
@@ -173,7 +173,7 @@ class ListCatalog(BaseModel):
 class CatalogDetailModel(BaseModel):
     id: Optional[int]
     name: str
-    code: str
+    code: Optional[str]
     level: Optional[int]
     description: Optional[str]
     catalog: int
