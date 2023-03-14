@@ -1,4 +1,4 @@
-python app.py
+# python app.py
 python3 -m venv xfiv-edificio-python
 sleep 5
 source xfiv-edificio-python/bin/activate
