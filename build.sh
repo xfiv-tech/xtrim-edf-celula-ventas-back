@@ -5,7 +5,10 @@ git add .
 git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
 
 git push origin feat/addCatalogsAndEmployees
+<<<<<<< HEAD
 
+=======
+>>>>>>> fafe788bdf61a66016d24133df93a28d26afa433
 docker login -u "intelnexoec" -p "dckr_pat_EY2hedAJR91hc9Vn9Hx6-qVpgg0"
 
 export SHORT_COMMIT=$(git log -1 --pretty="%H" | cut -b -8)
