@@ -6,7 +6,7 @@ COPY . /xtrim/
 
 COPY ./requirements.txt /xtrim/requirements.txt
 
-RUN pip install -r /xtrim/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt
 
 RUN ls -la
 

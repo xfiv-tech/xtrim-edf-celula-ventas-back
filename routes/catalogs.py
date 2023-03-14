@@ -160,7 +160,7 @@ async def get_catalogDetailsById(search: SearchList):
         ]).where(CatalogDetail.c.catalog == search.id)
         return {
             "message": "Catalog detail retrieved successfully",
-            "data": db.execute(query).first(),
+            "data": db.execute(query).all(),
         }
     except Exception as e:
         return {"error": str(e)}
