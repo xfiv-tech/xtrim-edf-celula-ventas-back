@@ -21,6 +21,7 @@ async def ValidacionLogin(datos: Login):
     try:
         query = Usuarios.select().where(Usuarios.c.email == datos.email)
         user = db.execute(query).first()
+        print("decr_data",user)
         decr_data = checkPassword(datos.password, user[5])
         menu = Menus.select().where(Menus.c.id_roles == user[1])
         menu = db.execute(menu).fetchall()

@@ -1,5 +1,4 @@
 FROM python:3.10.4-alpine
-#ok
 
 WORKDIR /xtrim_edificio
 
@@ -10,6 +9,7 @@ COPY ./requirements.txt /xtrim_edificio/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /xtrim_edificio/requirements.txt
 
 RUN pip install PyJWT
+
 
 RUN ls -la
 
