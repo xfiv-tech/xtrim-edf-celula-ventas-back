@@ -1,7 +1,7 @@
 git pull origin develop
 git add .
 git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
-git push origin develop
+git push origin feat/develop
 docker login -u "intelnexoec" -p "dckr_pat_EY2hedAJR91hc9Vn9Hx6-qVpgg0"
 
 export SHORT_COMMIT=$(git log -1 --pretty="%H" | cut -b -8)

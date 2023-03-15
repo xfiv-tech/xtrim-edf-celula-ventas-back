@@ -8,7 +8,6 @@ class CityModel(BaseModel):
     type: int
     region: int
     status: int
-    catalog: int
     manager_region: int
     manager_city: int
 
@@ -113,3 +112,13 @@ class LeaderSellerModel(BaseModel):
 
 class ListLeaderSeller(BaseModel):
     data: List[LeaderSellerModel]
+
+
+class ManagerModel(BaseModel):
+    id: Optional[int]
+    manager: int
+    type: int
+
+
+class ListManager(BaseModel):
+    data: List[ManagerModel]

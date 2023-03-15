@@ -14,12 +14,24 @@ employee = APIRouter(route_class=ValidacionToken)
 
 #EMPLOYEES
 @employee.get("/empleados", tags=["Empleados"])
-async def get_employes():
+async def get_employees():
     try:
         query = Employee.select()
         data = db.execute(query).fetchall()
         return {
             "list": "Empleados",
+            "data": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+@employee.post("/empleado_id", tags=["Empleados"])
+async def get_employee(search: SearchList):
+    try:
+        query = Employee.select().where(Employee.c.id == search.id)
+        data = db.execute(query).fetchall()
+        return {
+            "list": "Empleado",
             "data": data
         }
     except Exception as e:

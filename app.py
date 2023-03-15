@@ -11,10 +11,12 @@ from routes.channel import channel
 from routes.registroCelula import registro
 from routes.catalogs import catalogs
 from routes.salesCell.employee import employee
+from routes.salesCell.manager import manager
 from routes.salesCell.city import city
 from routes.salesCell.seller import seller
 from routes.salesCell.distributor import distributor
 from routes.salesCell.leaderSeller import leaderSeller
+from routes.salesCell.administrator import administrator
 
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -64,10 +66,12 @@ app.include_router(login)
 #app.include_router(registro)
 app.include_router(catalogs)
 app.include_router(employee)
+app.include_router(manager)
 app.include_router(city)
 app.include_router(seller)
 app.include_router(distributor)
 app.include_router(leaderSeller)
+app.include_router(administrator)
 
 # from fastapi import FastAPI
 
