@@ -19,6 +19,7 @@ login = APIRouter()
 @login.post("/login", tags=["login"])
 async def ValidacionLogin(datos: Login):
     try:
+        print("datos",datos)
         query = Usuarios.select().where(Usuarios.c.email == datos.email)
         user = db.execute(query).first()
         decr_data = checkPassword(datos.password, user[5])
