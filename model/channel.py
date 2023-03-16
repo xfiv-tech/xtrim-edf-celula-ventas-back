@@ -94,6 +94,14 @@ RegistrarGerente = Table("registrar_gerente", meta,
     Column("nombre_gerente", String(255))
 )
 
+RegistrarGerenteRegional = Table("registrar_gerente_regional", meta,
+    Column("id_gerente_regional", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_estado", Integer, ForeignKey("estados.id_estado")),
+    Column("nombre_gerente", String(255))
+)
+
 RegistrarGerenteCiudad = Table("registrar_gerente_ciudad", meta,
     Column("id_gerente_ciudad", Integer, primary_key=True, autoincrement=True),
     Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),

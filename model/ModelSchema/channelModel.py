@@ -131,6 +131,13 @@ class ArrayRegistrarAdministradorModel(BaseModel):
     data: List[RegistrarAdministradorModel]
 
 
+
+class RegistrarGerenteRegionalModel(BaseModel):
+    id_gerente_regional: Optional[int]
+    id_channel: int
+    id_ciudad: int
+    id_estado: int
+    nombre_gerente: str
 class RegistrarGerenteModel(BaseModel):
     id_gerente: Optional[int]
     id_channel: int

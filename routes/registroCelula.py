@@ -1,8 +1,8 @@
 from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, Request, HTTPException
-from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarJefeModel, RegistrarVendedorModel
+from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.ModelSchema.menu import MenuBase, SubmenuBase
-from model.channel import RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
+from model.channel import RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
 from model.menu import Menus
 from model.submenu import Submenus
 from database.db import db
@@ -379,6 +379,71 @@ async def delete_gerente(id_gerente: int):
             "error": str(e)
         }
     
+
+#Registrar gerente regional
+@registro.get("/listar_gerente_regional", tags=["Gerente Regional"])
+async def get_gerente_ciudad():
+    try:
+        query = RegistrarGerenteRegional.select()
+        data = db.execute(query).fetchall()
+        return {
+            "code": "0",
+            "data": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@registro.post("/crear_gerente_regional", tags=["Gerente Regional"])
+async def post_gerente_ciudad(request: RegistrarGerenteRegionalModel):
+    try:
+        query = RegistrarGerenteRegional.insert().values(
+            id_gerente_ciudad=request.id_gerente_ciudad,
+            id_channel=request.id_channel,
+            id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            nombre_gerente_ciudad=request.nombre_gerente_ciudad
+        )
+        data = db.execute(query)
+        return {
+            "code": "0",
+            "data": data
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.put("/actualizar_gerente_regional", tags=["Gerente Regional"])
+async def put_gerente_ciudad(request: RegistrarGerenteRegionalModel):
+    try:
+        db.execute(RegistrarGerenteRegional.update().values(
+            id_channel=request.id_channel,
+            id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            nombre_gerente_ciudad=request.nombre_gerente_regional
+        ).where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional))
+        return {
+            "code": "0"
+        }
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+@registro.delete("/eliminar_gerente_regional", tags=["Gerente Regional"])
+async def delete_gerente_ciudad(id_gerente_regional: int):
+    try:
+        query = RegistrarGerenteRegional.delete().where(RegistrarGerenteRegional.id_gerente_regional == id_gerente_regional)
+        data = db.execute(query)
+        return {
+            "code": "0",
+            "data": data
+        }
+    except Exception as e:
+        return {
+            "error": str(e)
+        }  
+
+
 
 #Registrar gerente de ciudad
 @registro.get("/listar_gerente_ciudad", tags=["Gerente de Ciudad"])
