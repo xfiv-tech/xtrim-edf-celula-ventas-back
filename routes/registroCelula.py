@@ -11,7 +11,7 @@ from sqlalchemy import join, select, and_, or_, func, desc, asc
 
 registro = APIRouter(route_class=ValidacionToken)
 
-
+#lista de vendedores
 @registro.get("/listar_registro", tags=["Vendedor"])
 async def get_registro():
     try:
