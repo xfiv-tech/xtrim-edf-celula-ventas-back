@@ -10,8 +10,6 @@ from model.administrador import Administradores
 from middleware.validacionToken import ValidacionToken
 
 from starlette.status import HTTP_204_NO_CONTENT
-
-
 channel = APIRouter(route_class=ValidacionToken)
 
 

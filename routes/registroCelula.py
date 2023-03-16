@@ -161,9 +161,10 @@ async def put_distribuidor(request: RegistrarDistribuidorModel):
             fecha_ingreso=request.fecha_ingreso,
             fecha_salida=request.fecha_salida
         ).where(RegistrarDistribuidor.c.id_registrar_distribuidor == request.id_registrar_distribuidor)
+        data = db.execute(query)
         return {
             "code": "0",
-            "data": query
+            "data": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -401,6 +402,7 @@ async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
         data = db.execute(query)
         return {
             "code": "0",
+            "data": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -409,14 +411,15 @@ async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
 @registro.put("/actualizar_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
     try:
-        db.execute(RegistrarGerenteCiudad.update().values(
+        data = db.execute(RegistrarGerenteCiudad.update().values(
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
             nombre_gerente_ciudad=request.nombre_gerente_ciudad
         ).where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad))
         return {
-            "code": "0"
+            "code": "0",
+            "data": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -426,9 +429,10 @@ async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
 async def delete_gerente_ciudad(id_gerente_ciudad: int):
     try:
         query = RegistrarGerenteCiudad.delete().where(RegistrarGerenteCiudad.id_gerente_ciudad == id_gerente_ciudad)
-        db.execute(query)
+        data = db.execute(query)
         return {
             "code": "0",
+            "data": data
         }
     except Exception as e:
         return {
@@ -461,9 +465,10 @@ async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
             id_estado=request.id_estado,
             nombre_admin_proyectos=request.nombre_admin_proyectos
         )
-        db.execute(query)
+        data = db.execute(query)
         return {
             "code": "0",
+            "data": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -472,14 +477,15 @@ async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
 @registro.put("/actualizar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
     try:
-        db.execute(RegistrarAdminProyectos.update().values(
+        data = db.execute(RegistrarAdminProyectos.update().values(
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
             nombre_admin_proyectos=request.nombre_admin_proyectos
         ).where(RegistrarAdminProyectos.c.id_admin_proyectos == request.id_admin_proyectos))
         return {
-            "code": "0"
+            "code": "0",
+            "data": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -489,9 +495,10 @@ async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
 async def delete_administrador_proyectos(id_admin_proyectos: int):
     try:
         query = RegistrarAdminProyectos.delete().where(RegistrarAdminProyectos.id_admin_proyectos == id_admin_proyectos)
-        db.execute(query)
+        data = db.execute(query)
         return {
             "code": "0",
+            "data": data
         }
     except Exception as e:
         return {
