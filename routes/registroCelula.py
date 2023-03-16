@@ -1,13 +1,16 @@
+import statistics
 from middleware.validacionToken import ValidacionToken
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Response
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.ModelSchema.menu import MenuBase, SubmenuBase
-from model.channel import RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
+from model.channel import Channel, Ciudad, Estados, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
 from model.menu import Menus
 from model.submenu import Submenus
 from database.db import db
+from sqlalchemy import join, select, and_, or_, func, desc, asc
 
 registro = APIRouter(route_class=ValidacionToken)
+
 
 @registro.get("/listar_registro", tags=["Vendedor"])
 async def get_registro():
@@ -60,6 +63,7 @@ async def post_registro(request: RegistrarVendedorModel):
     except Exception as e:
         return {"error": str(e)}
 
+
 @registro.put("/actualizar_registro", tags=["Vendedor"])
 async def put_registro(request: RegistrarVendedorModel):
     try:
@@ -98,11 +102,12 @@ async def put_registro(request: RegistrarVendedorModel):
     except Exception as e:
         return {"error": str(e)}
 
-    
+
 @registro.delete("/eliminar_registro", tags=["Vendedor"])
 async def delete_registro(id_registrar_vendedor: int):
     try:
-        query = RegistrarVendedor.delete().where(RegistrarVendedor.id_registrar_vendedor == id_registrar_vendedor)
+        query = RegistrarVendedor.delete().where(
+            RegistrarVendedor.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query)
         return {
             "code": "0",
@@ -112,7 +117,7 @@ async def delete_registro(id_registrar_vendedor: int):
         return {
             "error": str(e)
         }
-    
+
 
 # Reistrar Distribuidor
 @registro.get("/listar_distribuidor", tags=["Distribuidor"])
@@ -126,6 +131,7 @@ async def get_distribuidor():
         }
     except Exception as e:
         return {"error": str(e)}
+
 
 @registro.post("/crear_distribuidor", tags=["Distribuidor"])
 async def post_distribuidor(request: RegistrarDistribuidorModel):
@@ -147,7 +153,7 @@ async def post_distribuidor(request: RegistrarDistribuidorModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_distribuidor", tags=["Distribuidor"])
 async def put_distribuidor(request: RegistrarDistribuidorModel):
@@ -169,12 +175,13 @@ async def put_distribuidor(request: RegistrarDistribuidorModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_distribuidor", tags=["Distribuidor"])
 async def delete_distribuidor(id_registrar_distribuidor: int):
     try:
-        query = RegistrarDistribuidor.delete().where(RegistrarDistribuidor.id_registrar_distribuidor == id_registrar_distribuidor)
+        query = RegistrarDistribuidor.delete().where(
+            RegistrarDistribuidor.id_registrar_distribuidor == id_registrar_distribuidor)
         data = db.execute(query)
         return {
             "code": "0",
@@ -186,7 +193,7 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
         }
 
 
-#Registrar Jefe de Venta
+# Registrar Jefe de Venta
 @registro.get("/listar_jefe_venta", tags=["Jefe de Venta"])
 async def get_jefe_venta():
     try:
@@ -216,7 +223,7 @@ async def post_jefe_venta(request: RegistrarJefeModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_jefe_venta", tags=["Jefe de Venta"])
 async def put_jefe_venta(request: RegistrarJefeModel):
@@ -234,12 +241,13 @@ async def put_jefe_venta(request: RegistrarJefeModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_jefe_venta", tags=["Jefe de Venta"])
 async def delete_jefe_venta(id_jefe_venta: int):
     try:
-        query = RegistroJefeVentas.delete().where(RegistroJefeVentas.id_jefe_venta == id_jefe_venta)
+        query = RegistroJefeVentas.delete().where(
+            RegistroJefeVentas.id_jefe_venta == id_jefe_venta)
         data = db.execute(query)
         return {
             "code": "0",
@@ -249,8 +257,10 @@ async def delete_jefe_venta(id_jefe_venta: int):
         return {
             "error": str(e)
         }
-    
-#Registrar Administrador
+
+# Registrar Administrador
+
+
 @registro.get("/listar_administrador", tags=["Administrador"])
 async def get_administrador():
     try:
@@ -281,7 +291,7 @@ async def post_administrador(request: RegistrarAdministradorModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_administrador", tags=["Administrador"])
 async def put_administrador(request: RegistrarAdministradorModel):
@@ -299,12 +309,13 @@ async def put_administrador(request: RegistrarAdministradorModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_administrador", tags=["Administrador"])
 async def delete_administrador(id_administrador: int):
     try:
-        query = RegistroAdministrador.delete().where(RegistroAdministrador.id_administrador == id_administrador)
+        query = RegistroAdministrador.delete().where(
+            RegistroAdministrador.id_administrador == id_administrador)
         data = db.execute(query)
         return {
             "code": "0",
@@ -314,20 +325,36 @@ async def delete_administrador(id_administrador: int):
         return {
             "error": str(e)
         }
-    
-#Registrar gerente
+
+# Registrar gerente
+
+
 @registro.get("/listar_gerente", tags=["Gerente"])
 async def get_gerente():
     try:
-        query = RegistrarGerente.select()
+        query = RegistrarGerente.join(Channel, Channel.c.id_channel == RegistrarGerente.c.id_channel).join(
+            Ciudad, Ciudad.c.id_ciudad == RegistrarGerente.c.id_ciudad).join(
+            Estados, Estados.c.id_estado == RegistrarGerente.c.id_estado).select().with_only_columns([
+                RegistrarGerente.c.id_gerente,
+                Channel.c.channel,
+                Ciudad.c.ciudad,
+                Estados.c.estado,
+                RegistrarGerente.c.nombre_gerente
+            ])
+        
+        print("Query", query)
         data = db.execute(query).fetchall()
+        print("Data",data)
         return {
             "code": "0",
             "data": data
         }
     except Exception as e:
-        return {"error": str(e)}
-    
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e.args)
+        })
+
 
 @registro.post("/crear_gerente", tags=["Gerente"])
 async def post_gerente(request: RegistrarGerenteModel):
@@ -346,7 +373,7 @@ async def post_gerente(request: RegistrarGerenteModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_gerente", tags=["Gerente"])
 async def put_gerente(request: RegistrarGerenteModel):
@@ -363,12 +390,13 @@ async def put_gerente(request: RegistrarGerenteModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_gerente", tags=["Gerente"])
 async def delete_gerente(id_gerente: int):
     try:
-        query = RegistrarGerente.delete().where(RegistrarGerente.id_gerente == id_gerente)
+        query = RegistrarGerente.delete().where(
+            RegistrarGerente.id_gerente == id_gerente)
         data = db.execute(query)
         return {
             "code": "0",
@@ -378,9 +406,9 @@ async def delete_gerente(id_gerente: int):
         return {
             "error": str(e)
         }
-    
 
-#Registrar gerente regional
+
+# Registrar gerente regional
 @registro.get("/listar_gerente_regional", tags=["Gerente Regional"])
 async def get_gerente_ciudad():
     try:
@@ -411,7 +439,7 @@ async def post_gerente_ciudad(request: RegistrarGerenteRegionalModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_gerente_regional", tags=["Gerente Regional"])
 async def put_gerente_ciudad(request: RegistrarGerenteRegionalModel):
@@ -427,12 +455,13 @@ async def put_gerente_ciudad(request: RegistrarGerenteRegionalModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_gerente_regional", tags=["Gerente Regional"])
 async def delete_gerente_ciudad(id_gerente_regional: int):
     try:
-        query = RegistrarGerenteRegional.delete().where(RegistrarGerenteRegional.id_gerente_regional == id_gerente_regional)
+        query = RegistrarGerenteRegional.delete().where(
+            RegistrarGerenteRegional.id_gerente_regional == id_gerente_regional)
         data = db.execute(query)
         return {
             "code": "0",
@@ -441,11 +470,10 @@ async def delete_gerente_ciudad(id_gerente_regional: int):
     except Exception as e:
         return {
             "error": str(e)
-        }  
+        }
 
 
-
-#Registrar gerente de ciudad
+# Registrar gerente de ciudad
 @registro.get("/listar_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def get_gerente_ciudad():
     try:
@@ -457,7 +485,8 @@ async def get_gerente_ciudad():
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
+
 @registro.post("/crear_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
     try:
@@ -475,7 +504,7 @@ async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
@@ -491,12 +520,13 @@ async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def delete_gerente_ciudad(id_gerente_ciudad: int):
     try:
-        query = RegistrarGerenteCiudad.delete().where(RegistrarGerenteCiudad.id_gerente_ciudad == id_gerente_ciudad)
+        query = RegistrarGerenteCiudad.delete().where(
+            RegistrarGerenteCiudad.id_gerente_ciudad == id_gerente_ciudad)
         data = db.execute(query)
         return {
             "code": "0",
@@ -506,9 +536,9 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
         return {
             "error": str(e)
         }
-    
 
-#Administrador de proyectos
+
+# Administrador de proyectos
 
 @registro.get("/listar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def get_administrador_proyectos():
@@ -521,7 +551,7 @@ async def get_administrador_proyectos():
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.post("/crear_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
@@ -540,7 +570,7 @@ async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.put("/actualizar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
@@ -557,12 +587,13 @@ async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
         }
     except Exception as e:
         return {"error": str(e)}
-    
+
 
 @registro.delete("/eliminar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def delete_administrador_proyectos(id_admin_proyectos: int):
     try:
-        query = RegistrarAdminProyectos.delete().where(RegistrarAdminProyectos.id_admin_proyectos == id_admin_proyectos)
+        query = RegistrarAdminProyectos.delete().where(
+            RegistrarAdminProyectos.id_admin_proyectos == id_admin_proyectos)
         data = db.execute(query)
         return {
             "code": "0",
