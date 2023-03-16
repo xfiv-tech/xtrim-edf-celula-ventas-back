@@ -16,7 +16,7 @@ class ValidacionToken(APIRoute):
         def get_route_handler(self):
             original_route = super().get_route_handler()
             async def verify_token_middleware(request:Request):
-                if DEV == "DEV": return await original_route(request)
+                if DEV == "PRO": return await original_route(request)
                 channel = request.headers['channel']
                 if channel == "Web":
                     beare = request.headers['Authorization']
