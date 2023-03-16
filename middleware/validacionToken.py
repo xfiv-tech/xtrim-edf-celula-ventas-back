@@ -6,6 +6,7 @@ import os
 load_dotenv()
 
 Token = os.getenv("Xtrim_token")
+DEV = os.getenv("DEV")
 
 
 class ValidacionToken(APIRoute):
@@ -13,6 +14,7 @@ class ValidacionToken(APIRoute):
         def get_route_handler(self):
             original_route = super().get_route_handler()
             async def verify_token_middleware(request:Request):
+                if DEV == "DEV": return await original_route(request)
                 token = request.headers['xtrim-api-key']
                 print(token)
                 validado = validarToken(token)

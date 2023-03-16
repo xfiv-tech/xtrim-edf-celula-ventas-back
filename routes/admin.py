@@ -111,6 +111,12 @@ async def delete_administrador(adminID: AdministradorList):
 async def get_administrador_cedula(admCedula: AdminCedula):
     try:
         data = db.execute(Administradores.select().where(Administradores.c.cedula == admCedula.cedula)).first()
+        if data == None:
+            return {
+                "code": "0",
+                "data": data,
+                "message": "Administrador no encontrado"
+            }
         dataE = db.execute(Edicifios.select().where(Edicifios.c.idAdministrador == data.id)).fetchall()
         edificios = []
         for i in dataE:
