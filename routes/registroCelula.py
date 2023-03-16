@@ -341,6 +341,7 @@ async def get_gerente():
                 Channel.c.channel,
                 Ciudad.c.ciudad,
                 Ciudad.c.id_ciudad,
+                Ciudad.c.region,
                 Estados.c.estado,
                 Estados.c.id_estado,
                 RegistrarGerente.c.nombre_gerente
