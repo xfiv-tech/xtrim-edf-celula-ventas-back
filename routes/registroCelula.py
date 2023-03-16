@@ -346,7 +346,6 @@ async def get_gerente():
                 Estados.c.id_estado,
                 RegistrarGerente.c.nombre_gerente
             ])
-        
         print("Query", query)
         data = db.execute(query).fetchall()
         print("Data",data)
@@ -417,7 +416,19 @@ async def delete_gerente(id_gerente: int):
 @registro.get("/listar_gerente_regional", tags=["Gerente Regional"])
 async def get_gerente_ciudad():
     try:
-        query = RegistrarGerenteRegional.select()
+        query = RegistrarGerenteRegional.join(Channel, Channel.c.id_channel == RegistrarGerenteRegional.c.id_channel).join(
+            Ciudad, Ciudad.c.id_ciudad == RegistrarGerenteRegional.c.id_ciudad).join(
+            Estados, Estados.c.id_estado == RegistrarGerenteRegional.c.id_estado).select().with_only_columns([
+                RegistrarGerenteRegional.c.id_gerente_regional,
+                Channel.c.id_channel,
+                Channel.c.channel,
+                Ciudad.c.ciudad,
+                Ciudad.c.id_ciudad,
+                Ciudad.c.region,
+                Estados.c.estado,
+                Estados.c.id_estado,
+                RegistrarGerenteRegional.c.nombre_gerente
+            ])
         data = db.execute(query).fetchall()
         return {
             "code": "0",
@@ -482,7 +493,19 @@ async def delete_gerente_ciudad(id_gerente_regional: int):
 @registro.get("/listar_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def get_gerente_ciudad():
     try:
-        query = RegistrarGerenteCiudad.select()
+        query = RegistrarGerenteCiudad.join(Channel, Channel.c.id_channel == RegistrarGerenteCiudad.c.id_channel).join(
+            Ciudad, Ciudad.c.id_ciudad == RegistrarGerenteCiudad.c.id_ciudad).join(
+            Estados, Estados.c.id_estado == RegistrarGerenteCiudad.c.id_estado).select().with_only_columns([
+                RegistrarGerenteCiudad.c.id_gerente_ciudad,
+                Channel.c.id_channel,
+                Channel.c.channel,
+                Ciudad.c.ciudad,
+                Ciudad.c.id_ciudad,
+                Ciudad.c.region,
+                Estados.c.estado,
+                Estados.c.id_estado,
+                RegistrarGerenteCiudad.c.nombre_gerente_ciudad
+            ])
         data = db.execute(query).fetchall()
         return {
             "code": "0",
