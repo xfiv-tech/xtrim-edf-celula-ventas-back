@@ -12,7 +12,7 @@ database = os.getenv("database")
 DATABASE_CONNECTION_URI = f'mysql+pymysql://{user}:{password}@{host}/{database}'
 print(DATABASE_CONNECTION_URI)
 
-engine = create_engine(DATABASE_CONNECTION_URI, echo=True)
+engine = create_engine(DATABASE_CONNECTION_URI, echo=False)
 
 
 meta = MetaData()
