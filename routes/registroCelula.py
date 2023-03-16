@@ -123,12 +123,10 @@ async def delete_registro(id_registrar_vendedor: int):
 @registro.get("/listar_distribuidor", tags=["Distribuidor"])
 async def get_distribuidor():
     try:
-        query = RegistrarDistribuidor.join(Channel, Channel.c.id_channel == RegistrarDistribuidor.c.id_channel).join(
+        query = RegistrarDistribuidor.join(
             Ciudad, Ciudad.c.id_ciudad == RegistrarDistribuidor.c.id_ciudad).join(
             Estados, Estados.c.id_estado == RegistrarDistribuidor.c.id_estado).select().with_only_columns([
                 RegistrarDistribuidor.c.id_registrar_distribuidor,
-                Channel.c.id_channel,
-                Channel.c.channel,
                 Ciudad.c.ciudad,
                 Ciudad.c.id_ciudad,
                 Ciudad.c.region,
