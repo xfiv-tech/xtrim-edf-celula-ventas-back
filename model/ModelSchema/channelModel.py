@@ -114,6 +114,8 @@ class RegistrarJefeModel(BaseModel):
     id_jefe_venta: Optional[int]
     id_channel: int
     id_ciudad: int
+    id_estado: Optional[int] = None
+    id_regente: Optional[int] = None
     nombre_jefe: str
 
 class ArrayRegistrarJefeModel(BaseModel):

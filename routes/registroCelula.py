@@ -223,8 +223,8 @@ async def get_jefe_venta():
                 Ciudad.c.ciudad,
                 Ciudad.c.id_ciudad,
                 Ciudad.c.region,
-                Estados.c.estado,
-                Estados.c.id_estado,
+                RegistroJefeVentas.c.id_estado,
+                RegistroJefeVentas.c.id_gerente,
                 RegistroJefeVentas.c.nombre_jefe
             ])        
         data = db.execute(query).fetchall()
