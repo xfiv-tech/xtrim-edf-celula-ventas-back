@@ -260,7 +260,9 @@ async def put_jefe_venta(request: RegistrarJefeModel):
             id_jefe_venta=request.id_jefe_venta,
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
-            nombre_jefe=request.nombre_jefe
+            id_estado=request.id_estado,
+            id_gerente=request.id_gerente,
+            nombre_jefe=request.nombre_jefe,
         ).where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta)
         data = db.execute(query)
         return {
