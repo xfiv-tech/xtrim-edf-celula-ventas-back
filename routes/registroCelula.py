@@ -484,7 +484,7 @@ async def post_gerente_ciudad(request: RegistrarGerenteRegionalModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente_ciudad=request.nombre_gerente_ciudad
+            nombre_gerente_ciudad=request.nombre_gerente
         )
         data = db.execute(query)
         return {
