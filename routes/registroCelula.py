@@ -536,7 +536,7 @@ async def put_gerente_ciudad(request: RegistrarGerenteRegionalModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente_ciudad=request.nombre_gerente
+            nombre_gerente=request.nombre_gerente
         ).where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional))
         return {
             "code": "0"
