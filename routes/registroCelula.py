@@ -239,7 +239,8 @@ async def get_jefe_venta():
                     "region": i.region,
                     "id_estado": i.id_estado,
                     "id_gerente": i.id_gerente,
-                    "nombre_jefe": "Sin Asignar"
+                    "nombre_jefe": i.nombre_jefe,
+                    "nombre_gerente": "Sin asignar"
                 })
             else:
                 query = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i[7]).with_only_columns([
@@ -255,7 +256,8 @@ async def get_jefe_venta():
                     "region": i.region,
                     "id_estado": i.id_estado,
                     "id_gerente": i.id_gerente,
-                    "nombre_jefe": data.nombre_gerente
+                    "nombre_jefe": i.nombre_jefe,
+                    "nombre_gerente": data.nombre_gerente
                 })
 
         return {
