@@ -4,7 +4,7 @@ from database.db import meta, db
 
 Usuarios = Table("usuarios", meta, 
     Column("id", Integer, primary_key=True, autoincrement=True), 
-    Column("id_roles", Integer, ForeignKey("roles.id_roles")),
+    # Column("id_roles", Integer, ForeignKey("roles.id_roles")),
     Column("nombreCompleto", String(255)), 
     Column("email", String(255), unique=True), 
     Column("usuario", String(255)), 

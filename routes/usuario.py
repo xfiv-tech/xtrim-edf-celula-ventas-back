@@ -127,21 +127,22 @@ async def delete_usuario(usuarioID: UsuarioList):
 @usuarios.post("/login", tags=["login"])
 async def login(datos: Login):
     try:
+        print(datos)
         query = Usuarios.select().where(Usuarios.c.email == datos.email)
         user = db.execute(query).first()
         print(user)
-        decr_data = checkPassword(datos.password, user[5])
+        decr_data = checkPassword(datos.password, user.password)
         
         if len(user) > 0:
             if decr_data == True:
                 true_user = {
-                    "id": user[0],
-                    "id_rol": user[1],
-                    "nombreCompleto": user[2],
-                    "email": user[3],
-                    "usuario": user[4],
-                    "data_creatd": user[6],
-                    "data_update": user[7],
+                    "id": user.id,
+                    # "id_rol": user[1],
+                    "nombreCompleto": user.nombreCompleto,
+                    "email": user.email,
+                    "usuario": user.usuario,
+                    "data_creatd": user.data_creatd,
+                    "data_update": user.data_update,
                 }
                 return {
                     "code": "0",
@@ -163,5 +164,5 @@ async def login(datos: Login):
     except Exception as e:
         raise HTTPException(status_code=400, detail={
             "code": "-1",
-            "data": str(e)
+            "data": str(e.args)
         })
