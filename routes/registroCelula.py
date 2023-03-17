@@ -227,9 +227,40 @@ async def get_jefe_venta():
                 RegistroJefeVentas.c.nombre_jefe
             ])        
         data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            if i[7] == None:
+                infoData.append({
+                    "id_jefe_venta": i.id_jefe_venta,
+                    "id_channel": i.id_channel,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "id_ciudad": i.id_ciudad,
+                    "region": i.region,
+                    "id_estado": i.id_estado,
+                    "id_gerente": i.id_gerente,
+                    "nombre_jefe": "Sin Asignar"
+                })
+            else:
+                query = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i[7]).with_only_columns([
+                    RegistrarGerente.c.nombre_gerente
+                ])
+                data = db.execute(query).first()
+                infoData.append({
+                    "id_jefe_venta": i.id_jefe_venta,
+                    "id_channel": i.id_channel,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "id_ciudad": i.id_ciudad,
+                    "region": i.region,
+                    "id_estado": i.id_estado,
+                    "id_gerente": i.id_gerente,
+                    "nombre_jefe": data.nombre_gerente
+                })
+
         return {
             "code": "0",
-            "data": data
+            "data": infoData
         }
     except Exception as e:
         return {"error": str(e)}
@@ -242,6 +273,8 @@ async def post_jefe_venta(request: RegistrarJefeModel):
             id_jefe_venta=request.id_jefe_venta,
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
+            id_estado=request.id_estado,
+            id_gerente=request.id_gerente,
             nombre_jefe=request.nombre_jefe
         )
         data = db.execute(query)
