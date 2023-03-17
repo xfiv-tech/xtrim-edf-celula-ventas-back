@@ -480,11 +480,11 @@ async def get_gerente_ciudad():
 async def post_gerente_ciudad(request: RegistrarGerenteRegionalModel):
     try:
         query = RegistrarGerenteRegional.insert().values(
-            id_gerente_ciudad=request.id_gerente_ciudad,
+            id_gerente_regional=request.id_gerente_regional,
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente_ciudad=request.nombre_gerente
+            nombre_gerente=request.nombre_gerente
         )
         data = db.execute(query)
         return {
