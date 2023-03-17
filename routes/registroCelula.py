@@ -215,8 +215,7 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
 async def get_jefe_venta():
     try:
         query = RegistroJefeVentas.join(Channel, Channel.c.id_channel == RegistroJefeVentas.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistroJefeVentas.c.id_ciudad).join(
-            Estados, Estados.c.id_estado == RegistroJefeVentas.c.id_estado).select().with_only_columns([
+            Ciudad, Ciudad.c.id_ciudad == RegistroJefeVentas.c.id_ciudad).select().with_only_columns([
                 RegistroJefeVentas.c.id_jefe_venta,
                 Channel.c.id_channel,
                 Channel.c.channel,
