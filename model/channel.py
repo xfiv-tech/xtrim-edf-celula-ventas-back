@@ -62,7 +62,7 @@ RegistrarVendedor = Table("registrar_vendedor", meta,
     Column("id_gerente", Integer, nullable=True),
     Column("id_gerente_ciudad", Integer, nullable=True),
     Column("id_jefe_venta", Integer, nullable=True),
-    Column("id_lider_peloton", Integer, nullable=True),
+    Column("id_lider_peloton", Integer, nullable=True, default=0),
     Column("ciudad_gestion", String(255)),
     Column("lider_check", Boolean, default=False),
     Column("meta_volumen", Integer, default=0),
@@ -135,10 +135,6 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("nombre_administrador", String(255))
 )
-
-
-
-
 
 
 meta.create_all(db)
