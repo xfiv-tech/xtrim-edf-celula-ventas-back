@@ -65,7 +65,6 @@ class ArrayModalidadModel(BaseModel):
 class RegistrarVendedorModel(BaseModel):
     id_registrar_vendedor: Optional[int]
     id_channel: int
-    id_mando: int
     id_ciudad: int
     id_operador: int
     id_sistema_operativo: int
@@ -77,19 +76,20 @@ class RegistrarVendedorModel(BaseModel):
     usuario_equifax: str
     nombre_vendedor: str
     fecha_ingreso: str
-    id_gerente: int
-    id_gerente_ciudad: Optional[int]
-    id_jefe_venta: Optional[int]
-    id_lider_peloton: Optional[int]
+    id_gerente: Optional[int] = 0
+    id_gerente_regional: Optional[int] = 0
+    id_gerente_ciudad: Optional[int] = 0
+    id_jefe_venta: Optional[int] = 0
+    id_lider_peloton: Optional[int] = 0
     ciudad_gestion: str
-    lider_check: Optional[bool]
-    meta_volumen: Optional[int]
-    meta_dolares: Optional[float]
-    fecha_salida: Optional[str]
+    lider_check: Optional[bool] = False
+    meta_volumen: Optional[int] = 0
+    meta_dolares: Optional[float] = 0.0
+    fecha_salida: Optional[str] = None
     sector_residencia: str
     email: str
     cedula: str
-    dias_inactivo: Optional[int]
+    dias_inactivo: Optional[int] = 0
 
 class ArrayRegistrarVendedorModel(BaseModel):
     data: List[RegistrarVendedorModel]

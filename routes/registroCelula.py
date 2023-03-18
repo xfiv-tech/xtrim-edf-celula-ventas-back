@@ -3,11 +3,8 @@ from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, Request, HTTPException, Response
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.ModelSchema.menu import MenuBase, SubmenuBase
-from model.channel import Channel, Ciudad, Estados, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas
-from model.menu import Menus
-from model.submenu import Submenus
+from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from database.db import db
-from sqlalchemy import join, select, and_, or_, func, desc, asc
 
 registro = APIRouter(route_class=ValidacionToken)
 
@@ -15,7 +12,55 @@ registro = APIRouter(route_class=ValidacionToken)
 @registro.get("/listar_registro", tags=["Vendedor"])
 async def get_registro():
     try:
-        query = RegistrarVendedor.select()
+        query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+            Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+            Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+            Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+            SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+            Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).join(
+            RegistrarGerenteRegional, RegistrarGerente.c.id_gerente_regional == RegistrarGerenteRegional.c.id_gerente_regional).join(
+            RegistrarGerenteCiudad, RegistrarGerente.c.id_gerente_ciudad == RegistrarGerenteCiudad.c.id_gerente_ciudad).join(
+            RegistroJefeVentas, RegistrarGerente.c.id_jefe_venta == RegistroJefeVentas.c.id_jefe_venta).c.select().c.with_only_columns([
+            RegistrarVendedor.c.id_vendedor,
+            RegistrarVendedor.c.id_channel,
+            Channel.c.channel,
+            RegistrarVendedor.c.id_ciudad,
+            Ciudad.c.id_ciudad,
+            Ciudad.c.ciudad,
+            Ciudad.c.region,
+            RegistrarVendedor.c.id_estado,
+            Estados.c.estado,
+            RegistrarVendedor.c.id_operador,
+            Operador.c.operador,
+            RegistrarVendedor.c.id_sistema_operativo,
+            SistemaOperativo.c.sistema_operativo,
+            RegistrarVendedor.c.id_genero,
+            Genero.c.genero,
+            RegistrarVendedor.c.id_modalidad,
+            Modalidad.c.modalidad,
+            RegistrarVendedor.c.id_gerente,
+            RegistrarGerente.c.nombre_gerente,
+            RegistrarGerente.c.id_gerente_regional,
+            RegistrarGerenteRegional.c.nombre_gerente_regional,
+            RegistrarGerente.c.id_gerente_ciudad,
+            RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+            RegistrarGerente.c.id_jefe_venta,
+            RegistroJefeVentas.c.nombre_jefe,
+            RegistrarVendedor.c.cedula,
+            RegistrarVendedor.c.codigo_vendedor,
+            RegistrarVendedor.c.usuario_equifax,
+            RegistrarVendedor.c.nombre_vendedor,
+            RegistrarVendedor.c.fecha_ingreso,
+            RegistrarVendedor.c.fecha_salida,
+            RegistrarVendedor.c.sector_residencia,
+            RegistrarVendedor.c.ciudad_gestion,
+            RegistrarVendedor.c.lider_check,
+            RegistrarVendedor.c.meta_volumen,
+            RegistrarVendedor.c.meta_dolares,
+            RegistrarVendedor.c.email,
+            RegistrarVendedor.c.dias_inactivo
+            ])         
         data = db.execute(query).fetchall()
         return {
             "code": "0",
@@ -30,7 +75,6 @@ async def post_registro(request: RegistrarVendedorModel):
     try:
         query = RegistrarVendedor.insert().values(
             id_channel=request.id_channel,
-            id_mando=request.id_mando,
             id_ciudad=request.id_ciudad,
             id_operador=request.id_operador,
             id_sistema_operativo=request.id_sistema_operativo,
@@ -43,6 +87,7 @@ async def post_registro(request: RegistrarVendedorModel):
             nombre_vendedor=request.nombre_vendedor,
             fecha_ingreso=request.fecha_ingreso,
             id_gerente=request.id_gerente,
+            id_gerente_regional=request.id_gerente_regional,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
             id_lider_peloton=request.id_lider_peloton,
@@ -139,7 +184,6 @@ async def get_distribuidor():
                 RegistrarDistribuidor.c.fecha_ingreso,
                 RegistrarDistribuidor.c.fecha_salida
             ])       
-        query = RegistrarDistribuidor.select()
         data = db.execute(query).fetchall()
         return {
             "code": "0",
