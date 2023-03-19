@@ -1,12 +1,22 @@
-import statistics
+from function.excelReporte import get_tdd_excel_workbook
 from middleware.validacionToken import ValidacionToken
-from fastapi import APIRouter, Request, HTTPException, Response
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
-from model.ModelSchema.menu import MenuBase, SubmenuBase
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from database.db import db
 
 registro = APIRouter(route_class=ValidacionToken)
+
+#lista de vendedores
+@registro.get("/reporte_ftp", tags=["Vendedor"])
+async def get_reporteFtp():
+    await get_tdd_excel_workbook()
+    return FileResponse(
+        path='reporte_tdd.xlsx',
+        media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+        filename='reporte_tdd.xlsx',
+    )
 
 #lista de vendedores
 @registro.get("/listar_registro", tags=["Vendedor"])
@@ -34,11 +44,13 @@ async def get_registro():
             RegistrarVendedor.c.id_ciudad,
             RegistrarVendedor.c.id_registrar_vendedor,
             RegistrarVendedor.c.id_channel,
-            RegistrarVendedor.c.id_gerente,
+            # RegistrarVendedor.c.id_gerente,
+            # RegistrarVendedor.c.ciudad_gestion,
             RegistrarVendedor.c.id_gerente_regional,
             RegistrarVendedor.c.id_gerente_ciudad,
             RegistrarVendedor.c.id_jefe_venta,
             RegistrarVendedor.c.cedula,
+            RegistrarVendedor.c.telefono,
             RegistrarVendedor.c.id_operador,
             RegistrarVendedor.c.codigo_vendedor,
             RegistrarVendedor.c.usuario_equifax,
@@ -46,7 +58,6 @@ async def get_registro():
             RegistrarVendedor.c.fecha_ingreso,
             RegistrarVendedor.c.fecha_salida,
             RegistrarVendedor.c.sector_residencia,
-            RegistrarVendedor.c.ciudad_gestion,
             RegistrarVendedor.c.lider_check,
             RegistrarVendedor.c.meta_volumen,
             RegistrarVendedor.c.meta_dolares,
@@ -56,7 +67,11 @@ async def get_registro():
         data = db.execute(query).fetchall()
         dataInfo = []
         for i in data:
-            if i.id_gerente == None and i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+            if  i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente,
+                # ])
+                # data_gerente = db.execute(query_gerente).fetchone()
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -67,64 +82,20 @@ async def get_registro():
                     "id_genero": i.id_genero,
                     "id_modalidad": i.id_modalidad,
                     "cedula": i.cedula,
+                    "telefono": i.telefono,
                     "codigo_vendedor": i.codigo_vendedor,
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_gerente": None ,
-                    "nombre_gerente": "Sin Gerente",
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": None,
                     "nombre_gerente_regional": "Sin Gerente Regional",
                     "id_gerente_ciudad": None,
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
-                    "ciudad_gestion": i.ciudad_gestion,
-                    "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
-                    "fecha_salida": i.fecha_salida,
-                    "sector_residencia": i.sector_residencia,
-                    "email": i.email,
-                    "dias_inactivo": i.dias_inactivo,
-                    "channel": i.channel,
-                    "ciudad": i.ciudad,
-                    "region": i.region,
-                    "estado": i.estado,
-                    "operador": i.operador,
-                    "genero": i.genero,
-                    "modalidad": i.modalidad,
-                    "sistema_operativo": i.sistema_operativo
-                })
-            
-            elif i.id_gerente != None and i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
-                query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
-                    RegistrarGerente.c.nombre_gerente,
-                ])
-                data_gerente = db.execute(query_gerente).fetchone()
-                dataInfo.append({
-                    "id_registrar_vendedor": i.id_registrar_vendedor,
-                    "id_channel": i.id_channel,
-                    "id_ciudad": i.id_ciudad,
-                    "id_operador": i.id_operador,
-                    "id_sistema_operativo": i.id_sistema_operativo,
-                    "id_estado": i.id_estado,
-                    "id_genero": i.id_genero,
-                    "id_modalidad": i.id_modalidad,
-                    "cedula": i.cedula,
-                    "codigo_vendedor": i.codigo_vendedor,
-                    "usuario_equifax": i.usuario_equifax,
-                    "nombre_vendedor": i.nombre_vendedor,
-                    "fecha_ingreso": i.fecha_ingreso,
-                    "id_gerente": data_gerente.id_gerente,
-                    "nombre_gerente": data_gerente.nombre_gerente,
-                    "id_gerente_regional": None,
-                    "nombre_gerente_regional": "Sin Gerente Regional",
-                    "id_gerente_ciudad": None,
-                    "nombre_gerente_ciudad": "Sin Gerente Ciudad",
-                    "id_jefe_venta": None,
-                    "nombre_jefe_venta": "Sin Jefe de Ventas",
-                    "ciudad_gestion": i.ciudad_gestion,
+                    # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen": i.meta_volumen,
                     "meta_dolares": i.meta_dolares,
@@ -142,11 +113,11 @@ async def get_registro():
                     "sistema_operativo": i.sistema_operativo
                 })
 
-            elif i.id_gerente != None and i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
-                query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
-                    RegistrarGerente.c.nombre_gerente,
-                ])
-                data_gerente = db.execute(query_gerente).fetchone()
+            elif i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente,
+                # ])
+                # data_gerente = db.execute(query_gerente).fetchone()
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente_regional,
                 ])
@@ -161,19 +132,20 @@ async def get_registro():
                     "id_genero": i.id_genero,
                     "id_modalidad": i.id_modalidad,
                     "cedula": i.cedula,
+                    "telefono": i.telefono,
                     "codigo_vendedor": i.codigo_vendedor,
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_gerente": data_gerente.id_gerente,
-                    "nombre_gerente": data_gerente.nombre_gerente,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": data_gerente_regional.id_gerente_regional,
                     "nombre_gerente_regional": data_gerente_regional.nombre_gerente_regional,
                     "id_gerente_ciudad": None,
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
-                    "ciudad_gestion": i.ciudad_gestion,
+                    # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen": i.meta_volumen,
                     "meta_dolares": i.meta_dolares,
@@ -191,11 +163,11 @@ async def get_registro():
                     "sistema_operativo": i.sistema_operativo
                 })
 
-            elif i.id_gerente != None and i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
-                query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
-                    RegistrarGerente.c.nombre_gerente,
-                ])
-                data_gerente = db.execute(query_gerente).fetchone()
+            elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente,
+                # ])
+                # data_gerente = db.execute(query_gerente).fetchone()
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente_regional,
                 ])
@@ -214,19 +186,20 @@ async def get_registro():
                     "id_genero": i.id_genero,
                     "id_modalidad": i.id_modalidad,
                     "cedula": i.cedula,
+                    "telefono": i.telefono,
                     "codigo_vendedor": i.codigo_vendedor,
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_gerente": data_gerente.id_gerente,
-                    "nombre_gerente": data_gerente.nombre_gerente,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": data_gerente_regional.id_gerente_regional,
                     "nombre_gerente_regional": data_gerente_regional.nombre_gerente_regional,
                     "id_gerente_ciudad": data_gerente_ciudad.id_gerente_ciudad,
                     "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
-                    "ciudad_gestion": i.ciudad_gestion,
+                    # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen": i.meta_volumen,
                     "meta_dolares": i.meta_dolares,
@@ -244,11 +217,11 @@ async def get_registro():
                     "sistema_operativo": i.sistema_operativo
                 })
 
-            elif i.id_gerente != None and i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
-                query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
-                    RegistrarGerente.c.nombre_gerente,
-                ])
-                data_gerente = db.execute(query_gerente).fetchone()
+            elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente,
+                # ])
+                # data_gerente = db.execute(query_gerente).fetchone()
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente_regional,
                 ])
@@ -271,19 +244,20 @@ async def get_registro():
                     "id_genero": i.id_genero,
                     "id_modalidad": i.id_modalidad,
                     "cedula": i.cedula,
+                    "telefono": i.telefono,
                     "codigo_vendedor": i.codigo_vendedor,
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_gerente": data_gerente.id_gerente,
-                    "nombre_gerente": data_gerente.nombre_gerente,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": data_gerente_regional.id_gerente_regional,
                     "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
                     "id_gerente_ciudad": data_gerente_ciudad.id_gerente_ciudad,
                     "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
                     "id_jefe_venta": data_jefe_venta.id_jefe_venta,
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe_venta,
-                    "ciudad_gestion": i.ciudad_gestion,
+                    # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen": i.meta_volumen,
                     "meta_dolares": i.meta_dolares,
@@ -311,19 +285,20 @@ async def get_registro():
                     "id_genero": i.id_genero,
                     "id_modalidad": i.id_modalidad,
                     "cedula": i.cedula,
+                    "telefono": i.telefono,
                     "codigo_vendedor": i.codigo_vendedor,
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_gerente": None,
-                    "nombre_gerente": "Sin Gerente",
+                    # "id_gerente": None,
+                    # "nombre_gerente": "Sin Gerente",
                     "id_gerente_regional": None,
                     "nombre_gerente_regional": "Sin Gerente Regional",
                     "id_gerente_ciudad": None,
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
-                    "ciudad_gestion": i.ciudad_gestion,
+                    # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen": i.meta_volumen,
                     "meta_dolares": i.meta_dolares,
@@ -365,12 +340,12 @@ async def post_registro(request: RegistrarVendedorModel):
             usuario_equifax=request.usuario_equifax,
             nombre_vendedor=request.nombre_vendedor,
             fecha_ingreso=request.fecha_ingreso,
-            id_gerente=request.id_gerente,
+            # id_gerente=request.id_gerente,
             id_gerente_regional=request.id_gerente_regional,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
             id_lider_peloton=request.id_lider_peloton,
-            ciudad_gestion=request.ciudad_gestion,
+            # ciudad_gestion=request.ciudad_gestion,
             lider_check=request.lider_check,
             meta_volumen=request.meta_volumen,
             meta_dolares=request.meta_dolares,
@@ -401,15 +376,16 @@ async def put_registro(request: RegistrarVendedorModel):
             id_genero=request.id_genero,
             id_modalidad=request.id_modalidad,
             cedula=request.cedula,
+            telefono=request.telefono,
             codigo_vendedor=request.codigo_vendedor,
             usuario_equifax=request.usuario_equifax,
             nombre_vendedor=request.nombre_vendedor,
             fecha_ingreso=request.fecha_ingreso,
-            id_gerente=request.id_gerente,
+            # id_gerente=request.id_gerente,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
             id_lider_peloton=request.id_lider_peloton,
-            ciudad_gestion=request.ciudad_gestion,
+            # ciudad_gestion=request.ciudad_gestion,
             lider_check=request.lider_check,
             meta_volumen=request.meta_volumen,
             meta_dolares=request.meta_dolares,

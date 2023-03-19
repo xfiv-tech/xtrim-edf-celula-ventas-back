@@ -76,12 +76,12 @@ class RegistrarVendedorModel(BaseModel):
     usuario_equifax: str
     nombre_vendedor: str
     fecha_ingreso: str
-    id_gerente: Optional[int] = None
+    # id_gerente: Optional[int] = None
     id_gerente_regional: Optional[int] = None
     id_gerente_ciudad: Optional[int] = None
     id_jefe_venta: Optional[int] = None
     id_lider_peloton: Optional[int] = None
-    ciudad_gestion: str
+    # ciudad_gestion: str
     lider_check: Optional[bool] = False
     meta_volumen: Optional[int] = 0
     meta_dolares: Optional[float] = 0.0
