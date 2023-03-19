@@ -72,6 +72,7 @@ class RegistrarVendedorModel(BaseModel):
     id_genero: int
     id_modalidad: int
     cedula: str
+    telefono: str
     codigo_vendedor: str
     usuario_equifax: str
     nombre_vendedor: str
