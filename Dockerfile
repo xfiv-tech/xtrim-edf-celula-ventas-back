@@ -1,12 +1,24 @@
-FROM python:3.10.4-alpine
+FROM python:3.10-slim
 
-WORKDIR /xtrim
+ENV PYTHONUNBUFFERED True
 
-COPY . /xtrim/
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY . ./
 
-COPY ./requirements.txt /xtrim/requirements.txt
+# Install core dependencies.
+RUN apt-get update && apt-get install -y libpq-dev build-essential
 
-RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt
+# Install production dependencies.
+RUN pip install --no-cache-dir -r requirements.txt
+
+# WORKDIR /xtrim
+
+# COPY . /xtrim/
+
+# COPY ./requirements.txt /xtrim/requirements.txt
+
+# RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt
 
 RUN ls -la
 
@@ -17,3 +29,13 @@ LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>
 
 CMD python -m uvicorn index:app --host 0.0.0.0 --port 3003
 # CMD [ "uvicorn", "index:app", "--port", "3003" ]
+
+
+
+# Allow statements and log messages to immediately appear in the Knative logs
+
+
+# Copy local code to the container image.
+
+
+
