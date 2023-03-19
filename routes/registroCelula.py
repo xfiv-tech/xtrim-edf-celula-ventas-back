@@ -336,6 +336,7 @@ async def post_registro(request: RegistrarVendedorModel):
             id_genero=request.id_genero,
             id_modalidad=request.id_modalidad,
             cedula=request.cedula,
+            telefono=request.telefono,
             codigo_vendedor=request.codigo_vendedor,
             usuario_equifax=request.usuario_equifax,
             nombre_vendedor=request.nombre_vendedor,
@@ -406,8 +407,7 @@ async def put_registro(request: RegistrarVendedorModel):
 @registro.delete("/eliminar_registro", tags=["Vendedor"])
 async def delete_registro(id_registrar_vendedor: int):
     try:
-        query = RegistrarVendedor.delete().where(
-            RegistrarVendedor.id_registrar_vendedor == id_registrar_vendedor)
+        query = RegistrarVendedor.delete().where(RegistrarVendedor.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query)
         return {
             "code": "0",
