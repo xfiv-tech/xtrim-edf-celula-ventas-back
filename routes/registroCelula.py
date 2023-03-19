@@ -76,10 +76,6 @@ async def get_registro():
         dataInfo = []
         for i in data:
             if  i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
-                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
-                #     RegistrarGerente.c.nombre_gerente,
-                # ])
-                # data_gerente = db.execute(query_gerente).fetchone()
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -127,7 +123,7 @@ async def get_registro():
                 # ])
                 # data_gerente = db.execute(query_gerente).fetchone()
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
-                    RegistrarGerenteRegional.c.nombre_gerente_regional,
+                    RegistrarGerenteRegional.c.nombre_gerente,
                 ])
                 data_gerente_regional = db.execute(query_gerente_regional).fetchone()
                 dataInfo.append({
@@ -147,8 +143,8 @@ async def get_registro():
                     "fecha_ingreso": i.fecha_ingreso,
                     # "id_gerente": data_gerente.id_gerente,
                     # "nombre_gerente": data_gerente.nombre_gerente,
-                    "id_gerente_regional": data_gerente_regional.id_gerente_regional,
-                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente_regional,
+                    "id_gerente_regional": i.id_gerente_regional,
+                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
                     "id_gerente_ciudad": None,
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
@@ -177,7 +173,7 @@ async def get_registro():
                 # ])
                 # data_gerente = db.execute(query_gerente).fetchone()
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
-                    RegistrarGerenteRegional.c.nombre_gerente_regional,
+                    RegistrarGerenteRegional.c.nombre_gerente,
                 ])
                 data_gerente_regional = db.execute(query_gerente_regional).fetchone()
                 query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
@@ -201,9 +197,9 @@ async def get_registro():
                     "fecha_ingreso": i.fecha_ingreso,
                     # "id_gerente": data_gerente.id_gerente,
                     # "nombre_gerente": data_gerente.nombre_gerente,
-                    "id_gerente_regional": data_gerente_regional.id_gerente_regional,
-                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente_regional,
-                    "id_gerente_ciudad": data_gerente_ciudad.id_gerente_ciudad,
+                    "id_gerente_regional": i.id_gerente_regional,
+                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
+                    "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
@@ -226,20 +222,22 @@ async def get_registro():
                 })
 
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
+                print("entro aca", i.id_gerente_regional, i.id_gerente_ciudad, i.id_jefe_venta)
                 # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
                 #     RegistrarGerente.c.nombre_gerente,
                 # ])
                 # data_gerente = db.execute(query_gerente).fetchone()
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
-                    RegistrarGerenteRegional.c.nombre_gerente_regional,
+                    RegistrarGerenteRegional.c.nombre_gerente,
                 ])
                 data_gerente_regional = db.execute(query_gerente_regional).fetchone()
+                print("data_gerente_regional", data_gerente_regional.nombre_gerente)
                 query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
                     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
                 ])
                 data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
                 query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
-                    RegistroJefeVentas.c.nombre_jefe_venta,
+                    RegistroJefeVentas.c.nombre_jefe,
                 ])
                 data_jefe_venta = db.execute(query_jefe_venta).fetchone()
                 dataInfo.append({
@@ -259,12 +257,12 @@ async def get_registro():
                     "fecha_ingreso": i.fecha_ingreso,
                     # "id_gerente": data_gerente.id_gerente,
                     # "nombre_gerente": data_gerente.nombre_gerente,
-                    "id_gerente_regional": data_gerente_regional.id_gerente_regional,
+                    "id_gerente_regional": i.id_gerente_regional,
                     "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
-                    "id_gerente_ciudad": data_gerente_ciudad.id_gerente_ciudad,
+                    "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
-                    "id_jefe_venta": data_jefe_venta.id_jefe_venta,
-                    "nombre_jefe_venta": data_jefe_venta.nombre_jefe_venta,
+                    "id_jefe_venta": i.id_jefe_venta,
+                    "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen": i.meta_volumen,
