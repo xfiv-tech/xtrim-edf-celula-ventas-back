@@ -28,9 +28,9 @@ class ReporteExcel(BaseModel):
     id_jefe_venta: int = None
     nombre_jefe_venta: str 
     # ciudad_gestion: str 
-    lider_check: bool 
+    lider_check: bool = False
     meta_volumen: int 
-    meta_dolares: float 
+    meta_dolares: float = None
     fecha_salida: str 
     sector_residencia: str 
     email: str 
@@ -357,7 +357,7 @@ async def get_tdd_excel_workbook():
         ])
         for i in data:
             k = ReporteExcel(**i)
-            # print(k)
+            print(k)
             ws.append([
                 k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.lider_check, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
             ])
