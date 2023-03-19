@@ -5,19 +5,27 @@ from fastapi.responses import FileResponse
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from database.db import db
+from datetime import datetime
+# moment.need()
 
 registro = APIRouter(route_class=ValidacionToken)
 
 #lista de vendedores
 @registro.get("/reporte_ftp", tags=["Vendedor"])
 async def get_reporteFtp():
-    await get_tdd_excel_workbook()
-    return FileResponse(
-        path='reporte_tdd.xlsx',
-        media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-        filename='reporte_tdd.xlsx',
-    )
-
+    try:
+        resultado = await get_tdd_excel_workbook()
+        if resultado["success"]:
+            return FileResponse(
+                path='reporte_tdd.xlsx',
+                media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+                filename='reporte_tdd.xlsx',
+            )
+        else:
+            raise HTTPException(status_code=400, detail=resultado["error"])
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e.args))
+    
 #lista de vendedores
 @registro.get("/listar_registro", tags=["Vendedor"])
 async def get_registro():
@@ -340,7 +348,7 @@ async def post_registro(request: RegistrarVendedorModel):
             codigo_vendedor=request.codigo_vendedor,
             usuario_equifax=request.usuario_equifax,
             nombre_vendedor=request.nombre_vendedor,
-            fecha_ingreso=request.fecha_ingreso,
+            fecha_ingreso=datetime.strptime(request.fecha_ingreso, '%d/%m/%y'),
             # id_gerente=request.id_gerente,
             id_gerente_regional=request.id_gerente_regional,
             id_gerente_ciudad=request.id_gerente_ciudad,
@@ -350,7 +358,7 @@ async def post_registro(request: RegistrarVendedorModel):
             lider_check=request.lider_check,
             meta_volumen=request.meta_volumen,
             meta_dolares=request.meta_dolares,
-            fecha_salida=request.fecha_salida,
+            fecha_salida=datetime.strptime(request.fecha_salida, '%d/%m/%y'),
             sector_residencia=request.sector_residencia,
             email=request.email,
             dias_inactivo=request.dias_inactivo
@@ -381,7 +389,7 @@ async def put_registro(request: RegistrarVendedorModel):
             codigo_vendedor=request.codigo_vendedor,
             usuario_equifax=request.usuario_equifax,
             nombre_vendedor=request.nombre_vendedor,
-            fecha_ingreso=request.fecha_ingreso,
+            fecha_ingreso=datetime.strptime(request.fecha_ingreso, '%d/%m/%y'),
             # id_gerente=request.id_gerente,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
@@ -390,7 +398,7 @@ async def put_registro(request: RegistrarVendedorModel):
             lider_check=request.lider_check,
             meta_volumen=request.meta_volumen,
             meta_dolares=request.meta_dolares,
-            fecha_salida=request.fecha_salida,
+            fecha_salida=datetime.strptime(request.fecha_salida, '%d/%m/%y'),
             sector_residencia=request.sector_residencia,
             email=request.email,
             dias_inactivo=request.dias_inactivo

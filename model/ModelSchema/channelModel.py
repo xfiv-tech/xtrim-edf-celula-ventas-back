@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
+
 class ChanellModel(BaseModel):
     id_channel: Optional[int]
     channel: str

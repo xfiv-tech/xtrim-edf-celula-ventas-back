@@ -27,7 +27,7 @@ class ReporteExcel(BaseModel):
     nombre_gerente_ciudad: str 
     id_jefe_venta: int = None
     nombre_jefe_venta: str 
-    ciudad_gestion: str 
+    # ciudad_gestion: str 
     lider_check: bool 
     meta_volumen: int 
     meta_dolares: float 
@@ -347,19 +347,28 @@ async def get_infoReporte():
         return {"error": str(e)}
     
 async def get_tdd_excel_workbook(): 
-    wb = Workbook() 
-    ws = wb.active 
-    data = await get_infoReporte()
+    try:
+        wb = Workbook() 
+        ws = wb.active 
+        data = await get_infoReporte()
 
-    ws.append([
-        "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE","CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR","META VOLUMEN","META DOLARES","USUARIO EQUIFAX","CEDULA"
-    ])
-    for i in data:
-        k = ReporteExcel(**i)
-        # print(k)
         ws.append([
-            k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.lider_check, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
+            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE","CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR","META VOLUMEN","META DOLARES","USUARIO EQUIFAX","CEDULA"
         ])
-    wb.save("reporte_tdd.xlsx")
-
+        for i in data:
+            k = ReporteExcel(**i)
+            # print(k)
+            ws.append([
+                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.lider_check, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
+            ])
+        wb.save("reporte_tdd.xlsx")
+        return {
+            "success": True,
+        }
+    except Exception as e:
+        print("get excel",e.args)
+        return {
+            "error": str(e.args),
+            "success": False,
+        }
     

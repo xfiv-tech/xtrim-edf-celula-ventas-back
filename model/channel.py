@@ -33,7 +33,6 @@ Modalidad = Table("modalidad", meta,
     Column("modalidad", String(255), unique=True),
 )
 
-
 Channel = Table("channel", meta,
     Column("id_channel", Integer, primary_key=True, autoincrement=True),
     Column("channel", String(255), unique=True),
@@ -136,6 +135,5 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("nombre_administrador", String(255))
 )
-
 
 meta.create_all(db)
