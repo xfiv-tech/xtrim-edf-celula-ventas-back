@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
-
+#id_gerente_ciudad
 #Gerente regional
 class AsigancionCiudadGreginal(BaseModel):
     id_asignacion_ciudades: Optional[int] = None

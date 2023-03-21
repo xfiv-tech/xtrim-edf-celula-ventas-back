@@ -1,7 +1,11 @@
 
 
 
-from model.ModelSchema.asignacionModel import ArrayAsigancionCanalAdmin, ArrayAsigancionCanalDistribuidor, ArrayAsigancionCanalGciudad, ArrayAsigancionCanalGregional, ArrayAsigancionCanalJefe, ArrayAsigancionCiudadAdmin, ArrayAsigancionCiudadDistribuidor, ArrayAsigancionCiudadGciudad, ArrayAsigancionCiudadGreginal, ArrayAsigancionCiudadJefe
+from model.ModelSchema.asignacionModel import ArrayAsigancionCanalAdmin, ArrayAsigancionCanalDistribuidor
+from model.ModelSchema.asignacionModel import ArrayAsigancionCanalGciudad, ArrayAsigancionCanalGregional
+from model.ModelSchema.asignacionModel import ArrayAsigancionCanalJefe, ArrayAsigancionCiudadAdmin
+from model.ModelSchema.asignacionModel import ArrayAsigancionCiudadDistribuidor, ArrayAsigancionCiudadGciudad
+from model.ModelSchema.asignacionModel import ArrayAsigancionCiudadGreginal, ArrayAsigancionCiudadJefe
 from model.channel import Channel, Ciudad, asignacion_ciudades_gerente_regional, asiganacion_canal_gerente_regional
 from model.channel import asignacion_ciudades_gerente_ciudad,asignacion_canal_gerente_ciudad
 from model.channel import asignacion_ciudades_jefe_ventas,asignacion_canal_jefe_ventas
@@ -14,7 +18,7 @@ from database.db import db
 async def AsignarCiudadesGRegional(data: ArrayAsigancionCiudadGreginal):
     try:
         for i in data.data:
-            if i.id_gerente_ciudad != 0 and i.id_ciudad != 0:
+            if i.id_gerente_regional != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_gerente_regional.insert().values(
                     id_ciudad=i.id_ciudad,
                     id_gerente_regional=i.id_gerente_regional,
