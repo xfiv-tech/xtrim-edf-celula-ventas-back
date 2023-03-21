@@ -367,10 +367,10 @@ async def post_registro(request: RegistrarVendedorModel):
             email=request.email,
             dias_inactivo=request.dias_inactivo
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -473,10 +473,10 @@ async def post_distribuidor(request: RegistrarDistribuidorModel):
             fecha_ingreso=request.fecha_ingreso,
             fecha_salida=request.fecha_salida
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -590,10 +590,10 @@ async def post_jefe_venta(request: RegistrarJefeModel):
             id_gerente=request.id_gerente,
             nombre_jefe=request.nombre_jefe
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -670,10 +670,10 @@ async def post_administrador(request: RegistrarAdministradorModel):
             id_estado=request.id_estado,
             nombre_administrador=request.nombre_administrador
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -749,10 +749,10 @@ async def post_gerente_ciudad(request: RegistrarGerenteRegionalModel):
             id_estado=request.id_estado,
             nombre_gerente=request.nombre_gerente
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -826,10 +826,10 @@ async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
             id_estado=request.id_estado,
             nombre_gerente_ciudad=request.nombre_gerente_ciudad
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
@@ -904,10 +904,10 @@ async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
             id_estado=request.id_estado,
             nombre_admin_proyectos=request.nombre_admin_proyectos
         )
-        data = db.execute(query).inserted_primary_key
+        data = db.execute(query).lastrowid
         return {
             "code": "0",
-            "data": data
+            "id_insert": data
         }
     except Exception as e:
         return {"error": str(e)}
