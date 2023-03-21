@@ -554,10 +554,10 @@ async def get_jefe_venta():
                     "nombre_gerente": "Sin asignar"
                 })
             else:
-                query = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i[7]).with_only_columns([
-                    RegistrarGerente.c.nombre_gerente
-                ])
-                data = db.execute(query).first()
+                # query = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i[7]).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente
+                # ])
+                # data = db.execute(query).first()
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
                     "id_channel": i.id_channel,
@@ -568,7 +568,7 @@ async def get_jefe_venta():
                     "id_estado": i.id_estado,
                     "id_gerente": i.id_gerente,
                     "nombre_jefe": i.nombre_jefe,
-                    "nombre_gerente": data.nombre_gerente
+                    "nombre_gerente": ""
                 })
 
         return {

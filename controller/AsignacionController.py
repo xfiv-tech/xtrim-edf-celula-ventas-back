@@ -81,7 +81,16 @@ async def ListarCanalesGRciudad(id_gerente_regional: int):
         query = asiganacion_canal_gerente_regional.join(Channel, asiganacion_canal_gerente_regional.c.id_channel == Channel.c.id_channel).select().where(
             asiganacion_canal_gerente_regional.c.id_gerente_regional == id_gerente_regional
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_canal": i.id_asignacion_canal,
+                "id_channel": i.id_channel,
+                "id_gerente_regional": i.id_gerente_regional,
+                "channel": i.channel
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -115,7 +124,16 @@ async def ListarCiudadesGCiudad(id_gerente_ciudad: int):
         query = asignacion_ciudades_gerente_ciudad.join(Channel, asignacion_ciudades_gerente_ciudad.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
             asignacion_ciudades_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_ciudades_gerente_ciudad": i.id_asignacion_ciudades_gerente_ciudad,
+                "id_ciudad": i.id_ciudad,
+                "id_gerente_ciudad": i.id_gerente_ciudad,
+                "ciudad": i.ciudad
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -147,7 +165,16 @@ async def ListarCanalesGCiudad(id_gerente_ciudad: int):
         query = asignacion_canal_gerente_ciudad.join(Channel, asignacion_canal_gerente_ciudad.c.id_channel == Channel.c.id_channel).select().where(
             asignacion_canal_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_canal_gerente_ciudad": i.id_asignacion_canal_gerente_ciudad,
+                "id_channel": i.id_channel,
+                "id_gerente_ciudad": i.id_gerente_ciudad,
+                "channel": i.channel
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -180,7 +207,15 @@ async def ListarCiudadesJVCiudad(id_jefe_venta: int):
         query = asignacion_ciudades_jefe_ventas.join(Ciudad, asignacion_ciudades_jefe_ventas.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
             asignacion_ciudades_jefe_ventas.c.id_jefe_venta == id_jefe_venta
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_ciudades_jefe_ventas": i.id_asignacion_ciudades_jefe_ventas,
+                "id_ciudad": i.id_ciudad,
+                "id_jefe_venta": i.id_jefe_venta,
+                "ciudad": i.ciudad
+            })
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -212,7 +247,16 @@ async def ListarCanalesJVCiudad(id_jefe_venta: int):
         query = asignacion_canal_jefe_ventas.join(Channel, asignacion_canal_jefe_ventas.c.id_channel == Channel.c.id_channel).select().where(
             asignacion_canal_jefe_ventas.c.id_jefe_venta == id_jefe_venta
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_canal_jefe_ventas": i.id_asignacion_canal_jefe_ventas,
+                "id_channel": i.id_channel,
+                "id_jefe_venta": i.id_jefe_venta,
+                "channel": i.channel
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
