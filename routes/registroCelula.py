@@ -1,3 +1,4 @@
+from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
 from function.excelReporte import get_tdd_excel_workbook
 from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
@@ -452,9 +453,28 @@ async def get_distribuidor():
                 RegistrarDistribuidor.c.fecha_salida
             ])       
         data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_registrar_distribuidor": i.id_registrar_distribuidor,
+                "id_ciudad": i.id_ciudad,
+                "ciudad": i.ciudad,
+                "region": i.region,
+                "id_estado": i.id_estado,
+                "estado": i.estado,
+                "nombre_distribuidor": i.nombre_distribuidor,
+                "responsable": i.responsable,
+                "telefono": i.telefono,
+                "email": i.email,
+                "fecha_ingreso": i.fecha_ingreso,
+                "fecha_salida": i.fecha_salida,
+                "ciudades_asignadas": await ListarCiudadesDistribuidor(i.id_registrar_distribuidor),
+                "canales_asignados": await ListarCanalesDistribuidor(i.id_registrar_distribuidor)
+            })
+
         return {
             "code": "0",
-            "data": data
+            "data": infoData
         }
     except Exception as e:
         return {"error": str(e)}
@@ -551,7 +571,9 @@ async def get_jefe_venta():
                     "id_estado": i.id_estado,
                     "id_gerente": i.id_gerente,
                     "nombre_jefe": i.nombre_jefe,
-                    "nombre_gerente": "Sin asignar"
+                    "nombre_gerente": "Sin asignar",
+                    "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
+                    "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
             else:
                 # query = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i[7]).with_only_columns([
@@ -568,7 +590,9 @@ async def get_jefe_venta():
                     "id_estado": i.id_estado,
                     "id_gerente": i.id_gerente,
                     "nombre_jefe": i.nombre_jefe,
-                    "nombre_gerente": ""
+                    "nombre_gerente": "",
+                    "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
+                    "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
 
         return {
@@ -652,6 +676,22 @@ async def get_administrador():
                 RegistroAdministrador.c.nombre_administrador
             ])           
         data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_administrador": i.id_administrador,
+                "id_channel": i.id_channel,
+                "channel": i.channel,
+                "ciudad": i.ciudad,
+                "id_ciudad": i.id_ciudad,
+                "region": i.region,
+                "id_estado": i.id_estado,
+                "estado": i.estado,
+                "nombre_administrador": i.nombre_administrador,
+                "ciudades_asignadas": await ListarCiudadesAPCiudad(i.id_administrador),
+                "canales_asignados": await ListarCanalesAPCiudad(i.id_administrador)
+
+            })
         return {
             "code": "0",
             "data": data
@@ -731,9 +771,25 @@ async def get_gerente_ciudad():
                 RegistrarGerenteRegional.c.nombre_gerente
             ])
         data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_gerente_regional": i.id_gerente_regional,
+                "id_channel": i.id_channel,
+                "channel": i.channel,
+                "ciudad": i.ciudad,
+                "id_ciudad": i.id_ciudad,
+                "region": i.region,
+                "id_estado": i.id_estado,
+                "estado": i.estado,
+                "nombre_gerente": i.nombre_gerente,
+                "ciudades_asignadas": await ListarCiudadesGRegional(i.id_gerente_regional),
+                "canales_asignados": await ListarCanalesGRciudad(i.id_gerente_regional)
+
+            })
         return {
             "code": "0",
-            "data": data
+            "data": infoData
         }
     except Exception as e:
         return {"error": str(e)}
@@ -808,6 +864,21 @@ async def get_gerente_ciudad():
                 RegistrarGerenteCiudad.c.nombre_gerente_ciudad
             ])
         data = db.execute(query).fetchall()
+        infodata = []
+        for i in data:
+            infodata.append({
+                "id_gerente_ciudad": i.id_gerente_ciudad,
+                "id_channel": i.id_channel,
+                "channel": i.channel,
+                "ciudad": i.ciudad,
+                "id_ciudad": i.id_ciudad,
+                "region": i.region,
+                "id_estado": i.id_estado,
+                "estado": i.estado,
+                "nombre_gerente_ciudad": i.nombre_gerente_ciudad,
+                "ciudades_asignadas": await ListarCiudadesGCiudad(i.id_gerente_ciudad),
+                "canales_asignados": await ListarCanalesGCiudad(i.id_gerente_ciudad)
+            })
         return {
             "code": "0",
             "data": data
@@ -868,7 +939,6 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
 
 
 # Administrador de proyectos
-
 @registro.get("/listar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def get_administrador_proyectos():
     try:

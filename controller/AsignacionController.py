@@ -290,7 +290,16 @@ async def ListarCiudadesAPCiudad(id_admin_proyecto: int):
         query = asignacion_ciudades_admin_proyectos.join(Ciudad, asignacion_ciudades_admin_proyectos.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
             asignacion_ciudades_admin_proyectos.c.id_admin_proyecto == id_admin_proyecto
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_ciudades_admin_proyectos": i.id_asignacion_ciudades_admin_proyectos,
+                "id_ciudad": i.id_ciudad,
+                "id_admin_proyecto": i.id_admin_proyecto,
+                "ciudad": i.ciudad
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -322,7 +331,16 @@ async def ListarCanalesAPCiudad(id_admin_proyecto: int):
         query = asignacion_canal_admin_proyectos.join(Channel, asignacion_canal_admin_proyectos.c.id_channel == Channel.c.id_channel).select().where(
             asignacion_canal_admin_proyectos.c.id_admin_proyecto == id_admin_proyecto
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_canal_admin_proyectos": i.id_asignacion_canal_admin_proyectos,
+                "id_channel": i.id_channel,
+                "id_admin_proyecto": i.id_admin_proyecto,
+                "channel": i.channel
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -350,12 +368,21 @@ async def AsignarCiudadesDistribuidor(data: ArrayAsigancionCiudadDistribuidor):
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
-async def ListarCiudadesDistribuidor(id_distribuidor: int):
+async def ListarCiudadesDistribuidor(id_registrar_distribuidor: int):
     try:
         query = asignacion_ciudades_distribuidor.join(Ciudad, asignacion_ciudades_distribuidor.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
-            asignacion_ciudades_distribuidor.c.id_distribuidor == id_distribuidor
+            asignacion_ciudades_distribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_ciudades_distribuidor": i.id_asignacion_ciudades_distribuidor,
+                "id_ciudad": i.id_ciudad,
+                "id_distribuidor": i.id_registrar_distribuidor,
+                "ciudad": i.ciudad
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
@@ -382,12 +409,21 @@ async def AsignarCanalesDistribuidor(data: ArrayAsigancionCanalDistribuidor):
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
-async def ListarCanalesDistribuidor(id_distribuidor: int):
+async def ListarCanalesDistribuidor(id_registrar_distribuidor: int):
     try:
         query = asignacion_canal_distribuidor.join(Channel, asignacion_canal_distribuidor.c.id_channel == Channel.c.id_channel).select().where(
-            asignacion_canal_distribuidor.c.id_distribuidor == id_distribuidor
+            asignacion_canal_distribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor
         )
-        return db.execute(query).fetchall()
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_canal_distribuidor": i.id_asignacion_canal_distribuidor,
+                "id_channel": i.id_channel,
+                "id_distribuidor": i.id_registrar_distribuidor,
+                "channel": i.channel
+            })
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
