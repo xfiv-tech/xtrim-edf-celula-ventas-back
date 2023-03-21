@@ -1,7 +1,6 @@
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey, Float
 from database.db import meta, db
 
-
 Ciudad = Table("ciudad", meta,
     Column("id_ciudad", Integer, primary_key=True, autoincrement=True),
     Column("ciudad", String(255), unique=True),
@@ -43,6 +42,7 @@ Mando = Table("mando", meta,
     Column("mando", String(255), unique=True),
 )
 
+#registro de gerente regional
 RegistrarVendedor = Table("registrar_vendedor", meta,
     Column("id_registrar_vendedor", Integer, primary_key=True, autoincrement=True),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
@@ -86,14 +86,6 @@ RegistrarDistribuidor = Table("registrar_distribuidor", meta,
     Column("fecha_salida", String(255), nullable=True)
 )
 
-RegistrarGerente = Table("registrar_gerente", meta,
-    Column("id_gerente", Integer, primary_key=True, autoincrement=True),
-    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
-    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
-    Column("id_estado", Integer, ForeignKey("estados.id_estado")),
-    Column("nombre_gerente", String(255))
-)
-
 RegistrarGerenteRegional = Table("registrar_gerente_regional", meta,
     Column("id_gerente_regional", Integer, primary_key=True, autoincrement=True),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
@@ -118,7 +110,6 @@ RegistrarAdminProyectos = Table("registrar_admin_proyectos", meta,
     Column("nombre_admin_proyectos", String(255))
 )
 
-
 RegistroJefeVentas = Table("registro_jefe_ventas", meta,
     Column("id_jefe_venta", Integer, primary_key=True, autoincrement=True),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
@@ -134,6 +125,67 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("nombre_administrador", String(255))
+)
+
+# Tablas de asignacion de gerentes a ciudades y canales
+
+asignacion_ciudades_gerente_regional = Table("asignacion_ciudades_gerente_regional", meta,
+    Column("id_asignacion_ciudades", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_gerente_regional", Integer, ForeignKey("registrar_gerente_regional.id_gerente_regional"))
+)
+asiganacion_canal_gerente_regional = Table("asignacion_canal_gerente_regional", meta,
+    Column("id_asignacion_canal", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_gerente_regional", Integer, ForeignKey("registrar_gerente_regional.id_gerente_regional"))
+)
+
+asignacion_ciudades_gerente_ciudad = Table("asignacion_ciudades_gerente_ciudad", meta,
+    Column("id_asignacion_ciudades_gerente_ciudad", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_gerente_ciudad", Integer, ForeignKey("registrar_gerente_ciudad.id_gerente_ciudad"))
+)
+
+asignacion_canal_gerente_ciudad = Table("asignacion_canal_gerente_ciudad", meta,
+    Column("id_asignacion_canal_gerente_ciudad", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_gerente_ciudad", Integer, ForeignKey("registrar_gerente_ciudad.id_gerente_ciudad"))
+)
+
+asignacion_ciudades_jefe_ventas = Table("asignacion_ciudades_jefe_ventas", meta,
+    Column("id_asignacion_ciudades_jefe_ventas", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_jefe_venta", Integer, ForeignKey("registro_jefe_ventas.id_jefe_venta"))
+)
+
+asignacion_canal_jefe_ventas = Table("asignacion_canal_jefe_ventas", meta,
+    Column("id_asignacion_canal_jefe_ventas", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_jefe_venta", Integer, ForeignKey("registro_jefe_ventas.id_jefe_venta"))
+)
+
+asignacion_ciudades_admin_proyectos = Table("asignacion_ciudades_admin_proyectos", meta,
+    Column("id_asignacion_ciudades_admin_proyectos", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_admin_proyectos", Integer, ForeignKey("registrar_admin_proyectos.id_admin_proyectos"))
+)
+
+asignacion_canal_admin_proyectos = Table("asignacion_canal_admin_proyectos", meta,
+    Column("id_asignacion_canal_admin_proyectos", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_admin_proyectos", Integer, ForeignKey("registrar_admin_proyectos.id_admin_proyectos"))
+)
+
+asignacion_ciudades_distribuidor = Table("asignacion_ciudades_distribuidor", meta,
+    Column("id_asignacion_ciudades_distribuidor", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_registrar_distribuidor", Integer, ForeignKey("registrar_distribuidor.id_registrar_distribuidor"))
+)
+
+asignacion_canal_distribuidor = Table("asignacion_canal_distribuidor", meta,
+    Column("id_asignacion_canal_distribuidor", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_registrar_distribuidor", Integer, ForeignKey("registrar_distribuidor.id_registrar_distribuidor"))
 )
 
 meta.create_all(db)

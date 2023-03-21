@@ -9,6 +9,7 @@ from routes.menu import menu
 from routes.login import login
 from routes.channel import channel
 from routes.registroCelula import registro
+from routes.asignacion import asignacion
 
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
@@ -56,6 +57,7 @@ app.include_router(menu)
 app.include_router(login)
 app.include_router(channel)
 app.include_router(registro)
+app.include_router(asignacion)
 
 # from fastapi import FastAPI
 

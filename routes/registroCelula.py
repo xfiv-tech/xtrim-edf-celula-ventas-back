@@ -1,9 +1,10 @@
 from function.excelReporte import get_tdd_excel_workbook
+from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
-from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
+from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
+from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from database.db import db
 from datetime import datetime
 # moment.need()
@@ -28,8 +29,13 @@ async def get_reporteFtp():
     
 #lista de vendedores
 @registro.get("/listar_registro", tags=["Vendedor"])
-async def get_registro():
+async def get_registro(request: Request):
     try:
+        header = request.headers
+        print("Headre",header["authorization"].split(" ")[1])
+        decodeToken = decode_token(header["authorization"].split(" ")[1])
+        print("decodeToken",decodeToken)
+
         query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
             Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
             Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
@@ -696,88 +702,6 @@ async def delete_administrador(id_administrador: int):
     try:
         query = RegistroAdministrador.delete().where(
             RegistroAdministrador.c.id_administrador == id_administrador)
-        data = db.execute(query)
-        return {
-            "code": "0",
-            "data": data
-        }
-    except Exception as e:
-        return {
-            "error": str(e)
-        }
-
-# Registrar gerente
-@registro.get("/listar_gerente", tags=["Gerente"])
-async def get_gerente():
-    try:
-        query = RegistrarGerente.join(Channel, Channel.c.id_channel == RegistrarGerente.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistrarGerente.c.id_ciudad).join(
-            Estados, Estados.c.id_estado == RegistrarGerente.c.id_estado).select().with_only_columns([
-                RegistrarGerente.c.id_gerente,
-                Channel.c.id_channel,
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
-                Estados.c.estado,
-                Estados.c.id_estado,
-                RegistrarGerente.c.nombre_gerente
-            ])
-        print("Query", query)
-        data = db.execute(query).fetchall()
-        print("Data",data)
-        return {
-            "code": "0",
-            "data": data
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e.args)
-        })
-
-
-@registro.post("/crear_gerente", tags=["Gerente"])
-async def post_gerente(request: RegistrarGerenteModel):
-    try:
-        query = RegistrarGerente.insert().values(
-            id_gerente=request.id_gerente,
-            id_channel=request.id_channel,
-            id_ciudad=request.id_ciudad,
-            id_estado=request.id_estado,
-            nombre_gerente=request.nombre_gerente
-        )
-        data = db.execute(query)
-        return {
-            "code": "0",
-            "data": data
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-
-@registro.put("/actualizar_gerente", tags=["Gerente"])
-async def put_gerente(request: RegistrarGerenteModel):
-    try:
-        data = db.execute(RegistrarGerente.update().values(
-            id_channel=request.id_channel,
-            id_ciudad=request.id_ciudad,
-            id_estado=request.id_estado,
-            nombre_gerente=request.nombre_gerente
-        ).where(RegistrarGerente.c.id_gerente == request.id_gerente))
-        return {
-            "code": "0",
-            "data": data
-        }
-    except Exception as e:
-        return {"error": str(e)}
-
-
-@registro.delete("/eliminar_gerente/{id_gerente}", tags=["Gerente"])
-async def delete_gerente(id_gerente: int):
-    try:
-        query = RegistrarGerente.delete().where(
-            RegistrarGerente.c.id_gerente == id_gerente)
         data = db.execute(query)
         return {
             "code": "0",

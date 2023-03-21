@@ -1,7 +1,7 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
 
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarGerente, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo 
+from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo 
 from database.db import db
 
 class ReporteExcel(BaseModel):

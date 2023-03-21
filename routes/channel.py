@@ -1,16 +1,8 @@
-from fastapi import APIRouter, Response, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException
 from database.db import db
 from model.ModelSchema.channelModel import ChanellModel, CiudadModel, EstadosModel, GeneroModel, MandoModel, ModalidadModel, OperadorModel, SistemaOperativoModel
 from model.channel import Channel, Ciudad, Estados, Genero, Mando, Modalidad, Operador, SistemaOperativo
-from model.edificio import Edicifios
-from schemas.edificio import Edificio
-from schemas.edificioList import EdificioList
-from datetime import datetime
-from model.administrador import Administradores
 from middleware.validacionToken import ValidacionToken
-
-from starlette.status import HTTP_204_NO_CONTENT
-
 
 channel = APIRouter(route_class=ValidacionToken)
 

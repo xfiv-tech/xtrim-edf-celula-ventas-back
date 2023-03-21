@@ -41,3 +41,18 @@ def read_token(token: str):
             "message": "Invalid Token",
             "status": 401
         }
+
+def decode_token(token: str):
+    try:
+        data = jwt.decode(token, SECRET, algorithms=["HS256"])
+        return data
+    except exceptions.ExpiredSignatureError:
+        return {
+            "message": "Token Expired",
+            "status": 401
+        }
+    except exceptions.DecodeError:
+        return {
+            "message": "Invalid Token",
+            "status": 401
+        }

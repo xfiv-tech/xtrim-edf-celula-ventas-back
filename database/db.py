@@ -12,9 +12,11 @@ database = os.getenv("database")
 DATABASE_CONNECTION_URI = f'mysql+pymysql://{user}:{password}@{host}/{database}'
 print(DATABASE_CONNECTION_URI)
 
-engine = create_engine(DATABASE_CONNECTION_URI, echo=False)
+engine = create_engine(DATABASE_CONNECTION_URI, echo=True)
 
 
 meta = MetaData()
 
 db = engine.connect()
+
+# print(db.execute("SELECT * FROM asignacion_ciudades_gerente_regional").fetchall())
