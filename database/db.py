@@ -18,5 +18,3 @@ engine = create_engine(DATABASE_CONNECTION_URI, echo=True)
 meta = MetaData()
 
 db = engine.connect()
-
-# print(db.execute("SELECT * FROM asignacion_ciudades_gerente_regional").fetchall())

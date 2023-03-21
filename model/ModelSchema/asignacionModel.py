@@ -3,7 +3,7 @@ from typing import List, Optional
 
 #Gerente regional
 class AsigancionCiudadGreginal(BaseModel):
-    id_asignacion_ciudad_greginal: Optional[int] = None
+    id_asignacion_ciudades: Optional[int] = None
     id_ciudad: int
     id_gerente_regional: int
 
