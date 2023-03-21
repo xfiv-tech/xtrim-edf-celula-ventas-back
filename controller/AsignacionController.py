@@ -18,23 +18,38 @@ from database.db import db
 async def AsignarCiudadesGRegional(data: ArrayAsigancionCiudadGreginal):
     try:
         for i in data.data:
+            print(i)
             if i.id_gerente_regional != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_gerente_regional.insert().values(
                     id_ciudad=i.id_ciudad,
                     id_gerente_regional=i.id_gerente_regional,
                 )
                 db.execute(query)
+
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
 async def ListarCiudadesGRegional(id_gerente_regional: int):
     try:
-        query = asignacion_ciudades_gerente_regional.join(Channel, asiganacion_canal_gerente_regional.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
+        print(id_gerente_regional)
+        query = asignacion_ciudades_gerente_regional.select().where(
             asignacion_ciudades_gerente_regional.c.id_gerente_regional == id_gerente_regional
         )
-        return db.execute(query).fetchall()
+        asignacion = db.execute(query).fetchall()
+        infoData = []
+        for i in asignacion:
+            query = Ciudad.select().where(Ciudad.c.id_ciudad == i.id_ciudad)
+            ciu = db.execute(query).fetchone()
+            infoData.append({
+                "id_asignacion_ciudades": i.id_asignacion_ciudades,
+                "id_ciudad": i.id_ciudad,
+                "id_gerente_regional": i.id_gerente_regional,
+                "ciudad": ciu.ciudad
+            })
+        return infoData
     except Exception as e:
+        print(e.args)
         return {"status": 400, "message": str(e)}
 
 async def DeleteCiudadesGRegional(id_asignacion_ciudades: int):

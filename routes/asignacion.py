@@ -7,8 +7,7 @@ asignacion = APIRouter(route_class=ValidacionToken)
 
 @asignacion.post("/asignacion_ciudades_gerente_regional", tags=["Asignacion de ciudades a gerente regional"])
 async def asignacion_ciudades_gerente_regional(data: ArrayAsigancionCiudadGreginal):
-    return data
-    # return await AsignarCiudadesGRegional(data)
+    return await AsignarCiudadesGRegional(data)
 
 @asignacion.get("/listar_ciudades_gerente_regional/{id_gerente_regional}", tags=["Listar ciudades de gerente regional"])
 async def listar_ciudades_gerente_regional(id_gerente_regional: int):
