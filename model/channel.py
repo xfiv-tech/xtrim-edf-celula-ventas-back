@@ -119,16 +119,17 @@ RegistroJefeVentas = Table("registro_jefe_ventas", meta,
     Column("nombre_jefe", String(255))
 )
 
+#tabla administrador de sistema
 RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_administrador", Integer, primary_key=True, autoincrement=True),
-    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
-    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
+    Column("email", String(255)),
+    Column("password", String(255)),
+    Column("perfil", String(255)),
     Column("nombre_administrador", String(255))
 )
 
 # Tablas de asignacion de gerentes a ciudades y canales
-
 asignacion_ciudades_gerente_regional = Table("asignacion_ciudades_gerente_regional", meta,
     Column("id_asignacion_ciudades", Integer, primary_key=True, autoincrement=True),
     Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
@@ -174,6 +175,18 @@ asignacion_canal_admin_proyectos = Table("asignacion_canal_admin_proyectos", met
     Column("id_asignacion_canal_admin_proyectos", Integer, primary_key=True, autoincrement=True),
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
     Column("id_admin_proyectos", Integer, ForeignKey("registrar_admin_proyectos.id_admin_proyectos"))
+)
+
+asignacion_ciudades_admin = Table("asignacion_ciudades_admin", meta,
+    Column("id_asignacion_ciudades_admin", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("id_administrador", Integer, ForeignKey("registro_administrador.id_administrador"))
+)
+
+asignacion_canal_admin = Table("asignacion_canal_admin", meta,
+    Column("id_asignacion_canal_admin", Integer, primary_key=True, autoincrement=True),
+    Column("id_channel", Integer, ForeignKey("channel.id_channel")),
+    Column("id_administrador", Integer, ForeignKey("registro_administrador.id_administrador"))
 )
 
 asignacion_ciudades_distribuidor = Table("asignacion_ciudades_distribuidor", meta,

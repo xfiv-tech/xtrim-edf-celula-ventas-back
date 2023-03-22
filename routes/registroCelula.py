@@ -1,4 +1,4 @@
-from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
+from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
 from function.excelReporte import get_tdd_excel_workbook
 from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
@@ -662,17 +662,13 @@ async def delete_jefe_venta(id_jefe_venta: int):
 @registro.get("/listar_administrador", tags=["Administrador"])
 async def get_administrador():
     try:
-        query = RegistroAdministrador.join(Channel, Channel.c.id_channel == RegistroAdministrador.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistroAdministrador.c.id_ciudad).join(
+        query = RegistroAdministrador.join(
             Estados, Estados.c.id_estado == RegistroAdministrador.c.id_estado).select().with_only_columns([
                 RegistroAdministrador.c.id_administrador,
-                Channel.c.id_channel,
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
                 Estados.c.estado,
                 Estados.c.id_estado,
+                RegistroAdministrador.c.perfil,
+                RegistroAdministrador.c.email,
                 RegistroAdministrador.c.nombre_administrador
             ])           
         data = db.execute(query).fetchall()
@@ -680,17 +676,13 @@ async def get_administrador():
         for i in data:
             infoData.append({
                 "id_administrador": i.id_administrador,
-                "id_channel": i.id_channel,
-                "channel": i.channel,
-                "ciudad": i.ciudad,
-                "id_ciudad": i.id_ciudad,
-                "region": i.region,
+                "perfil": i.perfil,
+                "email": i.email,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_administrador": i.nombre_administrador,
-                "ciudades_asignadas": await ListarCiudadesAPCiudad(i.id_administrador),
-                "canales_asignados": await ListarCanalesAPCiudad(i.id_administrador)
-
+                "ciudades_asignadas": await ListarCiudadesAdminCiudad(i.id_administrador),
+                "canales_asignados": await ListarCanalesAdminCiudad(i.id_administrador)
             })
         return {
             "code": "0",
@@ -704,11 +696,12 @@ async def get_administrador():
 async def post_administrador(request: RegistrarAdministradorModel):
     try:
         query = RegistroAdministrador.insert().values(
-            id_administrador=request.id_administrador,
-            id_channel=request.id_channel,
-            id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_administrador=request.nombre_administrador
+            email=request.email,
+            password=request.password,
+            perfil=request.perfil,
+            nombre_administrador=request.nombre_administrador,
+            channel_sistema=request.channel_sistema
         )
         data = db.execute(query).lastrowid
         return {
@@ -881,7 +874,7 @@ async def get_gerente_ciudad():
             })
         return {
             "code": "0",
-            "data": data
+            "data": infodata
         }
     except Exception as e:
         return {"error": str(e)}
@@ -956,9 +949,24 @@ async def get_administrador_proyectos():
                 RegistrarAdminProyectos.c.nombre_admin_proyectos
             ])        
         data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_admin_proyectos": i.id_admin_proyectos,
+                "id_channel": i.id_channel,
+                "channel": i.channel,
+                "ciudad": i.ciudad,
+                "id_ciudad": i.id_ciudad,
+                "region": i.region,
+                "id_estado": i.id_estado,
+                "estado": i.estado,
+                "nombre_admin_proyectos": i.nombre_admin_proyectos,
+                "ciudades_asignadas": await ListarCiudadesAPCiudad(i.id_admin_proyectos),
+                "canales_asignados": await ListarCanalesAPCiudad(i.id_admin_proyectos)
+            })
         return {
             "code": "0",
-            "data": data
+            "data": infoData
         }
     except Exception as e:
         return {"error": str(e)}

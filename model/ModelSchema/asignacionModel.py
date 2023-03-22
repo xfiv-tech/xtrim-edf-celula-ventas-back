@@ -86,3 +86,20 @@ class AsigancionCanalDistribuidor(BaseModel):
 
 class ArrayAsigancionCanalDistribuidor(BaseModel):
     data: List[AsigancionCanalDistribuidor]
+
+#Adminstrador 
+class AsigancionCiudadA(BaseModel):
+    id_asignacion_ciudades_admin: Optional[int] = None
+    id_ciudad: int
+    id_administrador: int
+
+class ArrayAsigancionCiudadA(BaseModel):
+    data: List[AsigancionCiudadA]
+
+class AsigancionCanalA(BaseModel):
+    id_asignacion_canal_admin: Optional[int] = None
+    id_channel: int
+    id_administrador: int
+
+class ArrayAsigancionCanalA(BaseModel):
+    data: List[AsigancionCanalA]

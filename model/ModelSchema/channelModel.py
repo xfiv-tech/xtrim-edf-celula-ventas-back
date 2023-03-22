@@ -126,14 +126,14 @@ class ArrayRegistrarJefeModel(BaseModel):
 
 class RegistrarAdministradorModel(BaseModel):
     id_administrador: Optional[int]
-    id_channel: int
-    id_ciudad: int
     id_estado: int
+    email: str
+    password: str
+    perfil: str
     nombre_administrador: str
 
 class ArrayRegistrarAdministradorModel(BaseModel):
     data: List[RegistrarAdministradorModel]
-
 
 
 class RegistrarGerenteRegionalModel(BaseModel):
@@ -158,6 +158,7 @@ class RegistrarGerenteCiudadModel(BaseModel):
     id_ciudad: int
     id_estado: int
     nombre_gerente_ciudad: str
+    channel_sistema: str
 
 class ArrayRegistrarGerenteCiudadModel(BaseModel):
     data: List[RegistrarGerenteCiudadModel]

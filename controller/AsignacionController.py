@@ -11,6 +11,7 @@ from model.channel import asignacion_ciudades_gerente_ciudad,asignacion_canal_ge
 from model.channel import asignacion_ciudades_jefe_ventas,asignacion_canal_jefe_ventas
 from model.channel import asignacion_ciudades_admin_proyectos,asignacion_canal_admin_proyectos
 from model.channel import asignacion_ciudades_distribuidor,asignacion_canal_distribuidor
+from model.channel import asignacion_ciudades_admin,asignacion_canal_admin
 
 
 from database.db import db
@@ -188,6 +189,7 @@ async def DeleteCanalesGCiudad(id_asignacion_canal_gerente_ciudad: int):
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
+
 #Jefe de venta
 async def AsignarCiudadesJVCiudad(data: ArrayAsigancionCiudadJefe):
     try:
@@ -354,6 +356,7 @@ async def DeleteCanalesAPCiudad(id_admin_proyectos: int):
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
+
 #Distribuidor
 async def AsignarCiudadesDistribuidor(data: ArrayAsigancionCiudadDistribuidor):
     try:
@@ -439,3 +442,86 @@ async def DeleteCanalesDistribuidor(id_asignacion_canal_distribuidor: int):
 
 
 
+#Asignacion de Administradores de Proyectos 
+async def AsignarCiudadesAdminCiudad(data):
+    try:
+        for i in data.data:
+            if i.id_administrador != 0 and i.id_ciudad != 0:
+                query = asignacion_ciudades_admin.insert().values(
+                    id_ciudad=i.id_ciudad,
+                    id_administrador=i.id_administrador,
+                )
+                db.execute(query)
+        return {"status": 200, "message": "Asignacion exitosa"}
+    except Exception as e:
+        return {"status": 400, "message": str(e)}
+
+async def ListarCiudadesAdminCiudad(id_administrador: int):
+    try:
+        query = asignacion_ciudades_admin.join(Ciudad, asignacion_ciudades_admin.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
+            asignacion_ciudades_admin.c.id_administrador == id_administrador
+        )
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_ciudades_admin_proyectos": i.asignacion_ciudades_admin,
+                "id_ciudad": i.id_ciudad,
+                "id_administrador": i.id_administrador,
+                "ciudad": i.ciudad
+            })
+        return infoData
+    except Exception as e:
+        return {"status": 400, "message": str(e)}
+    
+async def DeleteCiudadesAdminCiudad(id_administrador: int):
+    try:
+        query = asignacion_ciudades_admin.delete().where(
+            asignacion_ciudades_admin.c.id_administrador == id_administrador
+        )
+        db.execute(query)
+        return {"status": 200, "message": "Eliminacion exitosa"}
+    except Exception as e:
+        return {"status": 400, "message": str(e)}
+    
+async def AsignarCanalesAdminCiudad(data):
+    try:
+        for i in data.data:
+            if i.id_channel != 0 and i.id_admin_proyecto != 0:
+                query = asignacion_canal_admin.insert().values(
+                    id_channel=i.id_channel,
+                    id_administrador=i.id_administrador,
+                )
+                db.execute(query)
+        return {"status": 200, "message": "Asignacion exitosa"}
+    except Exception as e:
+        return {"status": 400, "message": str(e)}
+    
+async def ListarCanalesAdminCiudad(id_administrador: int):
+    try:
+        query = asignacion_canal_admin.join(Channel, asignacion_canal_admin.c.id_channel == Channel.c.id_channel).select().where(
+            asignacion_canal_admin.c.id_administrador == id_administrador
+        )
+        data = db.execute(query).fetchall()
+        infoData = []
+        for i in data:
+            infoData.append({
+                "id_asignacion_canal_admin": i.id_asignacion_canal_admin,
+                "id_channel": i.id_channel,
+                "id_administrador": i.id_administrador,
+                "channel": i.channel
+            })
+        return infoData
+    except Exception as e:
+        return {"status": 400, "message": str(e)}
+    
+async def DeleteCanalesAdminCiudad(id_administrador: int):
+    try:
+        query = asignacion_canal_admin.delete().where(
+            asignacion_canal_admin.c.id_administrador == id_administrador
+        )
+        db.execute(query)
+        return {"status": 200, "message": "Eliminacion exitosa"}
+    except Exception as e:
+        return {"status": 400, "message": str(e)}
+ 
