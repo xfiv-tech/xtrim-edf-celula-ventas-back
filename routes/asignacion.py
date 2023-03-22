@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from controller.AsignacionController import AsignarCanalesAPCiudad, AsignarCanalesAdminCiudad, AsignarCanalesDistribuidor, AsignarCanalesGCiudad, AsignarCanalesGRciudad, AsignarCanalesJVCiudad, AsignarCiudadesAPCiudad, AsignarCiudadesAdminCiudad, AsignarCiudadesDistribuidor, AsignarCiudadesGCiudad, AsignarCiudadesGRegional, AsignarCiudadesJVCiudad, DeleteCanalesAPCiudad, DeleteCanalesAdminCiudad, DeleteCanalesDistribuidor, DeleteCanalesGCiudad, DeleteCanalesGRciudad, DeleteCanalesJVCiudad, DeleteCiudadesAPCiudad, DeleteCiudadesAdminCiudad, DeleteCiudadesDistribuidor, DeleteCiudadesGCiudad, DeleteCiudadesGRegional, DeleteCiudadesJVCiudad, ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
 from middleware.validacionToken import ValidacionToken
-from model.ModelSchema.asignacionModel import ArrayAsigancionCanalAdmin, ArrayAsigancionCanalDistribuidor, ArrayAsigancionCanalGciudad, ArrayAsigancionCanalGregional, ArrayAsigancionCanalJefe, ArrayAsigancionCiudadAdmin, ArrayAsigancionCiudadDistribuidor, ArrayAsigancionCiudadGciudad, ArrayAsigancionCiudadGreginal, ArrayAsigancionCiudadJefe
+from model.ModelSchema.asignacionModel import ArrayAsigancionCanalA, ArrayAsigancionCanalAdmin, ArrayAsigancionCanalDistribuidor, ArrayAsigancionCanalGciudad, ArrayAsigancionCanalGregional, ArrayAsigancionCanalJefe, ArrayAsigancionCiudadA, ArrayAsigancionCiudadAdmin, ArrayAsigancionCiudadDistribuidor, ArrayAsigancionCiudadGciudad, ArrayAsigancionCiudadGreginal, ArrayAsigancionCiudadJefe
 
 asignacion = APIRouter(route_class=ValidacionToken)
 
@@ -84,23 +84,23 @@ async def asignacion_ciudades_jefe_ventas(data: ArrayAsigancionCiudadJefe):
 async def listar_canal_administrador(id_admin_proyecto: int):
     return await ListarCanalesAPCiudad(id_admin_proyecto)
 
-@asignacion.post("/asignacion_canal_administrador", tags=["Asignacion de canal a administrador de proyecto"])
+@asignacion.post("/asignacion_canal_administrador_proyecto", tags=["Asignacion de canal a administrador de proyecto"])
 async def asignacion_canal_administrador(data: ArrayAsigancionCanalAdmin):
     return await AsignarCanalesAPCiudad(data)
 
-@asignacion.delete("/eliminar_asignacion_canal_administrador/{id_asignacion_ciudades_admin_proyectos}", tags=["Eliminar asignacion de canal a administrador de proyecto"])
+@asignacion.delete("/eliminar_asignacion_canal_administrador_v/{id_asignacion_ciudades_admin_proyectos}", tags=["Eliminar asignacion de canal a administrador de proyecto"])
 async def eliminar_asignacion_canal_administrador(id_asignacion_ciudades_admin_proyectos: int):
     return await DeleteCanalesAPCiudad(id_asignacion_ciudades_admin_proyectos)
 
-@asignacion.get("/listar_ciudades_administrador/{id_admin_proyecto}", tags=["Listar ciudades de administrador de proyecto"])
+@asignacion.get("/listar_ciudades_administrador_proyecto/{id_admin_proyecto}", tags=["Listar ciudades de administrador de proyecto"])
 async def listar_ciudades_administrador(id_admin_proyecto: int):
     return await ListarCiudadesAPCiudad(id_admin_proyecto)
 
-@asignacion.delete("/eliminar_asignacion_ciudades_administrador/{id_asignacion_ciudades_administrador}", tags=["Eliminar asignacion de ciudades a administrador de proyecto"])
+@asignacion.delete("/eliminar_asignacion_ciudades_administrador_proyecto/{id_asignacion_ciudades_administrador}", tags=["Eliminar asignacion de ciudades a administrador de proyecto"])
 async def eliminar_asignacion_ciudades_administrador(id_asignacion_ciudades_administrador: int):
     return await DeleteCiudadesAPCiudad(id_asignacion_ciudades_administrador)
 
-@asignacion.post("/asignacion_ciudades_administrador", tags=["Asignacion de ciudades a administrador de proyecto"])
+@asignacion.post("/asignacion_ciudades_administrador_proyecto", tags=["Asignacion de ciudades a administrador de proyecto"])
 async def asignacion_ciudades_administrador(data: ArrayAsigancionCiudadAdmin):
     return await AsignarCiudadesAPCiudad(data)
 
@@ -136,21 +136,21 @@ async def listar_canal_administrador(id_administrador: int):
     return await ListarCanalesAdminCiudad(id_administrador)
 
 @asignacion.post("/asignacion_canal_administrador", tags=["Asignacion de canal a administrador"])
-async def asignacion_canal_administrador(data: ArrayAsigancionCanalAdmin):
+async def asignacion_canal_administrador(data: ArrayAsigancionCanalA):
     return await AsignarCanalesAdminCiudad(data)
 
-@asignacion.delete("/eliminar_asignacion_canal_administrador/{id_asignacion_ciudades_admin_proyectos}", tags=["Eliminar asignacion de canal a administrador"])
-async def eliminar_asignacion_canal_administrador(id_asignacion_ciudades_admin_proyectos: int):
-    return await DeleteCanalesAdminCiudad(id_asignacion_ciudades_admin_proyectos)
+@asignacion.delete("/eliminar_asignacion_canal_administrador/{id_asignacion_canal_admin}", tags=["Eliminar asignacion de canal a administrador"])
+async def eliminar_asignacion_canal_administrador(id_asignacion_canal_admin: int):
+    return await DeleteCanalesAdminCiudad(id_asignacion_canal_admin)
 
 @asignacion.get("/listar_ciudades_administrador/{id_administrador}", tags=["Listar ciudades de administrador de proyecto"])
 async def listar_ciudades_administrador(id_administrador: int):
     return await ListarCiudadesAdminCiudad(id_administrador)
 
-@asignacion.delete("/eliminar_asignacion_ciudades_administrador/{id_asignacion_ciudades_administrador}", tags=["Eliminar asignacion de ciudades a administrador"])
-async def eliminar_asignacion_ciudades_administrador(id_asignacion_ciudades_administrador: int):
-    return await DeleteCiudadesAdminCiudad(id_asignacion_ciudades_administrador)
+@asignacion.delete("/eliminar_asignacion_ciudades_administrador/{id_asignacion_ciudades_admin}", tags=["Eliminar asignacion de ciudades a administrador"])
+async def eliminar_asignacion_ciudades_administrador(id_asignacion_ciudades_admin: int):
+    return await DeleteCiudadesAdminCiudad(id_asignacion_ciudades_admin)
 
 @asignacion.post("/asignacion_ciudades_administrador", tags=["Asignacion de ciudades a administrador"])
-async def asignacion_ciudades_administrador(data: ArrayAsigancionCiudadAdmin):
+async def asignacion_ciudades_administrador(data: ArrayAsigancionCiudadA):
     return await AsignarCiudadesAdminCiudad(data)
