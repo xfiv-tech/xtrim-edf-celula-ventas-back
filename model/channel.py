@@ -123,7 +123,7 @@ RegistroJefeVentas = Table("registro_jefe_ventas", meta,
 RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_administrador", Integer, primary_key=True, autoincrement=True),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
-    Column("email", String(255)),
+    Column("email", String(255), unique=True),
     Column("password", String(255)),
     Column("perfil", String(255)),
     Column("nombre_administrador", String(255))

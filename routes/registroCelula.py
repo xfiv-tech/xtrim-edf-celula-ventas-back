@@ -1,4 +1,5 @@
 from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
+from function.encrytPassword import encryptPassword
 from function.excelReporte import get_tdd_excel_workbook
 from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
@@ -686,7 +687,7 @@ async def get_administrador():
             })
         return {
             "code": "0",
-            "data": data
+            "data": infoData
         }
     except Exception as e:
         return {"error": str(e)}
@@ -698,10 +699,9 @@ async def post_administrador(request: RegistrarAdministradorModel):
         query = RegistroAdministrador.insert().values(
             id_estado=request.id_estado,
             email=request.email,
-            password=request.password,
+            password=encryptPassword(request.password),
             perfil=request.perfil,
             nombre_administrador=request.nombre_administrador,
-            channel_sistema=request.channel_sistema
         )
         data = db.execute(query).lastrowid
         return {
