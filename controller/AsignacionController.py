@@ -272,10 +272,10 @@ async def DeleteCanalesJVCiudad(id_asignacion_canal_jefe_ventas: int):
     
 
 #Administrador Proyecto
-async def AsignarCiudadesAPCiudad(data: ArrayAsigancionCiudadAdmin):
+async def AsignarCiudadesAPCiudad(data):
     try:
         for i in data.data:
-            if i.id_admin_proyecto != 0 and i.id_ciudad != 0:
+            if i.id_admin_proyectos != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_admin_proyectos.insert().values(
                     id_ciudad=i.id_ciudad,
                     id_admin_proyectos=i.id_admin_proyectos,
