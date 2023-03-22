@@ -487,7 +487,7 @@ async def DeleteCiudadesAdminCiudad(id_administrador: int):
 async def AsignarCanalesAdminCiudad(data):
     try:
         for i in data.data:
-            if i.id_channel != 0 and i.id_admin_proyecto != 0:
+            if i.id_channel != 0 and i.id_administrador != 0:
                 query = asignacion_canal_admin.insert().values(
                     id_channel=i.id_channel,
                     id_administrador=i.id_administrador,
