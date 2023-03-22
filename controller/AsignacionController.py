@@ -219,6 +219,7 @@ async def ListarCiudadesJVCiudad(id_jefe_venta: int):
                 "id_jefe_venta": i.id_jefe_venta,
                 "ciudad": i.ciudad
             })
+            return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     

@@ -570,7 +570,7 @@ async def get_jefe_venta():
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
-            if i[7] == None:
+            if i.id_gerente_regional == None:
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
                     "id_estado": i.id_estado,
