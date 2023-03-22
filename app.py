@@ -55,8 +55,8 @@ app.include_router(reporte)
 app.include_router(roles)
 app.include_router(menu)
 app.include_router(login)
-app.include_router(channel)
 app.include_router(registro)
+app.include_router(channel)
 app.include_router(asignacion)
 
 # from fastapi import FastAPI

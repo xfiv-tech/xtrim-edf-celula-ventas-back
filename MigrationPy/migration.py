@@ -1,5 +1,29 @@
 from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey, Float
-from database.db import meta, db
+from conexion import meta, db
+
+Roles = Table("roles", meta,
+    Column("id_roles", Integer, primary_key=True, autoincrement=True),
+    Column("rol", String(255)),
+    Column("descripcion", String(255)),
+    Column("data_created", DateTime),
+    Column("data_update", DateTime)
+)
+
+Menus = Table("menus", meta,
+    Column("id_menus", Integer, primary_key=True, autoincrement=True),
+    Column("id_roles", Integer, ForeignKey("roles.id_roles")),
+    Column("menu", String(255)),
+    Column("path", String(255)),
+    Column("icon", String(255)),
+
+)
+
+Submenus = Table("submenus", meta,
+    Column("id_menus", Integer, ForeignKey("menus.id_menus")),
+    Column("submenu", String(255)),
+    Column("path", String(255)),
+    Column("icon", String(255)),
+)
 
 Ciudad = Table("ciudad", meta,
     Column("id_ciudad", Integer, primary_key=True, autoincrement=True),
@@ -41,6 +65,8 @@ Mando = Table("mando", meta,
     Column("id_mando", Integer, primary_key=True, autoincrement=True),
     Column("mando", String(255), unique=True),
 )
+
+
 
 RegistrarDistribuidor = Table("registrar_distribuidor", meta,
     Column("id_registrar_distribuidor", Integer, primary_key=True, autoincrement=True),
@@ -198,5 +224,6 @@ asignacion_canal_distribuidor = Table("asignacion_canal_distribuidor", meta,
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
     Column("id_registrar_distribuidor", Integer, ForeignKey("registrar_distribuidor.id_registrar_distribuidor"))
 )
+
 
 meta.create_all(db)

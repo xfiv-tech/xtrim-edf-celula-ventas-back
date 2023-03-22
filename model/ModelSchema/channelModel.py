@@ -99,7 +99,7 @@ class ArrayRegistrarVendedorModel(BaseModel):
 
 class RegistrarDistribuidorModel(BaseModel):
     id_registrar_distribuidor: Optional[int]
-    id_ciudad: int
+    id_ciudad: Optional[int]
     id_estado: int
     nombre_distribuidor: str
     responsable: str
@@ -114,8 +114,8 @@ class ArrayRegistrarDistribuidor(BaseModel):
 
 class RegistrarJefeModel(BaseModel):
     id_jefe_venta: Optional[int]
-    id_channel: int
-    id_ciudad: int
+    id_channel: Optional[int]
+    id_ciudad: Optional[int]
     id_estado: Optional[int] = None
     id_gerente: Optional[int] = None
     nombre_jefe: str
@@ -138,14 +138,14 @@ class ArrayRegistrarAdministradorModel(BaseModel):
 
 class RegistrarGerenteRegionalModel(BaseModel):
     id_gerente_regional: Optional[int]
-    id_channel: int
-    id_ciudad: int
+    id_channel: Optional[int]
+    id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente: str
 class RegistrarGerenteModel(BaseModel):
     id_gerente: Optional[int]
-    id_channel: int
-    id_ciudad: int
+    id_channel: Optional[int]
+    id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente: str
 
@@ -154,8 +154,8 @@ class ArrayRegistrarGerenteModel(BaseModel):
 
 class RegistrarGerenteCiudadModel(BaseModel):
     id_gerente_ciudad: Optional[int]
-    id_channel: int
-    id_ciudad: int
+    id_channel: Optional[int]
+    id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente_ciudad: str
     channel_sistema: str
@@ -166,7 +166,7 @@ class ArrayRegistrarGerenteCiudadModel(BaseModel):
 
 class RegistrarAdminProyectosModel(BaseModel):
     id_admin_proyectos: Optional[int]
-    id_channel: int
-    id_ciudad: int
+    id_channel: Optional[int]
+    id_ciudad: Optional[int]
     id_estado: int
     nombre_admin_proyectos: str

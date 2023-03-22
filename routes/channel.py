@@ -53,18 +53,18 @@ async def create_edificio(channel: ChanellModel):
 
 
 
-@channel.delete("/channel", tags=["channel"])
-async def update_channel(channel: ChanellModel):
-    try:
-        db.execute(Channel.delete().where(Channel.c.id_channel == channel.id))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
+# @channel.delete("/channel", tags=["channel"])
+# async def update_channel(channel: ChanellModel):
+#     try:
+#         db.execute(Channel.delete().where(Channel.c.id_channel == channel.id))
+#         return {
+#             "code": "0"
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail={
+#             "code": "-1",
+#             "data": str(e)
+#         })
 
 
 @channel.get("/channel/{id}", tags=["channel"])
@@ -82,65 +82,7 @@ async def get_channel(id: int):
             "data": str(e)
         })
     
-
-@channel.get("/mando", tags=["mando"])
-async def get_mando():
-    try:
-        query = Mando.select()
-        data = db.execute(query).fetchall()
-        return {
-            "code": "0",
-            "data": data,
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
-
-@channel.post("/mando", tags=["mando"])
-async def Crearmando(mando: MandoModel):
-    try:
-        db.execute(Mando.insert().values(mando=mando.mando))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
-
-@channel.put("/mando", tags=["mando"])
-async def create_mando(mando: MandoModel):
-    try:
-        db.execute(Mando.update().values(mando=mando.mando).where(Mando.c.id_mando == mando.id))
-        return {
-            "code": "0",
-            "data": db.execute(Mando.select().where(Mando.c.id_mando == mando.id)).first(),
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
-
-
-@channel.delete("/mando", tags=["mando"])
-async def update_mando(mando: MandoModel):
-    try:
-        db.execute(Mando.delete().where(Mando.c.id_mando == mando.id))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
-    
 #Ciudad
-
 @channel.get("/ciudad", tags=["ciudad"])
 async def get_ciudad():
     try:
@@ -182,18 +124,18 @@ async def create_ciudad(ciudad: CiudadModel):
             "data": str(e)
         })
 
-@channel.delete("/ciudad", tags=["ciudad"])
-async def delete_cuidad(ciudad: CiudadModel):
-    try:
-        db.execute(Ciudad.delete().where(Ciudad.c.id_ciudad == ciudad.id))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
+# @channel.delete("/ciudad", tags=["ciudad"])
+# async def delete_cuidad(ciudad: CiudadModel):
+#     try:
+#         db.execute(Ciudad.delete().where(Ciudad.c.id_ciudad == ciudad.id))
+#         return {
+#             "code": "0"
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail={
+#             "code": "-1",
+#             "data": str(e)
+#         })
 
     
 #Operador
@@ -239,8 +181,8 @@ async def create_operador(operador: OperadorModel):
             "data": str(e)
         })
     
-@channel.delete("/operador", tags=["operador"])
-async def delete_operador(operador: OperadorModel):
+# @channel.delete("/operador", tags=["operador"])
+# async def delete_operador(operador: OperadorModel):
     try:
         db.execute(Operador.delete().where(Operador.c.id_operador == operador.id))
         return {
@@ -294,8 +236,8 @@ async def create_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
             "data": str(e)
         })
 
-@channel.delete("/sistemaoperativo", tags=["sistemaoperativo"])
-async def delete_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
+# @channel.delete("/sistemaoperativo", tags=["sistemaoperativo"])
+# async def delete_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
     try:
         db.execute(SistemaOperativo.delete().where(SistemaOperativo.c.id_sistema_operativo == sistemaoperativo.id))
         return {
@@ -349,18 +291,18 @@ async def create_estado(estado: EstadosModel):
             "data": str(e)
         })
     
-@channel.delete("/estado", tags=["estado"])
-async def delete_estado(estado: EstadosModel):
-    try:
-        db.execute(Estados.delete().where(Estados.c.id_estado == estado.id))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
+# @channel.delete("/estado", tags=["estado"])
+# async def delete_estado(estado: EstadosModel):
+#     try:
+#         db.execute(Estados.delete().where(Estados.c.id_estado == estado.id))
+#         return {
+#             "code": "0"
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail={
+#             "code": "-1",
+#             "data": str(e)
+#         })
     
 #Genero
 @channel.get("/genero", tags=["genero"])
@@ -404,18 +346,18 @@ async def create_genero(genero: GeneroModel):
             "data": str(e)
         })
     
-@channel.delete("/genero", tags=["genero"])
-async def delete_genero(genero: GeneroModel):
-    try:
-        db.execute(Genero.delete().where(Genero.c.id_genero == genero.id))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
+# @channel.delete("/genero", tags=["genero"])
+# async def delete_genero(genero: GeneroModel):
+#     try:
+#         db.execute(Genero.delete().where(Genero.c.id_genero == genero.id))
+#         return {
+#             "code": "0"
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail={
+#             "code": "-1",
+#             "data": str(e)
+#         })
     
 #Modalidad
 @channel.get("/modalidad", tags=["modalidad"])
@@ -459,16 +401,16 @@ async def create_modalidad(modalidad: ModalidadModel):
             "data": str(e)
         })
     
-@channel.delete("/modalidad", tags=["modalidad"])
-async def delete_modalidad(modalidad: ModalidadModel):
-    try:
-        db.execute(Modalidad.delete().where(Modalidad.c.id_modalidad == modalidad.id))
-        return {
-            "code": "0"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
+# @channel.delete("/modalidad", tags=["modalidad"])
+# async def delete_modalidad(modalidad: ModalidadModel):
+#     try:
+#         db.execute(Modalidad.delete().where(Modalidad.c.id_modalidad == modalidad.id))
+#         return {
+#             "code": "0"
+#         }
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail={
+#             "code": "-1",
+#             "data": str(e)
+#         })
     
