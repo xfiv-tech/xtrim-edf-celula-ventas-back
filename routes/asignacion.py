@@ -5,40 +5,42 @@ from model.ModelSchema.asignacionModel import ArrayAsigancionCanalA, ArrayAsigan
 
 asignacion = APIRouter(route_class=ValidacionToken)
 
+
+@asignacion.get("/listar_ciudades_gerente_regional/{id_gerente_regional}", tags=["Asignacion de ciudades a gerente regional"])
+async def listar_ciudades_gerente_regional(id_gerente_regional: int):
+    return await ListarCiudadesGRegional(id_gerente_regional)
+
 @asignacion.post("/asignacion_ciudades_gerente_regional", tags=["Asignacion de ciudades a gerente regional"])
 async def asignacion_ciudades_gerente_regional(data: ArrayAsigancionCiudadGreginal):
     return await AsignarCiudadesGRegional(data)
 
-@asignacion.get("/listar_ciudades_gerente_regional/{id_gerente_regional}", tags=["Listar ciudades de gerente regional"])
-async def listar_ciudades_gerente_regional(id_gerente_regional: int):
-    return await ListarCiudadesGRegional(id_gerente_regional)
-
-@asignacion.delete("/eliminar_asignacion_ciudades_gerente_regional/{id_asignacion_ciudad_greginal}", tags=["Eliminar asignacion de ciudades a gerente regional"])
+@asignacion.delete("/eliminar_asignacion_ciudades_gerente_regional/{id_asignacion_ciudad_greginal}", tags=["Asignacion de ciudades a gerente regional"])
 async def eliminar_asignacion_ciudades_gerente_regional(id_asignacion_ciudad_greginal: int):
     return await DeleteCiudadesGRegional(id_asignacion_ciudad_greginal)
+
+
+@asignacion.get("/listar_canal_gerente_regional/{id_gerente_regional}", tags=["Asignacion de canal a gerente regional"])
+async def listar_canal_gerente_regional(id_gerente_regional: int):
+    return await ListarCiudadesGRegional(id_gerente_regional)
 
 @asignacion.post("/asignacion_canal_gerente_regional", tags=["Asignacion de canal a gerente regional"])
 async def asignacion_canal_gerente_regional(data: ArrayAsigancionCanalGregional):
     return await AsignarCanalesGRciudad(data)
 
-@asignacion.get("/listar_canal_gerente_regional/{id_gerente_regional}", tags=["Listar canales de gerente regional"])
-async def listar_canal_gerente_regional(id_gerente_regional: int):
-    return await ListarCiudadesGRegional(id_gerente_regional)
-
-@asignacion.delete("/eliminar_asignacion_canal_gerente_regional/{id_asignacion_canal}", tags=["Eliminar asignacion de canal a gerente regional"])
+@asignacion.delete("/eliminar_asignacion_canal_gerente_regional/{id_asignacion_canal}", tags=["Asignacion de canal a gerente regional"])
 async def eliminar_asignacion_canal_gerente_regional(id_asignacion_canal: int):
     return await DeleteCanalesGRciudad(id_asignacion_canal)
 
 #GENTE CIUDAD
+@asignacion.get("/listar_ciudades_gerente_ciudad/{id_gerente_ciudad}", tags=["Asignacion de ciudades a gerente ciudad"])
+async def listar_ciudades_gerente_ciudad(id_gerente_ciudad: int):
+    return await ListarCiudadesGCiudad(id_gerente_ciudad)
+
 @asignacion.post("/asignacion_ciudades_gerente_ciudad", tags=["Asignacion de ciudades a gerente ciudad"])
 async def asignacion_ciudades_gerente_ciudad(data: ArrayAsigancionCiudadGciudad):
     return await AsignarCiudadesGCiudad(data)
 
-@asignacion.get("/listar_ciudades_gerente_ciudad/{id_gerente_ciudad}", tags=["Listar ciudades de gerente ciudad"])
-async def listar_ciudades_gerente_ciudad(id_gerente_ciudad: int):
-    return await ListarCiudadesGCiudad(id_gerente_ciudad)
-
-@asignacion.delete("/eliminar_asignacion_ciudades_gerente_ciudad/{id_asignacion_ciudades_gerente_ciudad}", tags=["Eliminar asignacion de ciudades a gerente ciudad"])
+@asignacion.delete("/eliminar_asignacion_ciudades_gerente_ciudad/{id_asignacion_ciudades_gerente_ciudad}", tags=["Asignacion de ciudades a gerente ciudad"])
 async def eliminar_asignacion_ciudades_gerente_ciudad(id_asignacion_ciudades_gerente_ciudad: int):
     return await DeleteCiudadesGCiudad(id_asignacion_ciudades_gerente_ciudad)
 

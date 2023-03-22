@@ -11,9 +11,21 @@ menu = APIRouter(route_class=ValidacionToken)
 async def get_menu():
     try:
         data = db.execute(Menus.select()).fetchall()
+        infoData = []
+        for menu in data:
+            submenus = db.execute(Submenus.select().where(Submenus.c.id_menus == menu.id_menus)).fetchall()
+            infoData.append({
+                "id": menu.id_menus,
+                "id_roles": menu.id_roles,
+                "menu": menu.menu,
+                "path": menu.path,
+                "icon": menu.icon,
+                "submenus": submenus
+            })
+
         return {
             "code": "0",
-            "data": data
+            "data": infoData
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -46,6 +58,42 @@ async def post_menu(menu: MenuBase):
             "code": "-1",
             "data": str(e)
         })
+
+@menu.put("/menu", tags=["menu"])
+async def put_menu(menu: MenuBase):
+    try:
+        db.execute(Menus.update().where(Menus.c.id_menus == menu.id).values(
+            id_roles=menu.id_roles,
+            menu=menu.menu,
+            path=menu.path,
+            icon=menu.icon
+        ))
+        return {
+            "code": "0",
+            "data": "Menu actualizado"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+    
+@menu.delete("/menu/{id}", tags=["menu"])
+async def delete_menu(id: int):
+    try:
+        db.execute(Menus.delete().where(Menus.c.id_menus == id))
+        db.execute(Submenus.delete().where(Submenus.c.id_menus == id))
+        return {
+            "code": "0",
+            "data": "Menu eliminado y submenus"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+
+
 
 
 
