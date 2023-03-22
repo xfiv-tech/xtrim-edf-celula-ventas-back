@@ -561,16 +561,10 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
 @registro.get("/listar_jefe_venta", tags=["Jefe de Venta"])
 async def get_jefe_venta():
     try:
-        query = RegistroJefeVentas.join(Channel, Channel.c.id_channel == RegistroJefeVentas.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistroJefeVentas.c.id_ciudad).select().with_only_columns([
+        query = RegistroJefeVentas.select().with_only_columns([
                 RegistroJefeVentas.c.id_jefe_venta,
-                Channel.c.id_channel,
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
                 RegistroJefeVentas.c.id_estado,
-                RegistroJefeVentas.c.id_gerente,
+                RegistroJefeVentas.c.id_gerente_regional,
                 RegistroJefeVentas.c.nombre_jefe
             ])        
         data = db.execute(query).fetchall()
@@ -579,34 +573,24 @@ async def get_jefe_venta():
             if i[7] == None:
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
-                    "id_channel": i.id_channel,
-                    "channel": i.channel,
-                    "ciudad": i.ciudad,
-                    "id_ciudad": i.id_ciudad,
-                    "region": i.region,
                     "id_estado": i.id_estado,
-                    "id_gerente": i.id_gerente,
+                    "id_gerente_regional": i.id_gerente_regional,
                     "nombre_jefe": i.nombre_jefe,
                     "nombre_gerente": "Sin asignar",
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
             else:
-                # query = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i[7]).with_only_columns([
-                #     RegistrarGerente.c.nombre_gerente
-                # ])
-                # data = db.execute(query).first()
+                query = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                    RegistrarGerenteRegional.c.nombre_gerente
+                ])
+                data = db.execute(query).first()
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
-                    "id_channel": i.id_channel,
-                    "channel": i.channel,
-                    "ciudad": i.ciudad,
-                    "id_ciudad": i.id_ciudad,
-                    "region": i.region,
                     "id_estado": i.id_estado,
-                    "id_gerente": i.id_gerente,
+                    "id_gerente_regional": i.id_gerente_regional,
                     "nombre_jefe": i.nombre_jefe,
-                    "nombre_gerente": "",
+                    "nombre_gerente": data.nombre_gerente,
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
@@ -689,7 +673,7 @@ async def get_administrador():
                 RegistroAdministrador.c.id_administrador,
                 Estados.c.estado,
                 Estados.c.id_estado,
-                RegistroAdministrador.c.perfil,
+                RegistroAdministrador.c.id_roles,
                 RegistroAdministrador.c.email,
                 RegistroAdministrador.c.nombre_administrador
             ])           
@@ -698,7 +682,7 @@ async def get_administrador():
         for i in data:
             infoData.append({
                 "id_administrador": i.id_administrador,
-                "perfil": i.perfil,
+                "id_roles": i.id_roles,
                 "email": i.email,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
@@ -721,7 +705,7 @@ async def post_administrador(request: RegistrarAdministradorModel):
             id_estado=request.id_estado,
             email=request.email,
             password=encryptPassword(request.password),
-            perfil=request.perfil,
+            id_roles=request.id_roles,
             nombre_administrador=request.nombre_administrador,
         )
         data = db.execute(query).lastrowid
@@ -776,15 +760,9 @@ async def delete_administrador(id_administrador: int):
 @registro.get("/listar_gerente_regional", tags=["Gerente Regional"])
 async def get_gerente_ciudad():
     try:
-        query = RegistrarGerenteRegional.join(Channel, Channel.c.id_channel == RegistrarGerenteRegional.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistrarGerenteRegional.c.id_ciudad).join(
+        query = RegistrarGerenteRegional.join(
             Estados, Estados.c.id_estado == RegistrarGerenteRegional.c.id_estado).select().with_only_columns([
                 RegistrarGerenteRegional.c.id_gerente_regional,
-                Channel.c.id_channel,
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
                 Estados.c.estado,
                 Estados.c.id_estado,
                 RegistrarGerenteRegional.c.nombre_gerente
@@ -794,11 +772,6 @@ async def get_gerente_ciudad():
         for i in data:
             infoData.append({
                 "id_gerente_regional": i.id_gerente_regional,
-                "id_channel": i.id_channel,
-                "channel": i.channel,
-                "ciudad": i.ciudad,
-                "id_ciudad": i.id_ciudad,
-                "region": i.region,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_gerente": i.nombre_gerente,
@@ -875,15 +848,9 @@ async def delete_gerente_ciudad(id_gerente_regional: int):
 @registro.get("/listar_gerente_ciudad", tags=["Gerente de Ciudad"])
 async def get_gerente_ciudad():
     try:
-        query = RegistrarGerenteCiudad.join(Channel, Channel.c.id_channel == RegistrarGerenteCiudad.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistrarGerenteCiudad.c.id_ciudad).join(
+        query = RegistrarGerenteCiudad.join(
             Estados, Estados.c.id_estado == RegistrarGerenteCiudad.c.id_estado).select().with_only_columns([
                 RegistrarGerenteCiudad.c.id_gerente_ciudad,
-                Channel.c.id_channel,
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
                 Estados.c.estado,
                 Estados.c.id_estado,
                 RegistrarGerenteCiudad.c.nombre_gerente_ciudad
@@ -893,11 +860,6 @@ async def get_gerente_ciudad():
         for i in data:
             infodata.append({
                 "id_gerente_ciudad": i.id_gerente_ciudad,
-                "id_channel": i.id_channel,
-                "channel": i.channel,
-                "ciudad": i.ciudad,
-                "id_ciudad": i.id_ciudad,
-                "region": i.region,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_gerente_ciudad": i.nombre_gerente_ciudad,
@@ -973,15 +935,8 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
 @registro.get("/listar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def get_administrador_proyectos():
     try:
-        query = RegistrarAdminProyectos.join(Channel, Channel.c.id_channel == RegistrarAdminProyectos.c.id_channel).join(
-            Ciudad, Ciudad.c.id_ciudad == RegistrarAdminProyectos.c.id_ciudad).join(
-            Estados, Estados.c.id_estado == RegistrarAdminProyectos.c.id_estado).select().with_only_columns([
+        query = RegistrarAdminProyectos.join(Estados, Estados.c.id_estado == RegistrarAdminProyectos.c.id_estado).select().with_only_columns([
                 RegistrarAdminProyectos.c.id_admin_proyectos,
-                Channel.c.id_channel,
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
                 Estados.c.estado,
                 Estados.c.id_estado,
                 RegistrarAdminProyectos.c.nombre_admin_proyectos
@@ -991,11 +946,6 @@ async def get_administrador_proyectos():
         for i in data:
             infoData.append({
                 "id_admin_proyectos": i.id_admin_proyectos,
-                "id_channel": i.id_channel,
-                "channel": i.channel,
-                "ciudad": i.ciudad,
-                "id_ciudad": i.id_ciudad,
-                "region": i.region,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_admin_proyectos": i.nombre_admin_proyectos,

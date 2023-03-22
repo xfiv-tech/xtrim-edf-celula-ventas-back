@@ -129,8 +129,9 @@ class RegistrarAdministradorModel(BaseModel):
     id_estado: int
     email: str
     password: str
-    perfil: str
+    id_roles: str
     nombre_administrador: str
+    
 
 class ArrayRegistrarAdministradorModel(BaseModel):
     data: List[RegistrarAdministradorModel]

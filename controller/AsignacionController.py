@@ -122,7 +122,7 @@ async def AsignarCiudadesGCiudad(data: ArrayAsigancionCiudadGciudad):
 
 async def ListarCiudadesGCiudad(id_gerente_ciudad: int):
     try:
-        query = asignacion_ciudades_gerente_ciudad.join(Channel, asignacion_ciudades_gerente_ciudad.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
+        query = asignacion_ciudades_gerente_ciudad.join(Ciudad, asignacion_ciudades_gerente_ciudad.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
             asignacion_ciudades_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad
         )
         data = db.execute(query).fetchall()
@@ -132,6 +132,7 @@ async def ListarCiudadesGCiudad(id_gerente_ciudad: int):
                 "id_asignacion_ciudades_gerente_ciudad": i.id_asignacion_ciudades_gerente_ciudad,
                 "id_ciudad": i.id_ciudad,
                 "id_gerente_ciudad": i.id_gerente_ciudad,
+                "region": i.region,
                 "ciudad": i.ciudad
             })
         return infoData

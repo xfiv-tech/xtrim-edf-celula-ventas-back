@@ -61,12 +61,6 @@ Channel = Table("channel", meta,
     Column("channel", String(255), unique=True),
 )
 
-Mando = Table("mando", meta,
-    Column("id_mando", Integer, primary_key=True, autoincrement=True),
-    Column("mando", String(255), unique=True),
-)
-
-
 
 RegistrarDistribuidor = Table("registrar_distribuidor", meta,
     Column("id_registrar_distribuidor", Integer, primary_key=True, autoincrement=True),
@@ -119,7 +113,7 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("email", String(255), unique=True),
     Column("password", String(255)),
-    Column("perfil", String(255)),
+    Column("id_roles", Integer, ForeignKey("roles.id_roles")),
     Column("nombre_administrador", String(255))
 )
 
