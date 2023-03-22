@@ -278,17 +278,17 @@ async def AsignarCiudadesAPCiudad(data: ArrayAsigancionCiudadAdmin):
             if i.id_admin_proyecto != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_admin_proyectos.insert().values(
                     id_ciudad=i.id_ciudad,
-                    id_admin_proyecto=i.id_admin_proyecto,
+                    id_admin_proyectos=i.id_admin_proyectos,
                 )
                 db.execute(query)
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
 
-async def ListarCiudadesAPCiudad(id_admin_proyecto: int):
+async def ListarCiudadesAPCiudad(id_admin_proyectos: int):
     try:
         query = asignacion_ciudades_admin_proyectos.join(Ciudad, asignacion_ciudades_admin_proyectos.c.id_ciudad == Ciudad.c.id_ciudad).select().where(
-            asignacion_ciudades_admin_proyectos.c.id_admin_proyecto == id_admin_proyecto
+            asignacion_ciudades_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos
         )
         data = db.execute(query).fetchall()
         infoData = []
@@ -296,17 +296,17 @@ async def ListarCiudadesAPCiudad(id_admin_proyecto: int):
             infoData.append({
                 "id_asignacion_ciudades_admin_proyectos": i.id_asignacion_ciudades_admin_proyectos,
                 "id_ciudad": i.id_ciudad,
-                "id_admin_proyecto": i.id_admin_proyecto,
+                "id_admin_proyectos": i.id_admin_proyectos,
                 "ciudad": i.ciudad
             })
         return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
-async def DeleteCiudadesAPCiudad(id_admin_proyecto: int):
+async def DeleteCiudadesAPCiudad(id_admin_proyectos: int):
     try:
         query = asignacion_ciudades_admin_proyectos.delete().where(
-            asignacion_ciudades_admin_proyectos.c.id_admin_proyecto == id_admin_proyecto
+            asignacion_ciudades_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos
         )
         db.execute(query)
         return {"status": 200, "message": "Eliminacion exitosa"}
@@ -319,17 +319,17 @@ async def AsignarCanalesAPCiudad(data: ArrayAsigancionCanalAdmin):
             if i.id_channel != 0 and i.id_admin_proyecto != 0:
                 query = asignacion_canal_admin_proyectos.insert().values(
                     id_channel=i.id_channel,
-                    id_admin_proyecto=i.id_admin_proyecto,
+                    id_admin_proyectos=i.id_admin_proyectos,
                 )
                 db.execute(query)
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
-async def ListarCanalesAPCiudad(id_admin_proyecto: int):
+async def ListarCanalesAPCiudad(id_admin_proyectos: int):
     try:
         query = asignacion_canal_admin_proyectos.join(Channel, asignacion_canal_admin_proyectos.c.id_channel == Channel.c.id_channel).select().where(
-            asignacion_canal_admin_proyectos.c.id_admin_proyecto == id_admin_proyecto
+            asignacion_canal_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos
         )
         data = db.execute(query).fetchall()
         infoData = []
@@ -337,17 +337,17 @@ async def ListarCanalesAPCiudad(id_admin_proyecto: int):
             infoData.append({
                 "id_asignacion_canal_admin_proyectos": i.id_asignacion_canal_admin_proyectos,
                 "id_channel": i.id_channel,
-                "id_admin_proyecto": i.id_admin_proyecto,
+                "id_admin_proyectos": i.id_admin_proyectos,
                 "channel": i.channel
             })
         return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
-async def DeleteCanalesAPCiudad(id_admin_proyecto: int):
+async def DeleteCanalesAPCiudad(id_admin_proyectos: int):
     try:
         query = asignacion_canal_admin_proyectos.delete().where(
-            asignacion_canal_admin_proyectos.c.id_admin_proyecto == id_admin_proyecto
+            asignacion_canal_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos
         )
         db.execute(query)
         return {"status": 200, "message": "Eliminacion exitosa"}
