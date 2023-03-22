@@ -7,8 +7,17 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
+from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
+from model.channel import asiganacion_canal_gerente_regional, asignacion_ciudades_gerente_regional
+from model.channel import asignacion_ciudades_gerente_ciudad, asignacion_canal_gerente_ciudad
+from model.channel import asignacion_ciudades_jefe_ventas, asignacion_canal_jefe_ventas
+from model.channel import asignacion_ciudades_admin_proyectos, asignacion_canal_admin_proyectos
+from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
+from model.channel import asignacion_ciudades_distribuidor, asignacion_canal_distribuidor
 from database.db import db
 from datetime import datetime
+
+from routes.asignacion import asignacion_ciudades_administrador
 # moment.need()
 
 registro = APIRouter(route_class=ValidacionToken)
@@ -528,7 +537,13 @@ async def put_distribuidor(request: RegistrarDistribuidorModel):
 @registro.delete("/eliminar_distribuidor/{id_registrar_distribuidor}", tags=["Distribuidor"])
 async def delete_distribuidor(id_registrar_distribuidor: int):
     try:
-        print (id_registrar_distribuidor)
+
+        db.execute(asignacion_ciudades_distribuidor.delete().where(
+            asignacion_ciudades_distribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor))
+        
+        db.execute(asignacion_canal_distribuidor.delete().where(
+            asignacion_canal_distribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor))
+
         query = RegistrarDistribuidor.delete().where(
             RegistrarDistribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor)
         data = db.execute(query)
@@ -647,6 +662,12 @@ async def put_jefe_venta(request: RegistrarJefeModel):
 @registro.delete("/eliminar_jefe_venta/{id_jefe_venta}", tags=["Jefe de Venta"])
 async def delete_jefe_venta(id_jefe_venta: int):
     try:
+        db.execute(asignacion_ciudades_jefe_ventas.delete().where(
+            asignacion_ciudades_jefe_ventas.c.id_jefe_venta == id_jefe_venta))
+        
+        db.execute(asignacion_canal_jefe_ventas.delete().where(
+            asignacion_canal_jefe_ventas.c.id_jefe_venta == id_jefe_venta))
+        
         query = RegistroJefeVentas.delete().where(
             RegistroJefeVentas.c.id_jefe_venta == id_jefe_venta)
         data = db.execute(query)
@@ -733,6 +754,11 @@ async def put_administrador(request: RegistrarAdministradorModel):
 @registro.delete("/eliminar_administrador", tags=["Administrador"])
 async def delete_administrador(id_administrador: int):
     try:
+        db.execute(asignacion_ciudades_admin.delete().where(
+            asignacion_ciudades_admin.c.id_administrador == id_administrador))
+        db.execute(asignacion_canal_admin.delete().where(
+            asignacion_canal_admin.c.id_administrador == id_administrador))
+
         query = RegistroAdministrador.delete().where(
             RegistroAdministrador.c.id_administrador == id_administrador)
         data = db.execute(query)
@@ -826,6 +852,12 @@ async def put_gerente_ciudad(request: RegistrarGerenteRegionalModel):
 @registro.delete("/eliminar_gerente_regional/{id_gerente_regional}", tags=["Gerente Regional"])
 async def delete_gerente_ciudad(id_gerente_regional: int):
     try:
+        db.execute(asignacion_ciudades_gerente_regional.delete().where(
+            asignacion_ciudades_gerente_regional.c.id_gerente_regional == id_gerente_regional))
+        db.execute(asiganacion_canal_gerente_regional.delete().where(
+            asiganacion_canal_gerente_regional.c.id_gerente_regional == id_gerente_regional))
+        
+
         query = RegistrarGerenteRegional.delete().where(
             RegistrarGerenteRegional.c.id_gerente_regional == id_gerente_regional)
         data = db.execute(query)
@@ -918,6 +950,12 @@ async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
 @registro.delete("/eliminar_gerente_ciudad/{id_gerente_ciudad}", tags=["Gerente de Ciudad"])
 async def delete_gerente_ciudad(id_gerente_ciudad: int):
     try:
+        db.execute(asignacion_ciudades_gerente_ciudad.delete().where(
+            asignacion_ciudades_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad))
+        
+        db.execute(asignacion_canal_gerente_ciudad.delete().where(
+            asignacion_canal_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad))
+        
         query = RegistrarGerenteCiudad.delete().where(
             RegistrarGerenteCiudad.c.id_gerente_ciudad == id_gerente_ciudad)
         data = db.execute(query)
@@ -1011,6 +1049,13 @@ async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
 @registro.delete("/eliminar_administrador_proyectos/{id_admin_proyectos}", tags=["Administrador de Proyectos"])
 async def delete_administrador_proyectos(id_admin_proyectos: int):
     try:
+
+        db.execute(asignacion_ciudades_admin_proyectos.delete().where(
+            asignacion_ciudades_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos))
+        
+        db.execute(asignacion_canal_admin_proyectos.delete().where(
+            asignacion_canal_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos))
+
         query = RegistrarAdminProyectos.delete().where(
             RegistrarAdminProyectos.c.id_admin_proyectos == id_admin_proyectos)
         data = db.execute(query)
