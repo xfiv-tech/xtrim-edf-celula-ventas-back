@@ -442,7 +442,7 @@ async def DeleteCanalesDistribuidor(id_asignacion_canal_distribuidor: int):
 
 
 
-#Asignacion de Administradores de Proyectos 
+#Asignacion de Administradores
 async def AsignarCiudadesAdminCiudad(data):
     try:
         for i in data.data:
@@ -465,7 +465,7 @@ async def ListarCiudadesAdminCiudad(id_administrador: int):
         infoData = []
         for i in data:
             infoData.append({
-                "id_asignacion_ciudades_admin_proyectos": i.asignacion_ciudades_admin,
+                "id_asignacion_ciudades_admin": i.id_asignacion_ciudades_admin,
                 "id_ciudad": i.id_ciudad,
                 "id_administrador": i.id_administrador,
                 "ciudad": i.ciudad
