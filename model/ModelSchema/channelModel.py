@@ -131,6 +131,7 @@ class RegistrarAdministradorModel(BaseModel):
     password: str
     id_roles: str
     nombre_administrador: str
+    perfil: str
     
 
 class ArrayRegistrarAdministradorModel(BaseModel):

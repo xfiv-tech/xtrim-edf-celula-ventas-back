@@ -89,7 +89,8 @@ RegistroAdministrador = Table("registro_administrador", meta,
     Column("email", String(255), unique=True),
     Column("password", String(255)),
     Column("id_roles", Integer, ForeignKey("roles.id_roles")),
-    Column("nombre_administrador", String(255))
+    Column("nombre_administrador", String(255)),
+    Column("perfil", String(255)),
 )
 
 # #registro de gerente regional

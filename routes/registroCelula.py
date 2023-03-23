@@ -675,6 +675,7 @@ async def get_administrador():
                 Estados.c.id_estado,
                 RegistroAdministrador.c.id_roles,
                 RegistroAdministrador.c.email,
+                RegistroAdministrador.c.perfil,
                 RegistroAdministrador.c.nombre_administrador
             ])           
         data = db.execute(query).fetchall()
@@ -686,6 +687,7 @@ async def get_administrador():
                 "email": i.email,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
+                "perfil": i.perfil,
                 "nombre_administrador": i.nombre_administrador,
                 "ciudades_asignadas": await ListarCiudadesAdminCiudad(i.id_administrador),
                 "canales_asignados": await ListarCanalesAdminCiudad(i.id_administrador)
@@ -706,6 +708,7 @@ async def post_administrador(request: RegistrarAdministradorModel):
             email=request.email,
             password=encryptPassword(request.password),
             id_roles=request.id_roles,
+            perfil=request.perfil,
             nombre_administrador=request.nombre_administrador,
         )
         data = db.execute(query).lastrowid
