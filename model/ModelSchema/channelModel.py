@@ -133,6 +133,14 @@ class RegistrarAdministradorModel(BaseModel):
     nombre_administrador: str
     perfil: str
     
+class RegistrarAdministradorModelNew(BaseModel):
+    id_administrador: Optional[int]
+    id_estado: int
+    email: str
+    new_password: str
+    id_roles: str
+    nombre_administrador: str
+    perfil: str
 
 class ArrayRegistrarAdministradorModel(BaseModel):
     data: List[RegistrarAdministradorModel]

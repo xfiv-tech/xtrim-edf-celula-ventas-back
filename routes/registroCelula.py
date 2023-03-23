@@ -5,7 +5,7 @@ from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
-from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
+from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarAdministradorModelNew, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
 from model.channel import asiganacion_canal_gerente_regional, asignacion_ciudades_gerente_regional
@@ -713,19 +713,31 @@ async def post_administrador(request: RegistrarAdministradorModel):
 
 
 @registro.put("/actualizar_administrador", tags=["Administrador"])
-async def put_administrador(request: RegistrarAdministradorModel):
+async def put_administrador(request: RegistrarAdministradorModelNew):
     try:
-        data = db.execute(RegistroAdministrador.update().values(
-            id_administrador=request.id_administrador,
-            id_channel=request.id_channel,
-            id_ciudad=request.id_ciudad,
-            id_estado=request.id_estado,
-            nombre_administrador=request.nombre_administrador
-        ).where(RegistroAdministrador.c.id_administrador == request.id_administrador))
-        return {
-            "code": "0",
-            "data": data
-        }
+        if request.new_password == "":
+            data = db.execute(RegistroAdministrador.update().values(
+                id_estado=request.id_estado,
+                id_roles=request.id_roles,
+                email=request.email,
+                nombre_administrador=request.nombre_administrador
+            ).where(RegistroAdministrador.c.id_administrador == request.id_administrador))
+            return {
+                "code": "0",
+                "data": data
+            }
+        else:
+            data = db.execute(RegistroAdministrador.update().values(
+                id_estado=request.id_estado,
+                id_roles=request.id_roles,
+                email=request.email,
+                password=encryptPassword(request.new_password),
+                nombre_administrador=request.nombre_administrador
+            ).where(RegistroAdministrador.c.id_administrador == request.id_administrador))
+            return {
+                "code": "0",
+                "data": data
+            }
     except Exception as e:
         return {"error": str(e)}
 
