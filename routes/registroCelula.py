@@ -572,7 +572,7 @@ async def get_jefe_venta():
                 })
             else:
                 query = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
-                    RegistrarGerenteRegional.c.nombre_gerente
+                    RegistrarGerenteRegional.c.nombre_gerente_ciudad
                 ])
                 data = db.execute(query).first()
                 infoData.append({
@@ -580,7 +580,7 @@ async def get_jefe_venta():
                     "id_estado": i.id_estado,
                     "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
-                    "nombre_gerente": data.nombre_gerente,
+                    "nombre_gerente": data.nombre_gerente_ciudad,
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
