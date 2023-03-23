@@ -560,6 +560,7 @@ async def get_jefe_venta():
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
+            print(i.id_gerente_ciudad)
             if i.id_gerente_ciudad == None:
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
@@ -571,9 +572,7 @@ async def get_jefe_venta():
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
             else:
-                query = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
-                    RegistrarGerenteRegional.c.nombre_gerente_ciudad
-                ])
+                query = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad)
                 data = db.execute(query).first()
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
