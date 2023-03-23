@@ -560,11 +560,13 @@ async def get_jefe_venta():
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
+            estado = db.execute(Estados.select().where(Estados.c.id_estado == i.id_estado)).first()
             print(i.id_gerente_ciudad)
             if i.id_gerente_ciudad == None:
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
                     "id_estado": i.id_estado,
+                    "estado": estado.estado,
                     "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
                     "nombre_gerente": "Sin asignar",
@@ -577,6 +579,7 @@ async def get_jefe_venta():
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
                     "id_estado": i.id_estado,
+                    "estado": estado.estado,
                     "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
                     "nombre_gerente": data.nombre_gerente_ciudad,
