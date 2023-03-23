@@ -447,12 +447,8 @@ async def delete_registro(id_registrar_vendedor: int):
 async def get_distribuidor():
     try:
         query = RegistrarDistribuidor.join(
-            Ciudad, Ciudad.c.id_ciudad == RegistrarDistribuidor.c.id_ciudad).join(
             Estados, Estados.c.id_estado == RegistrarDistribuidor.c.id_estado).select().with_only_columns([
                 RegistrarDistribuidor.c.id_registrar_distribuidor,
-                Ciudad.c.ciudad,
-                Ciudad.c.id_ciudad,
-                Ciudad.c.region,
                 Estados.c.estado,
                 Estados.c.id_estado,
                 RegistrarDistribuidor.c.nombre_distribuidor,
@@ -467,9 +463,6 @@ async def get_distribuidor():
         for i in data:
             infoData.append({
                 "id_registrar_distribuidor": i.id_registrar_distribuidor,
-                "id_ciudad": i.id_ciudad,
-                "ciudad": i.ciudad,
-                "region": i.region,
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_distribuidor": i.nombre_distribuidor,
@@ -481,7 +474,6 @@ async def get_distribuidor():
                 "ciudades_asignadas": await ListarCiudadesDistribuidor(i.id_registrar_distribuidor),
                 "canales_asignados": await ListarCanalesDistribuidor(i.id_registrar_distribuidor)
             })
-
         return {
             "code": "0",
             "data": infoData

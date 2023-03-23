@@ -363,10 +363,10 @@ async def DeleteCanalesAPCiudad(id_admin_proyectos: int):
 async def AsignarCiudadesDistribuidor(data: ArrayAsigancionCiudadDistribuidor):
     try:
         for i in data.data:
-            if i.id_distribuidor != 0 and i.id_ciudad != 0:
+            if i.id_registrar_distribuidor != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_distribuidor.insert().values(
                     id_ciudad=i.id_ciudad,
-                    id_distribuidor=i.id_distribuidor,
+                    id_registrar_distribuidor=i.id_registrar_distribuidor,
                 )
                 db.execute(query)
         return {"status": 200, "message": "Asignacion exitosa"}
