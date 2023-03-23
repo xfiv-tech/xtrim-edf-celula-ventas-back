@@ -69,8 +69,6 @@ async def get_registro(request: Request):
             RegistrarVendedor.c.id_ciudad,
             RegistrarVendedor.c.id_registrar_vendedor,
             RegistrarVendedor.c.id_channel,
-            # RegistrarVendedor.c.id_gerente,
-            # RegistrarVendedor.c.ciudad_gestion,
             RegistrarVendedor.c.id_gerente_regional,
             RegistrarVendedor.c.id_gerente_ciudad,
             RegistrarVendedor.c.id_jefe_venta,

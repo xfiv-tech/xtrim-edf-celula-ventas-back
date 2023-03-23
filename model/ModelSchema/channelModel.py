@@ -160,7 +160,6 @@ class RegistrarGerenteCiudadModel(BaseModel):
     id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente_ciudad: str
-    channel_sistema: str
 
 class ArrayRegistrarGerenteCiudadModel(BaseModel):
     data: List[RegistrarGerenteCiudadModel]

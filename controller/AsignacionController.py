@@ -26,6 +26,8 @@ async def AsignarCiudadesGRegional(data: ArrayAsigancionCiudadGreginal):
                     id_gerente_regional=i.id_gerente_regional,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
 
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
@@ -63,7 +65,6 @@ async def DeleteCiudadesGRegional(id_asignacion_ciudades: int):
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
-
 async def AsignarCanalesGRciudad(data: ArrayAsigancionCanalGregional):
     try:
         for i in data.data:
@@ -73,6 +74,8 @@ async def AsignarCanalesGRciudad(data: ArrayAsigancionCanalGregional):
                     id_gerente_regional=i.id_gerente_regional,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -116,6 +119,8 @@ async def AsignarCiudadesGCiudad(data: ArrayAsigancionCiudadGciudad):
                     id_gerente_ciudad=i.id_gerente_ciudad,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -158,6 +163,8 @@ async def AsignarCanalesGCiudad(data: ArrayAsigancionCanalGciudad):
                     id_gerente_ciudad=i.id_gerente_ciudad,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -201,6 +208,8 @@ async def AsignarCiudadesJVCiudad(data: ArrayAsigancionCiudadJefe):
                     id_jefe_venta=i.id_jefe_venta,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -242,6 +251,8 @@ async def AsignarCanalesJVCiudad(data: ArrayAsigancionCanalJefe):
                     id_jefe_venta=i.id_jefe_venta,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -326,6 +337,7 @@ async def AsignarCanalesAPCiudad(data: ArrayAsigancionCanalAdmin):
                     id_admin_proyectos=i.id_admin_proyectos,
                 )
                 db.execute(query)
+            
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -369,9 +381,11 @@ async def AsignarCiudadesDistribuidor(data: ArrayAsigancionCiudadDistribuidor):
                     id_registrar_distribuidor=i.id_registrar_distribuidor,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
-        return {"status": 400, "message": str(e)}
+        return {"status": 400, "message": str(e.args)}
     
 async def ListarCiudadesDistribuidor(id_registrar_distribuidor: int):
     try:
@@ -410,9 +424,11 @@ async def AsignarCanalesDistribuidor(data: ArrayAsigancionCanalDistribuidor):
                     id_registrar_distribuidor=i.id_registrar_distribuidor,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
-        return {"status": 400, "message": str(e)}
+        return {"status": 400, "message": str(e.args)}
     
 async def ListarCanalesDistribuidor(id_registrar_distribuidor: int):
     try:
@@ -443,7 +459,6 @@ async def DeleteCanalesDistribuidor(id_asignacion_canal_distribuidor: int):
         return {"status": 400, "message": str(e)}
 
 
-
 #Asignacion de Administradores
 async def AsignarCiudadesAdminCiudad(data):
     try:
@@ -454,6 +469,8 @@ async def AsignarCiudadesAdminCiudad(data):
                     id_administrador=i.id_administrador,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
@@ -495,6 +512,8 @@ async def AsignarCanalesAdminCiudad(data):
                     id_administrador=i.id_administrador,
                 )
                 db.execute(query)
+            else:
+                return {"status": 400, "message": "No se puede asignar"}
         return {"status": 200, "message": "Asignacion exitosa"}
     except Exception as e:
         return {"status": 400, "message": str(e)}
