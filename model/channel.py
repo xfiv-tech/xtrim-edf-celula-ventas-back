@@ -78,7 +78,7 @@ RegistroJefeVentas = Table("registro_jefe_ventas", meta,
     Column("id_channel", Integer, nullable=True),
     Column("id_ciudad", Integer, nullable=True),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
-    Column("id_gerente_regional", Integer, ForeignKey("registrar_gerente_regional.id_gerente_regional"), nullable=True, default=None),
+    Column("id_gerente_ciudad", Integer, ForeignKey("registrar_gerente_ciudad.id_gerente_ciudad"), nullable=True, default=None),
     Column("nombre_jefe", String(255))
 )
 

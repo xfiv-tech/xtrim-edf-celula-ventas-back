@@ -554,31 +554,31 @@ async def get_jefe_venta():
         query = RegistroJefeVentas.select().with_only_columns([
                 RegistroJefeVentas.c.id_jefe_venta,
                 RegistroJefeVentas.c.id_estado,
-                RegistroJefeVentas.c.id_gerente_regional,
+                RegistroJefeVentas.c.id_gerente_ciudad,
                 RegistroJefeVentas.c.nombre_jefe
             ])        
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
-            if i.id_gerente_regional == None:
+            if i.id_gerente_ciudad == None:
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
                     "id_estado": i.id_estado,
-                    "id_gerente_regional": i.id_gerente_regional,
+                    "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
                     "nombre_gerente": "Sin asignar",
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
             else:
-                query = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                query = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente
                 ])
                 data = db.execute(query).first()
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
                     "id_estado": i.id_estado,
-                    "id_gerente_regional": i.id_gerente_regional,
+                    "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
                     "nombre_gerente": data.nombre_gerente,
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
@@ -597,11 +597,11 @@ async def get_jefe_venta():
 async def post_jefe_venta(request: RegistrarJefeModel):
     try:
         query = RegistroJefeVentas.insert().values(
-            id_jefe_venta=request.id_jefe_venta,
-            id_channel=request.id_channel,
-            id_ciudad=request.id_ciudad,
+            # id_jefe_venta=request.id_jefe_venta,
+            # id_channel=request.id_channel,
+            # id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            id_gerente=request.id_gerente,
+            id_gerente_ciudad=request.id_gerente_ciudad,
             nombre_jefe=request.nombre_jefe
         )
         data = db.execute(query).lastrowid
