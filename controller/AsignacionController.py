@@ -220,6 +220,7 @@ async def ListarCiudadesJVCiudad(id_jefe_venta: int):
             asignacion_ciudades_jefe_ventas.c.id_jefe_venta == id_jefe_venta
         )
         data = db.execute(query).fetchall()
+        print(data)
         infoData = []
         for i in data:
             infoData.append({
@@ -228,7 +229,7 @@ async def ListarCiudadesJVCiudad(id_jefe_venta: int):
                 "id_jefe_venta": i.id_jefe_venta,
                 "ciudad": i.ciudad
             })
-            return infoData
+        return infoData
     except Exception as e:
         return {"status": 400, "message": str(e)}
     
