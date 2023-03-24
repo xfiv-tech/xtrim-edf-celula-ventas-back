@@ -766,7 +766,7 @@ async def put_registro(request: RegistrarVendedorModel):
         return {"error": str(e)}
 
 
-@registro.delete("/eliminar_registro", tags=["Vendedor"])
+@registro.delete("/eliminar_registro/{id_registrar_vendedor}", tags=["Vendedor"])
 async def delete_registro(id_registrar_vendedor: int):
     try:
         query = RegistrarVendedor.delete().where(RegistrarVendedor.id_registrar_vendedor == id_registrar_vendedor)
