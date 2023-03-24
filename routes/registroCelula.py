@@ -727,7 +727,6 @@ async def put_registro(request: RegistrarVendedorModel):
     try:
         query = RegistrarVendedor.update().values(
             id_channel=request.id_channel,
-            id_mando=request.id_mando,
             id_ciudad=request.id_ciudad,
             id_operador=request.id_operador,
             id_sistema_operativo=request.id_sistema_operativo,
