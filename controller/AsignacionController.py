@@ -331,6 +331,10 @@ async def DeleteCiudadesAPCiudad(id_admin_proyectos: int):
     
 async def AsignarCanalesAPCiudad(data: ArrayAsigancionCanalAdmin):
     try:
+
+        db.execute(asignacion_canal_admin_proyectos.delete().where(
+            asignacion_canal_admin_proyectos.c.id_admin_proyectos == data.data[0].id_admin_proyectos
+        ))
         for i in data.data:
             if i.id_channel != 0 and i.id_admin_proyectos != 0:
                 query = asignacion_canal_admin_proyectos.insert().values(

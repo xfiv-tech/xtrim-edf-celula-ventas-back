@@ -90,9 +90,9 @@ async def listar_canal_administrador(id_admin_proyecto: int):
 async def asignacion_canal_administrador(data: ArrayAsigancionCanalAdmin):
     return await AsignarCanalesAPCiudad(data)
 
-@asignacion.delete("/eliminar_asignacion_canal_administrador_v/{id_asignacion_ciudades_admin_proyectos}", tags=["Eliminar asignacion de canal a administrador de proyecto"])
-async def eliminar_asignacion_canal_administrador(id_asignacion_ciudades_admin_proyectos: int):
-    return await DeleteCanalesAPCiudad(id_asignacion_ciudades_admin_proyectos)
+@asignacion.delete("/eliminar_asignacion_canal_administrador/{id_asignacion_canal_admin_proyectos}", tags=["Eliminar asignacion de canal a administrador de proyecto"])
+async def eliminar_asignacion_canal_administrador(id_asignacion_canal_admin_proyectos: int):
+    return await DeleteCanalesAPCiudad(id_asignacion_canal_admin_proyectos)
 
 @asignacion.get("/listar_ciudades_administrador_proyecto/{id_admin_proyecto}", tags=["Listar ciudades de administrador de proyecto"])
 async def listar_ciudades_administrador(id_admin_proyecto: int):
