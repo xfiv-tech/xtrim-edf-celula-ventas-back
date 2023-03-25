@@ -331,7 +331,7 @@ async def DeleteCiudadesAPCiudad(id_admin_proyectos: int):
     
 async def AsignarCanalesAPCiudad(data: ArrayAsigancionCanalAdmin):
     try:
-
+        print(data.data[0].id_admin_proyectos)
         db.execute(asignacion_canal_admin_proyectos.delete().where(
             asignacion_canal_admin_proyectos.c.id_admin_proyectos == data.data[0].id_admin_proyectos
         ))
