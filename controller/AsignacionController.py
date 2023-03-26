@@ -18,6 +18,9 @@ from database.db import db
 #Gerente regional
 async def AsignarCiudadesGRegional(data: ArrayAsigancionCiudadGreginal):
     try:
+        db.execute(asignacion_ciudades_gerente_regional.delete().where(
+            asignacion_ciudades_gerente_regional.c.id_gerente_regional == data.data[0].id_gerente_regional
+        ))           
         for i in data.data:
             print(i)
             if i.id_gerente_regional != 0 and i.id_ciudad != 0:
@@ -67,6 +70,9 @@ async def DeleteCiudadesGRegional(id_asignacion_ciudades: int):
     
 async def AsignarCanalesGRciudad(data: ArrayAsigancionCanalGregional):
     try:
+        db.execute(asiganacion_canal_gerente_regional.delete().where(
+            asiganacion_canal_gerente_regional.c.id_gerente_regional == data.data[0].id_gerente_regional
+        ))          
         for i in data.data:
             if i.id_channel != 0 and i.id_gerente_regional != 0:
                 query = asiganacion_canal_gerente_regional.insert().values(
@@ -112,6 +118,9 @@ async def DeleteCanalesGRciudad(id_asignacion_canal: int):
 #Gerente ciudad
 async def AsignarCiudadesGCiudad(data: ArrayAsigancionCiudadGciudad):
     try:
+        db.execute(asignacion_ciudades_gerente_ciudad.delete().where(
+            asignacion_ciudades_gerente_ciudad.c.id_gerente_ciudad == data.data[0].id_gerente_ciudad
+        ))             
         for i in data.data:
             if i.id_gerente_ciudad != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_gerente_ciudad.insert().values(
@@ -156,6 +165,9 @@ async def DeleteCiudadesGCiudad(id_asignacion_ciudades_gerente_ciudad: int):
     
 async def AsignarCanalesGCiudad(data: ArrayAsigancionCanalGciudad):
     try:
+        db.execute(asignacion_canal_gerente_ciudad.delete().where(
+            asignacion_canal_gerente_ciudad.c.id_gerente_ciudad == data.data[0].id_gerente_ciudad
+        ))         
         for i in data.data:
             if i.id_channel != 0 and i.id_gerente_ciudad != 0:
                 query = asignacion_canal_gerente_ciudad.insert().values(
