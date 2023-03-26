@@ -297,7 +297,7 @@ async def DeleteCanalesJVCiudad(id_asignacion_canal_jefe_ventas: int):
 async def AsignarCiudadesAPCiudad(data):
     try:
         db.execute(asignacion_ciudades_admin_proyectos.delete().where(
-            asignacion_ciudades_admin_proyectos.c.id_administrador == data.data[0].id_administrador
+            asignacion_ciudades_admin_proyectos.c.id_admin_proyectos == data.data[0].id_admin_proyectos
         ))                
         for i in data.data:
             if i.id_admin_proyectos != 0 and i.id_ciudad != 0:
