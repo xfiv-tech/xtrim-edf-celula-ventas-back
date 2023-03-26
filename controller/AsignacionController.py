@@ -201,6 +201,9 @@ async def DeleteCanalesGCiudad(id_asignacion_canal_gerente_ciudad: int):
 #Jefe de venta
 async def AsignarCiudadesJVCiudad(data: ArrayAsigancionCiudadJefe):
     try:
+        db.execute(asignacion_ciudades_jefe_ventas.delete().where(
+            asignacion_ciudades_jefe_ventas.c.id_jefe_venta == data.data[0].id_jefe_venta
+        ))         
         for i in data.data:
             if i.id_jefe_venta != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_jefe_ventas.insert().values(
@@ -244,6 +247,9 @@ async def DeleteCiudadesJVCiudad(id_asignacion_ciudades_jefe_ventas: int):
         return {"status": 400, "message": str(e)}
     
 async def AsignarCanalesJVCiudad(data: ArrayAsigancionCanalJefe):
+    db.execute(asignacion_canal_jefe_ventas.delete().where(
+        asignacion_canal_jefe_ventas.c.id_jefe_venta == data.data[0].id_jefe_venta
+    ))      
     try:
         for i in data.data:
             if i.id_channel != 0 and i.id_jefe_venta != 0:
@@ -290,6 +296,9 @@ async def DeleteCanalesJVCiudad(id_asignacion_canal_jefe_ventas: int):
 #Administrador Proyecto
 async def AsignarCiudadesAPCiudad(data):
     try:
+        db.execute(asignacion_ciudades_admin_proyectos.delete().where(
+            asignacion_ciudades_admin_proyectos.c.id_administrador == data.data[0].id_administrador
+        ))                
         for i in data.data:
             if i.id_admin_proyectos != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_admin_proyectos.insert().values(
@@ -379,6 +388,9 @@ async def DeleteCanalesAPCiudad(id_admin_proyectos: int):
 #Distribuidor
 async def AsignarCiudadesDistribuidor(data: ArrayAsigancionCiudadDistribuidor):
     try:
+        db.execute(asignacion_ciudades_distribuidor.delete().where(
+            asignacion_ciudades_distribuidor.c.id_registrar_distribuidor == data.data[0].id_registrar_distribuidor
+        ))
         for i in data.data:
             if i.id_registrar_distribuidor != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_distribuidor.insert().values(
@@ -422,6 +434,9 @@ async def DeleteCiudadesDistribuidor(id_asignacion_ciudades_distribuidor: int):
     
 async def AsignarCanalesDistribuidor(data: ArrayAsigancionCanalDistribuidor):
     try:
+        db.execute(asignacion_canal_distribuidor.delete().where(
+            asignacion_canal_distribuidor.c.id_registrar_distribuidor == data.data[0].id_registrar_distribuidor
+        ))
         for i in data.data:
             if i.id_channel != 0 and i.id_registrar_distribuidor != 0:
                 query = asignacion_canal_distribuidor.insert().values(
@@ -467,6 +482,9 @@ async def DeleteCanalesDistribuidor(id_asignacion_canal_distribuidor: int):
 #Asignacion de Administradores
 async def AsignarCiudadesAdminCiudad(data):
     try:
+        db.execute(asignacion_ciudades_admin.delete().where(
+            asignacion_ciudades_admin.c.id_administrador == data.data[0].id_administrador
+        ))
         for i in data.data:
             if i.id_administrador != 0 and i.id_ciudad != 0:
                 query = asignacion_ciudades_admin.insert().values(
@@ -510,6 +528,9 @@ async def DeleteCiudadesAdminCiudad(id_administrador: int):
     
 async def AsignarCanalesAdminCiudad(data):
     try:
+        db.execute(asignacion_canal_admin.delete().where(
+            asignacion_canal_admin.c.id_administrador == data.data[0].id_administrador
+        ))        
         for i in data.data:
             if i.id_channel != 0 and i.id_administrador != 0:
                 query = asignacion_canal_admin.insert().values(
