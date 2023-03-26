@@ -964,7 +964,7 @@ async def put_jefe_venta(request: RegistrarJefeModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            id_gerente=request.id_gerente,
+            id_gerente_ciudad=request.id_gerente_ciudad,
             nombre_jefe=request.nombre_jefe,
         ).where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta)
         data = db.execute(query)
@@ -1056,11 +1056,12 @@ async def post_administrador(request: RegistrarAdministradorModel):
 @registro.put("/actualizar_administrador", tags=["Administrador"])
 async def put_administrador(request: RegistrarAdministradorModelNew):
     try:
-        if request.new_password == "":
+        if request.new_password == "" or request.new_password == None:
             data = db.execute(RegistroAdministrador.update().values(
                 id_estado=request.id_estado,
                 id_roles=request.id_roles,
                 email=request.email,
+                perfil=request.perfil,
                 nombre_administrador=request.nombre_administrador
             ).where(RegistroAdministrador.c.id_administrador == request.id_administrador))
             return {

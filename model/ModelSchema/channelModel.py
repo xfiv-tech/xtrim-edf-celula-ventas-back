@@ -137,7 +137,7 @@ class RegistrarAdministradorModelNew(BaseModel):
     id_administrador: Optional[int]
     id_estado: int
     email: str
-    new_password: str
+    new_password: Optional[str] = None
     id_roles: str
     nombre_administrador: str
     perfil: str
