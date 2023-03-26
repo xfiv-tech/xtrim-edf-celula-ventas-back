@@ -98,6 +98,7 @@ async def ValidacionLoginCelula(datos: Login):
                     "id_rol": user.id_roles,
                     "email": user.email,
                     "usuario": user.nombre_administrador,
+                    "perfil": user.perfil,
                 }
                 return {
                     "code": "0",
