@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from MigrationPy.migration import Perfiles
 from database.db import db
 from model.ModelSchema.channelModel import ChanellModel, CiudadModel, EstadosModel, GeneroModel, MandoModel, ModalidadModel, OperadorModel, SistemaOperativoModel
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, SistemaOperativo
@@ -413,4 +414,17 @@ async def create_modalidad(modalidad: ModalidadModel):
 #             "code": "-1",
 #             "data": str(e)
 #         })
-    
+
+@channel.get("/perfil", tags=["Perfils"])
+async def get_perfil():
+    try:
+        data = db.execute(Perfiles.select()).fetchall()
+        return {
+            "code": "0",
+            "data": data,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })

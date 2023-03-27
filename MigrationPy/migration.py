@@ -31,6 +31,11 @@ Ciudad = Table("ciudad", meta,
     Column("region", String(255)),
 )
 
+Perfiles = Table("perfiles", meta,
+    Column("id_perfil", Integer, primary_key=True, autoincrement=True),
+    Column("perfil", String(255), unique=True),
+)
+
 Operador = Table("operador", meta,
     Column("id_operador", Integer, primary_key=True, autoincrement=True),
     Column("operador", String(255), unique=True),
