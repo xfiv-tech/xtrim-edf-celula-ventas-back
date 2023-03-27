@@ -27,6 +27,7 @@ def write_token(data: dict):
 def read_token(token: str):
     try:
         data = jwt.decode(token, SECRET, algorithms=["HS256"])
+        print("read_token",data)
         return {
             "data": data,
             "status": 200

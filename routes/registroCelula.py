@@ -1,4 +1,5 @@
 from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
+from function.ExtraerCiuCanl import ExtraerCiuCanl
 from function.encrytPassword import encryptPassword
 from function.excelReporte import get_tdd_excel_workbook
 from function.function_jwt import decode_token
@@ -24,14 +25,19 @@ registro = APIRouter(route_class=ValidacionToken)
 
 #lista de vendedores
 @registro.get("/reporte_ftp", tags=["Vendedor"])
-async def get_reporteFtp():
+async def get_reporteFtp(request: Request):
     try:
-        resultado = await get_tdd_excel_workbook()
+        header = request.headers
+        decodeToken = decode_token(header["authorization"].split(" ")[1])
+        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
+        ciudad = CanalCiudad["ciudad"]
+        resultado = await get_tdd_excel_workbook(ciudad)
+        usuario = decodeToken["usuario"]+".xlsx"
         if resultado["success"]:
             return FileResponse(
                 path='reporte_tdd.xlsx',
                 media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
-                filename='reporte_tdd.xlsx',
+                filename=usuario,
             )
         else:
             raise HTTPException(status_code=400, detail=resultado["error"])
@@ -43,52 +49,56 @@ async def get_reporteFtp():
 async def get_registro(request: Request):
     try:
         header = request.headers
-        print("Headre",header["authorization"].split(" ")[1])
         decodeToken = decode_token(header["authorization"].split(" ")[1])
-        print("decodeToken",decodeToken)
+        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
+        ciudad = CanalCiudad["ciudad"]
+        data = []
+        for i in ciudad:
+            query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+                Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+                Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+                Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+                SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+                Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+                Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+                Channel.c.channel,
+                Ciudad.c.ciudad,
+                Ciudad.c.region,
+                Estados.c.estado,
+                Operador.c.operador,
+                Genero.c.genero,
+                Modalidad.c.modalidad,
+                RegistrarVendedor.c.id_sistema_operativo,
+                SistemaOperativo.c.sistema_operativo,
+                RegistrarVendedor.c.id_modalidad,
+                RegistrarVendedor.c.id_lider_peloton,
+                RegistrarVendedor.c.id_estado,
+                RegistrarVendedor.c.id_genero,
+                RegistrarVendedor.c.id_ciudad,
+                RegistrarVendedor.c.id_registrar_vendedor,
+                RegistrarVendedor.c.id_channel,
+                RegistrarVendedor.c.id_gerente_regional,
+                RegistrarVendedor.c.id_gerente_ciudad,
+                RegistrarVendedor.c.id_jefe_venta,
+                RegistrarVendedor.c.cedula,
+                RegistrarVendedor.c.telefono,
+                RegistrarVendedor.c.id_operador,
+                RegistrarVendedor.c.codigo_vendedor,
+                RegistrarVendedor.c.usuario_equifax,
+                RegistrarVendedor.c.nombre_vendedor,
+                RegistrarVendedor.c.fecha_ingreso,
+                RegistrarVendedor.c.fecha_salida,
+                RegistrarVendedor.c.sector_residencia,
+                RegistrarVendedor.c.lider_check,
+                RegistrarVendedor.c.meta_volumen,
+                RegistrarVendedor.c.meta_dolares,
+                RegistrarVendedor.c.email,
+                RegistrarVendedor.c.dias_inactivo
+                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
+            res = db.execute(query).fetchall()
+            for i in res:
+                data.append(i)
 
-        query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
-            Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
-            Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
-            Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
-            SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
-            Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
-            Channel.c.channel,
-            Ciudad.c.ciudad,
-            Ciudad.c.region,
-            Estados.c.estado,
-            Operador.c.operador,
-            Genero.c.genero,
-            Modalidad.c.modalidad,
-            RegistrarVendedor.c.id_sistema_operativo,
-            SistemaOperativo.c.sistema_operativo,
-            RegistrarVendedor.c.id_modalidad,
-            RegistrarVendedor.c.id_lider_peloton,
-            RegistrarVendedor.c.id_estado,
-            RegistrarVendedor.c.id_genero,
-            RegistrarVendedor.c.id_ciudad,
-            RegistrarVendedor.c.id_registrar_vendedor,
-            RegistrarVendedor.c.id_channel,
-            RegistrarVendedor.c.id_gerente_regional,
-            RegistrarVendedor.c.id_gerente_ciudad,
-            RegistrarVendedor.c.id_jefe_venta,
-            RegistrarVendedor.c.cedula,
-            RegistrarVendedor.c.telefono,
-            RegistrarVendedor.c.id_operador,
-            RegistrarVendedor.c.codigo_vendedor,
-            RegistrarVendedor.c.usuario_equifax,
-            RegistrarVendedor.c.nombre_vendedor,
-            RegistrarVendedor.c.fecha_ingreso,
-            RegistrarVendedor.c.fecha_salida,
-            RegistrarVendedor.c.sector_residencia,
-            RegistrarVendedor.c.lider_check,
-            RegistrarVendedor.c.meta_volumen,
-            RegistrarVendedor.c.meta_dolares,
-            RegistrarVendedor.c.email,
-            RegistrarVendedor.c.dias_inactivo
-            ])         
-        data = db.execute(query).fetchall()
         dataInfo = []
         for i in data:
             if  i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
@@ -344,7 +354,6 @@ async def get_registro(request: Request):
                     "sistema_operativo": i.sistema_operativo
                 })
                 
-
             else:
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
