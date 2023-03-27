@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from MigrationPy.migration import Perfiles
 from database.db import db
 from model.ModelSchema.channelModel import ChanellModel, CiudadModel, EstadosModel, GeneroModel, MandoModel, ModalidadModel, OperadorModel, SistemaOperativoModel
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, SistemaOperativo
+from model.channel import Perfiles, Channel, Ciudad, Estados, Genero, Modalidad, Operador, SistemaOperativo
 from middleware.validacionToken import ValidacionToken
 
 channel = APIRouter(route_class=ValidacionToken)
