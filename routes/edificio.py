@@ -121,13 +121,14 @@ async def create_edificio(edificio: Edificio):
 @edificios.put("/edificios_actualizar", tags=["edificios"])
 async def update_edificio(edificio: Edificio):
     try:
+        print(edificio)
         latitud = edificio.coordenadas.split(",")[0]
         longitud = edificio.coordenadas.split(",")[1]
 
         db.execute(
             Edicifios.update().values(
                 idAdministrador=edificio.idAdministrador,
-                # id_edificio=edificio.id_edificio,
+                id_edificio=edificio.id_edificio,
                 sector=edificio.sector,
                 ciudad=edificio.ciudad,
                 coordenadas=f"https://maps.google.com/?q={latitud},{longitud}",
