@@ -138,7 +138,7 @@ async def update_edificio(edificio: Edificio):
                 responsable=edificio.responsable,
                 adjunto=edificio.adjunto,
                 data_update=datetime.now(),
-            ).where(Edicifios.c.id_edificio == edificio.id_edificio)
+            ).where(Edicifios.c.id == edificio.id)
         )
         data = db.execute(Edicifios.select()).fetchall()
         return {
