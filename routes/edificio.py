@@ -121,12 +121,11 @@ async def create_edificio(edificio: Edificio):
 @edificios.put("/edificios_actualizar", tags=["edificios"])
 async def update_edificio(edificio: Edificio):
     try:
-        print(edificio)
+        print(edificio.id)
         latitud = edificio.coordenadas.split(",")[0]
         longitud = edificio.coordenadas.split(",")[1]
 
-        db.execute(
-            Edicifios.update().values(
+        db.execute(Edicifios.update().values(
                 idAdministrador=edificio.idAdministrador,
                 id_edificio=edificio.id_edificio,
                 sector=edificio.sector,
@@ -139,8 +138,7 @@ async def update_edificio(edificio: Edificio):
                 responsable=edificio.responsable,
                 adjunto=edificio.adjunto,
                 data_update=datetime.now(),
-            ).where(Edicifios.c.id == edificio.id)
-        )
+            ).where(Edicifios.c.id == edificio.id))
         data = db.execute(Edicifios.select()).fetchall()
         return {
             "code": "0",
