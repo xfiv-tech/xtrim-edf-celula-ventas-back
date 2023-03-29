@@ -127,7 +127,7 @@ async def update_edificio(edificio: Edificio):
         db.execute(
             Edicifios.update().values(
                 idAdministrador=edificio.idAdministrador,
-                id_edificio=edificio.id_edificio,
+                # id_edificio=edificio.id_edificio,
                 sector=edificio.sector,
                 ciudad=edificio.ciudad,
                 coordenadas=f"https://maps.google.com/?q={latitud},{longitud}",
@@ -138,7 +138,7 @@ async def update_edificio(edificio: Edificio):
                 responsable=edificio.responsable,
                 adjunto=edificio.adjunto,
                 data_update=datetime.now(),
-            ).where(Edicifios.c.idAdministrador == edificio.id)
+            ).where(Edicifios.c.id_edificio == edificio.id_edificio)
         )
         data = db.execute(Edicifios.select()).fetchall()
         return {
