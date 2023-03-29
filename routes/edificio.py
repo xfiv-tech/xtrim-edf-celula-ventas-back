@@ -121,6 +121,7 @@ async def create_edificio(edificio: Edificio):
 @edificios.put("/edificios_actualizar", tags=["edificios"])
 async def update_edificio(edificio: Edificio):
     try:
+        #db.execute(Channel.update().values(channel=channel.channel).where(Channel.c.id_channel == channel.id))
         print(edificio.id)
         latitud = edificio.coordenadas.split(",")[0]
         longitud = edificio.coordenadas.split(",")[1]
