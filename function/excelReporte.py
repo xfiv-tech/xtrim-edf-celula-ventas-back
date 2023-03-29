@@ -1,8 +1,17 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
+from function.ftp import ftp_connect
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo 
 from database.db import db
+
+HOST = os.getenv("HOST_FTP")
+USER = os.getenv("USER_FTP")
+PASS = os.getenv("PASS_FTP")
 
 class ReporteExcel(BaseModel):
     id_registrar_vendedor: int
@@ -416,6 +425,8 @@ async def get_tdd_excel_workbook(ciudad: list):
                 k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
             ])
         wb.save("reporte_tdd.xlsx")
+        ftp = ftp_connect(HOST, USER, PASS)
+        ftp.cwd("/reportes")
         return {
             "success": True,
         }
