@@ -7,7 +7,7 @@ from datetime import datetime
 from model.administrador import Administradores
 from middleware.validacionToken import ValidacionToken
 
-from starlette.status import HTTP_204_NO_CONTENT
+# from starlette.status import HTTP_204_NO_CONTENT
 
 
 edificios = APIRouter(
@@ -159,7 +159,7 @@ async def delete_edificio(edificioID: EdificioList):
         db.execute(Edicifios.delete().where(Edicifios.c.id == edificioID.id))
         return {
             "code": "0",
-            "data": Response(status_code=HTTP_204_NO_CONTENT),
+            "data": [],
             "message": "Edificio eliminado correctamente"
         }
     except Exception as e:
