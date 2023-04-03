@@ -76,7 +76,7 @@ async def ValidacionLoginCelula(datos: Login):
     try:
         query = RegistroAdministrador.select().where(RegistroAdministrador.c.email == datos.email)
         user = db.execute(query).first()
-        decr_data = checkPassword(datos.password, user.password)
+        decr_data = checkPassword(datos.password, user["password"])
         menu = Menus.select().where(Menus.c.id_roles == user.id_roles)
         menu = db.execute(menu).fetchall()
         info_menu = []
