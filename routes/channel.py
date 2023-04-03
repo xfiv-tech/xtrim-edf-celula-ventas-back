@@ -3,6 +3,7 @@ from database.db import db
 from model.ModelSchema.channelModel import ChanellModel, CiudadModel, EstadosModel, GeneroModel, MandoModel, ModalidadModel, OperadorModel, SistemaOperativoModel
 from model.channel import Perfiles, Channel, Ciudad, Estados, Genero, Modalidad, Operador, SistemaOperativo
 from middleware.validacionToken import ValidacionToken
+from time import time
 
 channel = APIRouter(route_class=ValidacionToken)
 
@@ -50,6 +51,22 @@ async def create_edificio(channel: ChanellModel):
             "code": "-1",
             "data": str(e)
         })
+
+
+@channel.get("/fecha_actual", tags=["Fecha Actual"])
+async def fecha_actual():
+    try:
+        return {
+            "code": "0",
+            "data": time().srtftime("%Y-%m-%d %H:%M:%S")
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+
+
 
 
 
