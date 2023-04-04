@@ -424,8 +424,10 @@ async def get_tdd_excel_workbook(ciudad: list):
             ws.append([
                 k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
             ])
+
         wb.save("reporte_tdd.xlsx")
         ftp = ftp_connect(HOST, USER, PASS)
+        print("ftp",ftp)
         ftp.cwd("/reportes")
         return {
             "success": True,
