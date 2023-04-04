@@ -1,10 +1,14 @@
 import ftplib
 
 def ftp_connect(host, user, passwd):
-    ftp = ftplib.FTP(host)
-    ftp.login(user, passwd)
-    print(ftp.getwelcome())
-    return ftp
+    try:
+        ftp = ftplib.FTP(host)
+        ftp.login(user, passwd)
+        print(ftp.getwelcome())
+        return ftp
+    except Exception as e:
+        print(e)
+        return None
 
 
 
