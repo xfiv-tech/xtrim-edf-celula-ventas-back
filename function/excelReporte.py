@@ -412,6 +412,10 @@ async def get_infoReporte(ciudad: list):
 async def get_tdd_excel_workbook(ciudad: list, usuario: str): 
     try:
         ftp = ftp_connect(HOST, USER, PASS)
+        ftplist = ftp_list(ftp, "QlikView")
+        ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+        print("ftplist",ftplist)
+        print("ftplistCelula",ftplistCelula)
         wb = Workbook() 
         ws = wb.active 
         data = await get_infoReporte(ciudad)
@@ -427,7 +431,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             ])
 
         wb.save(usuario)
-        ftp_upload(ftp, usuario)
+        ftp.upload(usuario, f"/QlikView/{usuario}")
         ftp_close(ftp)
         return {
             "success": True,
