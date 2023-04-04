@@ -2,6 +2,7 @@ from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanales
 from function.ExtraerCiuCanl import ExtraerCiuCanl
 from function.encrytPassword import encryptPassword
 from function.excelReporte import get_tdd_excel_workbook
+from function.ftp import ftp_connect, ftp_list
 from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, HTTPException, Request
@@ -23,10 +24,22 @@ from routes.asignacion import asignacion_ciudades_administrador
 
 registro = APIRouter(route_class=ValidacionToken)
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+HOST = os.getenv("HOST_FTP")
+USER = os.getenv("USER_FTP")
+PASS = os.getenv("PASS_FTP")
+
 #lista de vendedores
 @registro.get("/reporte_ftp", tags=["Vendedor"])
 async def get_reporteFtp(request: Request):
     try:
+        ftp = ftp_connect(HOST, USER, PASS)
+        ftplist = ftp_list(ftp, "/")
+        print("ftplist",ftplist)
+        print("ftp",ftp)
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
