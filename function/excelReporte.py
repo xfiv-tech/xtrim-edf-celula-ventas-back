@@ -1,6 +1,6 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
-from function.ftp import ftp_connect, ftp_list, ftp_upload
+from function.ftp import ftp_close, ftp_connect, ftp_list, ftp_upload
 import os
 from dotenv import load_dotenv
 
@@ -428,6 +428,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
 
         wb.save(usuario)
         ftp_upload(ftp, usuario, "QlikView/Celula_Ventas/")
+        ftp_close(ftp)
         return {
             "success": True,
         }
