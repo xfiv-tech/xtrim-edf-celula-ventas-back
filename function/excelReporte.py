@@ -431,7 +431,8 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             ])
 
         wb.save(usuario)
-        ftp.upload(usuario, f"/QlikView/{usuario}")
+        # ftp.upload(usuario, f"/QlikView/{usuario}")
+        ftp.storbinary(f"STOR /QlikView/{usuario}", open(usuario, "rb"))
         ftp_close(ftp)
         return {
             "success": True,
