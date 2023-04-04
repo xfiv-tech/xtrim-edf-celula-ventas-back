@@ -427,7 +427,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             ])
 
         wb.save(usuario)
-        ftp_upload(ftp, usuario, "QlikView/Celula_Ventas")
+        ftp_upload(ftp, usuario)
         ftp_close(ftp)
         return {
             "success": True,
