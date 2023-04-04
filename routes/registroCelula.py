@@ -37,7 +37,7 @@ PASS = os.getenv("PASS_FTP")
 async def get_reporteFtp(request: Request):
     try:
         ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "/")
+        ftplist = ftp_list(ftp, "QlikView")
         print("ftplist",ftplist)
         print("ftp",ftp)
         header = request.headers

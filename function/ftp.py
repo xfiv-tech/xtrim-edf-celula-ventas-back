@@ -13,7 +13,11 @@ def ftp_connect(host, user, passwd):
 
 
 def ftp_list(ftp, path):
-    return ftp.nlst(path)
+    try:
+        return ftp.nlst(path)
+    except Exception as e:
+        print(e)
+        return None
 
 
 def ftp_mkdir(ftp, path):
