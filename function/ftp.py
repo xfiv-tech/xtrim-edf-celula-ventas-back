@@ -3,6 +3,7 @@ import ftplib
 def ftp_connect(host, user, passwd):
     ftp = ftplib.FTP(host)
     ftp.login(user, passwd)
+    print(ftp.getwelcome())
     return ftp
 
 
