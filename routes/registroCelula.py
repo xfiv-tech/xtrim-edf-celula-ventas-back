@@ -36,19 +36,20 @@ PASS = os.getenv("PASS_FTP")
 @registro.get("/reporte_ftp", tags=["Vendedor"])
 async def get_reporteFtp(request: Request):
     try:
+        fecha = datetime.now().strftime("%Y-%m-%d")
         ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "QlikView")
+        ftplist = ftp_list(ftp, "QlikView/Celula_Ventas/")
         print("ftplist",ftplist)
         print("ftp",ftp)
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        resultado = await get_tdd_excel_workbook(ciudad)
-        usuario = decodeToken["usuario"]+".xlsx"
+        usuario = fecha+"_"+decodeToken["usuario"]+".xlsx"
+        resultado = await get_tdd_excel_workbook(ciudad, usuario)
         if resultado["success"]:
             return FileResponse(
-                path='reporte_tdd.xlsx',
+                path=usuario,
                 media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
                 filename=usuario,
             )

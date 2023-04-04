@@ -1,6 +1,6 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
-from function.ftp import ftp_connect, ftp_list
+from function.ftp import ftp_connect, ftp_list, ftp_upload
 import os
 from dotenv import load_dotenv
 
@@ -409,13 +409,9 @@ async def get_infoReporte(ciudad: list):
     except Exception as e:
         return {"error": str(e)}
     
-async def get_tdd_excel_workbook(ciudad: list): 
+async def get_tdd_excel_workbook(ciudad: list, usuario: str): 
     try:
         ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "/")
-        print("ftplist",ftplist)
-
-        print("ftp",ftp)
         wb = Workbook() 
         ws = wb.active 
         data = await get_infoReporte(ciudad)
@@ -430,8 +426,8 @@ async def get_tdd_excel_workbook(ciudad: list):
                 k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
             ])
 
-        wb.save("reporte_tdd.xlsx")
-        ftp.cwd("/reportes")
+        wb.save(usuario)
+        ftp_upload(ftp, usuario, "QlikView/Celula_Ventas/")
         return {
             "success": True,
         }
