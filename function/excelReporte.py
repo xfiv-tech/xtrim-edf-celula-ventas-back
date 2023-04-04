@@ -411,6 +411,8 @@ async def get_infoReporte(ciudad: list):
     
 async def get_tdd_excel_workbook(ciudad: list): 
     try:
+        ftp = ftp_connect(HOST, USER, PASS)
+        print("ftp",ftp)
         wb = Workbook() 
         ws = wb.active 
         data = await get_infoReporte(ciudad)
@@ -426,8 +428,6 @@ async def get_tdd_excel_workbook(ciudad: list):
             ])
 
         wb.save("reporte_tdd.xlsx")
-        ftp = ftp_connect(HOST, USER, PASS)
-        print("ftp",ftp)
         ftp.cwd("/reportes")
         return {
             "success": True,
