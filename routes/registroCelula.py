@@ -38,7 +38,7 @@ async def get_reporteFtp(request: Request):
     try:
         fecha = datetime.now().strftime("%Y-%m-%d")
         ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "QlikView/Celula_Ventas/")
+        ftplist = ftp_list(ftp, "QlikView/Celula_Ventas")
         print("ftplist",ftplist)
         print("ftp",ftp)
         header = request.headers
