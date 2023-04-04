@@ -38,8 +38,10 @@ async def get_reporteFtp(request: Request):
     try:
         fecha = datetime.now().strftime("%Y-%m-%d")
         ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "QlikView/Celula_Ventas")
+        ftplist = ftp_list(ftp, "QlikView")
+        ftplistCelula = ftp_list(ftp, "Celula_Ventas")
         print("ftplist",ftplist)
+        print("ftplistCelula",ftplistCelula)
         print("ftp",ftp)
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
