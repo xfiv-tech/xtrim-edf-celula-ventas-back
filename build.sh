@@ -4,7 +4,7 @@ git add .
 
 git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
 
-git push origin celula_venta
+git push origin celula_venta --force
 
 docker login -u "intelnexoec" -p "dckr_pat_EY2hedAJR91hc9Vn9Hx6-qVpgg0"
 
