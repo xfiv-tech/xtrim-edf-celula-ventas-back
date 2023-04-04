@@ -1,6 +1,6 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
-from function.ftp import ftp_connect
+from function.ftp import ftp_connect, ftp_list
 import os
 from dotenv import load_dotenv
 
@@ -412,6 +412,9 @@ async def get_infoReporte(ciudad: list):
 async def get_tdd_excel_workbook(ciudad: list): 
     try:
         ftp = ftp_connect(HOST, USER, PASS)
+        ftplist = ftp_list(ftp, "/")
+        print("ftplist",ftplist)
+
         print("ftp",ftp)
         wb = Workbook() 
         ws = wb.active 

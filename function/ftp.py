@@ -6,6 +6,7 @@ def ftp_connect(host, user, passwd):
     return ftp
 
 
+
 def ftp_list(ftp, path):
     return ftp.nlst(path)
 
