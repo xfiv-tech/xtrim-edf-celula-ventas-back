@@ -41,7 +41,7 @@ async def get_reporteFtp(request: Request):
         decodeToken = decode_token(header["authorization"].split(" ")[1])
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        usuario = fecha+"_"+decodeToken["usuario"]+".xlsx"
+        usuario = fecha+"_"+str(decodeToken["usuario"]).replace(" ", "_")+".xlsx"
         resultado = await get_tdd_excel_workbook(ciudad, usuario)
         if resultado["success"]:
             return FileResponse(
