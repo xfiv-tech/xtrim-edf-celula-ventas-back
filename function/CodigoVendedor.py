@@ -1,7 +1,7 @@
 import requests
 import uuid
-session = requests.Session()
-session.verify = False
+# session = requests.Session()
+# session.verify = False
 
 async def LoginCodigo():
     try:
@@ -11,10 +11,10 @@ async def LoginCodigo():
             "key": "YXBpbS1jbGllbnQ6N2M4ZmEyMDgtMmZjZC00YjhiLTk1ZjktYTIwZWJkODliYmRi",
             "realm": "realm-ecommerce",
             "type": "Basic"
-        }, headers={}, verify=False)
+        })
         print(login)
         response = login.json()
-        return response['data']['token']
+        return response["data"]["token"]
 
     except Exception as e:
         print(e)
@@ -33,9 +33,9 @@ async def ConsultarVendedor(codigo):
         })
         print(code)
         vendedor = code.json()
-        if(vendedor['code'] == 400):
+        if(vendedor["code"] == 400):
             return False
         else:
-            return vendedor['data']
+            return vendedor["data"]
     except Exception as e:
         print(e)
