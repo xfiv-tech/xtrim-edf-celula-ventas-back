@@ -23,6 +23,7 @@ from routes.asignacion import asignacion_ciudades_administrador
 # moment.need()
 
 registro = APIRouter(route_class=ValidacionToken)
+registro = APIRouter()
 
 import os
 from dotenv import load_dotenv
@@ -60,8 +61,10 @@ async def get_registro(request: Request):
     try:
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
+        print("decodeToken", decodeToken)
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
+        print("Ciudades", ciudad)
         data = []
         for i in ciudad:
             query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
@@ -100,8 +103,12 @@ async def get_registro(request: Request):
                 RegistrarVendedor.c.fecha_salida,
                 RegistrarVendedor.c.sector_residencia,
                 RegistrarVendedor.c.lider_check,
-                RegistrarVendedor.c.meta_volumen,
-                RegistrarVendedor.c.meta_dolares,
+                RegistrarVendedor.c.meta_volumen_internet,
+                RegistrarVendedor.c.meta_dolares_internet,
+                RegistrarVendedor.c.meta_volumen_telefonia,
+                RegistrarVendedor.c.meta_dolares_telefonia,
+                RegistrarVendedor.c.meta_volumen_television,
+                RegistrarVendedor.c.meta_dolares_television,
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
@@ -138,8 +145,12 @@ async def get_registro(request: Request):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -185,8 +196,12 @@ async def get_registro(request: Request):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -240,8 +255,12 @@ async def get_registro(request: Request):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -301,8 +320,12 @@ async def get_registro(request: Request):
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,

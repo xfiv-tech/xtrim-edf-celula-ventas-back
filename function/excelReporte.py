@@ -96,8 +96,12 @@ async def get_infoReporte(ciudad: list):
                 RegistrarVendedor.c.fecha_salida,
                 RegistrarVendedor.c.sector_residencia,
                 RegistrarVendedor.c.lider_check,
-                RegistrarVendedor.c.meta_volumen,
-                RegistrarVendedor.c.meta_dolares,
+                RegistrarVendedor.c.meta_volumen_internet,
+                RegistrarVendedor.c.meta_dolares_internet,
+                RegistrarVendedor.c.meta_volumen_telefonia,
+                RegistrarVendedor.c.meta_dolares_telefonia,
+                RegistrarVendedor.c.meta_volumen_television,
+                RegistrarVendedor.c.meta_dolares_television,
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
@@ -136,8 +140,12 @@ async def get_infoReporte(ciudad: list):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -183,8 +191,12 @@ async def get_infoReporte(ciudad: list):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -238,8 +250,12 @@ async def get_infoReporte(ciudad: list):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -299,8 +315,12 @@ async def get_infoReporte(ciudad: list):
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -346,8 +366,12 @@ async def get_infoReporte(ciudad: list):
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -389,8 +413,12 @@ async def get_infoReporte(ciudad: list):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -421,13 +449,13 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         data = await get_infoReporte(ciudad)
 
         ws.append([
-            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE","CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR","META VOLUMEN","META DOLARES","USUARIO EQUIFAX","CEDULA"
+            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR","META VOLUMEN","META DOLARES","USUARIO EQUIFAX","CEDULA"
         ])
         for i in data:
             k = ReporteExcel(**i)
             print(k)
             ws.append([
-                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
+                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
             ])
 
         wb.save(usuario)
