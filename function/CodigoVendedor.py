@@ -22,6 +22,7 @@ async def LoginCodigo():
 
 async def ConsultarVendedor(codigo):
     try:
+        print("externalTransactionId",str(uuid.uuid1()))
         response = await LoginCodigo()
         code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data={
             "channel": "TYTAN",
