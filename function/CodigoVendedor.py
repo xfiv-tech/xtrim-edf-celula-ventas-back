@@ -1,9 +1,11 @@
 import requests
 import uuid
-
+session = requests.Session()
+session.verify = False
 
 async def LoginCodigo():
     try:
+
         login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data={
             "channel": "Celula_Ventas",
             "key": "YXBpbS1jbGllbnQ6N2M4ZmEyMDgtMmZjZC00YjhiLTk1ZjktYTIwZWJkODliYmRi",
