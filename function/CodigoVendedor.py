@@ -12,7 +12,7 @@ async def LoginCodigo():
             "realm": "realm-ecommerce",
             "type": "Basic"
         })
-        print("Login",login)
+        print("Login",login.json())
         response = login.json()
         return response["data"]["token"]
 
