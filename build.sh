@@ -2,7 +2,7 @@
 
 git add .
 
-git commit -m "$(date +%Y-%m-%d_%H:%M:%S)"
+git commit -m "$(date +%Y-%m-%d_%H:%M:%S) habilitando el endpoit de codigo de vendedor"
 
 git push origin celula_venta --force
 

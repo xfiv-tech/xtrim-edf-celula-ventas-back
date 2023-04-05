@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException
+from function.CodigoVendedor import LoginCodigo
 from middleware.validacionToken import ValidacionToken
 from routes.usuario import usuarios
 from routes.admin import administradores
@@ -10,6 +11,7 @@ from routes.login import login
 from routes.channel import channel
 from routes.registroCelula import registro
 from routes.asignacion import asignacion
+from routes.codigo import codigo
 
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
@@ -30,9 +32,7 @@ app = FastAPI(
     authorizations={
         
     }
-    
 )
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -56,6 +56,7 @@ app.include_router(login)
 app.include_router(registro)
 app.include_router(channel)
 app.include_router(asignacion)
+app.include_router(codigo)
 
 # from fastapi import FastAPI
 
