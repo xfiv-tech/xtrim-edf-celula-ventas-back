@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+import os
 from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
 from function.ExtraerCiuCanl import ExtraerCiuCanl
 from function.encrytPassword import encryptPassword
@@ -25,44 +27,47 @@ from routes.asignacion import asignacion_ciudades_administrador
 registro = APIRouter(route_class=ValidacionToken)
 registro = APIRouter()
 
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-#lista de vendedores
+# lista de vendedores
+
+
 @registro.get("/reporte_ftp", tags=["Vendedor"])
 async def get_reporteFtp(request: Request):
     try:
         fecha = datetime.now().strftime("%Y-%m-%d")
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
-        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
+        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        usuario = fecha+"_"+str(decodeToken["usuario"]).replace(" ", "_")+".xlsx"
+        usuario = fecha+"_" + \
+            str(decodeToken["usuario"]).replace(" ", "_")+".xlsx"
         resultado = await get_tdd_excel_workbook(ciudad, usuario)
         if resultado["success"]:
             return FileResponse(
                 path=usuario,
-                media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+                media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 filename=usuario,
             )
         else:
             raise HTTPException(status_code=400, detail=resultado["error"])
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e.args))
-    
-#lista de vendedores
+
+# lista de vendedores
+
+
 @registro.get("/listar_registro", tags=["Vendedor"])
 async def get_registro(request: Request):
     try:
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
         print("decodeToken", decodeToken)
-        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"],decodeToken["perfil"])
+        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
         print("Ciudades", ciudad)
         data = []
@@ -74,51 +79,51 @@ async def get_registro(request: Request):
                 SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
                 Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
                 Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.region,
-                Estados.c.estado,
-                Operador.c.operador,
-                Genero.c.genero,
-                Modalidad.c.modalidad,
-                RegistrarVendedor.c.id_sistema_operativo,
-                SistemaOperativo.c.sistema_operativo,
-                RegistrarVendedor.c.id_modalidad,
-                RegistrarVendedor.c.id_lider_peloton,
-                RegistrarVendedor.c.id_estado,
-                RegistrarVendedor.c.id_genero,
-                RegistrarVendedor.c.id_ciudad,
-                RegistrarVendedor.c.id_registrar_vendedor,
-                RegistrarVendedor.c.id_channel,
-                RegistrarVendedor.c.id_gerente_regional,
-                RegistrarVendedor.c.id_gerente_ciudad,
-                RegistrarVendedor.c.id_jefe_venta,
-                RegistrarVendedor.c.cedula,
-                RegistrarVendedor.c.telefono,
-                RegistrarVendedor.c.id_operador,
-                RegistrarVendedor.c.codigo_vendedor,
-                RegistrarVendedor.c.usuario_equifax,
-                RegistrarVendedor.c.nombre_vendedor,
-                RegistrarVendedor.c.fecha_ingreso,
-                RegistrarVendedor.c.fecha_salida,
-                RegistrarVendedor.c.sector_residencia,
-                RegistrarVendedor.c.lider_check,
-                RegistrarVendedor.c.meta_volumen_internet,
-                RegistrarVendedor.c.meta_dolares_internet,
-                RegistrarVendedor.c.meta_volumen_telefonia,
-                RegistrarVendedor.c.meta_dolares_telefonia,
-                RegistrarVendedor.c.meta_volumen_television,
-                RegistrarVendedor.c.meta_dolares_television,
-                RegistrarVendedor.c.email,
-                RegistrarVendedor.c.dias_inactivo
-                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
+                    Channel.c.channel,
+                    Ciudad.c.ciudad,
+                    Ciudad.c.region,
+                    Estados.c.estado,
+                    Operador.c.operador,
+                    Genero.c.genero,
+                    Modalidad.c.modalidad,
+                    RegistrarVendedor.c.id_sistema_operativo,
+                    SistemaOperativo.c.sistema_operativo,
+                    RegistrarVendedor.c.id_modalidad,
+                    RegistrarVendedor.c.id_lider_peloton,
+                    RegistrarVendedor.c.id_estado,
+                    RegistrarVendedor.c.id_genero,
+                    RegistrarVendedor.c.id_ciudad,
+                    RegistrarVendedor.c.id_registrar_vendedor,
+                    RegistrarVendedor.c.id_channel,
+                    RegistrarVendedor.c.id_gerente_regional,
+                    RegistrarVendedor.c.id_gerente_ciudad,
+                    RegistrarVendedor.c.id_jefe_venta,
+                    RegistrarVendedor.c.cedula,
+                    RegistrarVendedor.c.telefono,
+                    RegistrarVendedor.c.id_operador,
+                    RegistrarVendedor.c.codigo_vendedor,
+                    RegistrarVendedor.c.usuario_equifax,
+                    RegistrarVendedor.c.nombre_vendedor,
+                    RegistrarVendedor.c.fecha_ingreso,
+                    RegistrarVendedor.c.fecha_salida,
+                    RegistrarVendedor.c.sector_residencia,
+                    RegistrarVendedor.c.lider_check,
+                    RegistrarVendedor.c.meta_volumen_internet,
+                    RegistrarVendedor.c.meta_dolares_internet,
+                    RegistrarVendedor.c.meta_volumen_telefonia,
+                    RegistrarVendedor.c.meta_dolares_telefonia,
+                    RegistrarVendedor.c.meta_volumen_television,
+                    RegistrarVendedor.c.meta_dolares_television,
+                    RegistrarVendedor.c.email,
+                    RegistrarVendedor.c.dias_inactivo
+                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
             for i in res:
                 data.append(i)
 
         dataInfo = []
         for i in data:
-            if  i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+            if i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -156,7 +161,7 @@ async def get_registro(request: Request):
                     "email": i.email,
                     "dias_inactivo": i.dias_inactivo,
                     "channel": i.channel,
-                    "ciudad": i.ciudad,  
+                    "ciudad": i.ciudad,
                     "region": i.region,
                     "estado": i.estado,
                     "operador": i.operador,
@@ -169,7 +174,8 @@ async def get_registro(request: Request):
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente,
                 ])
-                data_gerente_regional = db.execute(query_gerente_regional).fetchone()
+                data_gerente_regional = db.execute(
+                    query_gerente_regional).fetchone()
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -224,11 +230,13 @@ async def get_registro(request: Request):
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente,
                 ])
-                data_gerente_regional = db.execute(query_gerente_regional).fetchone()
+                data_gerente_regional = db.execute(
+                    query_gerente_regional).fetchone()
                 query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
                     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
                 ])
-                data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
+                data_gerente_ciudad = db.execute(
+                    query_gerente_ciudad).fetchone()
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -276,7 +284,8 @@ async def get_registro(request: Request):
                 })
 
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
-                print("entro aca", i.id_gerente_regional, i.id_gerente_ciudad, i.id_jefe_venta)
+                print("entro aca", i.id_gerente_regional,
+                      i.id_gerente_ciudad, i.id_jefe_venta)
                 # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
                 #     RegistrarGerente.c.nombre_gerente,
                 # ])
@@ -284,12 +293,15 @@ async def get_registro(request: Request):
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente,
                 ])
-                data_gerente_regional = db.execute(query_gerente_regional).fetchone()
-                print("data_gerente_regional", data_gerente_regional.nombre_gerente)
+                data_gerente_regional = db.execute(
+                    query_gerente_regional).fetchone()
+                print("data_gerente_regional",
+                      data_gerente_regional.nombre_gerente)
                 query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
                     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
                 ])
-                data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
+                data_gerente_ciudad = db.execute(
+                    query_gerente_ciudad).fetchone()
                 query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
                     RegistroJefeVentas.c.nombre_jefe,
                 ])
@@ -386,7 +398,7 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "sistema_operativo": i.sistema_operativo
                 })
-                
+
             else:
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
@@ -441,11 +453,12 @@ async def get_registro(request: Request):
 @registro.get("/listar_registro_id/{id_registrar_vendedor}", tags=["Vendedor"])
 async def get_registroID(id_registrar_vendedor: int, request: Request):
     try:
-        if id_registrar_vendedor == 0 or id_registrar_vendedor == None: return {"code":"-1","error": "id_registrar_vendedor no puede ser 0 o nulo"}
+        if id_registrar_vendedor == 0 or id_registrar_vendedor == None:
+            return {"code": "-1", "error": "id_registrar_vendedor no puede ser 0 o nulo"}
         header = request.headers
-        print("Headre",header["authorization"].split(" ")[1])
+        print("Headre", header["authorization"].split(" ")[1])
         decodeToken = decode_token(header["authorization"].split(" ")[1])
-        print("decodeToken",decodeToken)
+        print("decodeToken", decodeToken)
 
         query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
             Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
@@ -454,51 +467,54 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
             SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
             Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
             Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
-            Channel.c.channel,
-            Ciudad.c.ciudad,
-            Ciudad.c.region,
-            Estados.c.estado,
-            Operador.c.operador,
-            Genero.c.genero,
-            Modalidad.c.modalidad,
-            RegistrarVendedor.c.id_sistema_operativo,
-            SistemaOperativo.c.sistema_operativo,
-            RegistrarVendedor.c.id_modalidad,
-            RegistrarVendedor.c.id_estado,
-            RegistrarVendedor.c.id_genero,
-            RegistrarVendedor.c.id_ciudad,
-            RegistrarVendedor.c.id_registrar_vendedor,
-            RegistrarVendedor.c.id_channel,
-            RegistrarVendedor.c.id_gerente_regional,
-            RegistrarVendedor.c.id_gerente_ciudad,
-            RegistrarVendedor.c.id_jefe_venta,
-            RegistrarVendedor.c.cedula,
-            RegistrarVendedor.c.telefono,
-            RegistrarVendedor.c.id_operador,
-            RegistrarVendedor.c.codigo_vendedor,
-            RegistrarVendedor.c.usuario_equifax,
-            RegistrarVendedor.c.nombre_vendedor,
-            RegistrarVendedor.c.fecha_ingreso,
-            RegistrarVendedor.c.fecha_salida,
-            RegistrarVendedor.c.sector_residencia,
-            RegistrarVendedor.c.lider_check,
-            RegistrarVendedor.c.meta_volumen,
-            RegistrarVendedor.c.meta_dolares,
-            RegistrarVendedor.c.email,
-            RegistrarVendedor.c.dias_inactivo
-            ]).where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)       
+                Channel.c.channel,
+                Ciudad.c.ciudad,
+                Ciudad.c.region,
+                Estados.c.estado,
+                Operador.c.operador,
+                Genero.c.genero,
+                Modalidad.c.modalidad,
+                RegistrarVendedor.c.id_sistema_operativo,
+                SistemaOperativo.c.sistema_operativo,
+                RegistrarVendedor.c.id_modalidad,
+                RegistrarVendedor.c.id_estado,
+                RegistrarVendedor.c.id_genero,
+                RegistrarVendedor.c.id_ciudad,
+                RegistrarVendedor.c.id_registrar_vendedor,
+                RegistrarVendedor.c.id_channel,
+                RegistrarVendedor.c.id_gerente_regional,
+                RegistrarVendedor.c.id_gerente_ciudad,
+                RegistrarVendedor.c.id_jefe_venta,
+                RegistrarVendedor.c.cedula,
+                RegistrarVendedor.c.telefono,
+                RegistrarVendedor.c.id_operador,
+                RegistrarVendedor.c.codigo_vendedor,
+                RegistrarVendedor.c.usuario_equifax,
+                RegistrarVendedor.c.nombre_vendedor,
+                RegistrarVendedor.c.fecha_ingreso,
+                RegistrarVendedor.c.fecha_salida,
+                RegistrarVendedor.c.sector_residencia,
+                RegistrarVendedor.c.lider_check,
+                RegistrarVendedor.c.meta_volumen,
+                RegistrarVendedor.c.meta_dolares,
+                RegistrarVendedor.c.email,
+                RegistrarVendedor.c.dias_inactivo
+            ]).where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query).fetchall()
 
-        if data == None: return {"code":"-1","error": "No se encontraron datos"}
-        if len(data) == 0: return {"code":"-1","error": "No se encontraron datos"}
-        print("data",data)
+        if data == None:
+            return {"code": "-1", "error": "No se encontraron datos"}
+        if len(data) == 0:
+            return {"code": "-1", "error": "No se encontraron datos"}
+        print("data", data)
 
         dataInfo = {}
         for i in data:
             query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                 RegistrarGerenteRegional.c.nombre_gerente,
             ])
-            data_gerente_regional = db.execute(query_gerente_regional).fetchone()
+            data_gerente_regional = db.execute(
+                query_gerente_regional).fetchone()
 
             query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
                 RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
@@ -510,7 +526,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
             ])
             data_jefe_venta = db.execute(query_jefe_venta).fetchone()
 
-            if  i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+            if i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
                 dataInfo = {
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -716,7 +732,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "modalidad": i.modalidad,
                     "sistema_operativo": i.sistema_operativo
                 }
-            
+
             if dataInfo:
                 return {
                     "code": "0",
@@ -755,8 +771,12 @@ async def post_registro(request: RegistrarVendedorModel):
             id_lider_peloton=request.id_lider_peloton,
             # ciudad_gestion=request.ciudad_gestion,
             lider_check=request.lider_check,
-            meta_volumen=request.meta_volumen,
-            meta_dolares=request.meta_dolares,
+            meta_volumen_internet=request.meta_volumen_internet,
+            meta_dolares_internet=request.meta_dolares_internet,
+            meta_volumen_telefonia=request.meta_volumen_telefonia,
+            meta_dolares_telefonia=request.meta_dolares_telefonia,
+            meta_volumen_television=request.meta_volumen_television,
+            meta_dolares_television=request.meta_dolares_television,
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
             email=request.email,
@@ -811,7 +831,8 @@ async def put_registro(request: RegistrarVendedorModel):
 @registro.delete("/eliminar_registro/{id_registrar_vendedor}", tags=["Vendedor"])
 async def delete_registro(id_registrar_vendedor: int):
     try:
-        query = RegistrarVendedor.delete().where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
+        query = RegistrarVendedor.delete().where(
+            RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query)
         return {
             "code": "0",
@@ -838,7 +859,7 @@ async def get_distribuidor():
                 RegistrarDistribuidor.c.email,
                 RegistrarDistribuidor.c.fecha_ingreso,
                 RegistrarDistribuidor.c.fecha_salida
-            ])       
+            ])
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -913,7 +934,7 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
 
         db.execute(asignacion_ciudades_distribuidor.delete().where(
             asignacion_ciudades_distribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor))
-        
+
         db.execute(asignacion_canal_distribuidor.delete().where(
             asignacion_canal_distribuidor.c.id_registrar_distribuidor == id_registrar_distribuidor))
 
@@ -935,15 +956,16 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
 async def get_jefe_venta():
     try:
         query = RegistroJefeVentas.select().with_only_columns([
-                RegistroJefeVentas.c.id_jefe_venta,
-                RegistroJefeVentas.c.id_estado,
-                RegistroJefeVentas.c.id_gerente_ciudad,
-                RegistroJefeVentas.c.nombre_jefe
-            ])        
+            RegistroJefeVentas.c.id_jefe_venta,
+            RegistroJefeVentas.c.id_estado,
+            RegistroJefeVentas.c.id_gerente_ciudad,
+            RegistroJefeVentas.c.nombre_jefe
+        ])
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
-            estado = db.execute(Estados.select().where(Estados.c.id_estado == i.id_estado)).first()
+            estado = db.execute(Estados.select().where(
+                Estados.c.id_estado == i.id_estado)).first()
             print(i.id_gerente_ciudad)
             if i.id_gerente_ciudad == None:
                 infoData.append({
@@ -957,7 +979,8 @@ async def get_jefe_venta():
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
             else:
-                query = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad)
+                query = RegistrarGerenteCiudad.select().where(
+                    RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad)
                 data = db.execute(query).first()
                 infoData.append({
                     "id_jefe_venta": i.id_jefe_venta,
@@ -1023,10 +1046,10 @@ async def delete_jefe_venta(id_jefe_venta: int):
     try:
         db.execute(asignacion_ciudades_jefe_ventas.delete().where(
             asignacion_ciudades_jefe_ventas.c.id_jefe_venta == id_jefe_venta))
-        
+
         db.execute(asignacion_canal_jefe_ventas.delete().where(
             asignacion_canal_jefe_ventas.c.id_jefe_venta == id_jefe_venta))
-        
+
         query = RegistroJefeVentas.delete().where(
             RegistroJefeVentas.c.id_jefe_venta == id_jefe_venta)
         data = db.execute(query)
@@ -1040,6 +1063,8 @@ async def delete_jefe_venta(id_jefe_venta: int):
         }
 
 # Registrar Administrador
+
+
 @registro.get("/listar_administrador", tags=["Administrador"])
 async def get_administrador():
     try:
@@ -1052,7 +1077,7 @@ async def get_administrador():
                 RegistroAdministrador.c.email,
                 RegistroAdministrador.c.perfil,
                 RegistroAdministrador.c.nombre_administrador
-            ])           
+            ])
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -1220,7 +1245,6 @@ async def delete_gerente_ciudad(id_gerente_regional: int):
             asignacion_ciudades_gerente_regional.c.id_gerente_regional == id_gerente_regional))
         db.execute(asiganacion_canal_gerente_regional.delete().where(
             asiganacion_canal_gerente_regional.c.id_gerente_regional == id_gerente_regional))
-        
 
         query = RegistrarGerenteRegional.delete().where(
             RegistrarGerenteRegional.c.id_gerente_regional == id_gerente_regional)
@@ -1305,10 +1329,10 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
     try:
         db.execute(asignacion_ciudades_gerente_ciudad.delete().where(
             asignacion_ciudades_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad))
-        
+
         db.execute(asignacion_canal_gerente_ciudad.delete().where(
             asignacion_canal_gerente_ciudad.c.id_gerente_ciudad == id_gerente_ciudad))
-        
+
         query = RegistrarGerenteCiudad.delete().where(
             RegistrarGerenteCiudad.c.id_gerente_ciudad == id_gerente_ciudad)
         data = db.execute(query)
@@ -1327,11 +1351,11 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
 async def get_administrador_proyectos():
     try:
         query = RegistrarAdminProyectos.join(Estados, Estados.c.id_estado == RegistrarAdminProyectos.c.id_estado).select().with_only_columns([
-                RegistrarAdminProyectos.c.id_admin_proyectos,
-                Estados.c.estado,
-                Estados.c.id_estado,
-                RegistrarAdminProyectos.c.nombre_admin_proyectos
-            ])        
+            RegistrarAdminProyectos.c.id_admin_proyectos,
+            Estados.c.estado,
+            Estados.c.id_estado,
+            RegistrarAdminProyectos.c.nombre_admin_proyectos
+        ])
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -1393,7 +1417,7 @@ async def delete_administrador_proyectos(id_admin_proyectos: int):
 
         db.execute(asignacion_ciudades_admin_proyectos.delete().where(
             asignacion_ciudades_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos))
-        
+
         db.execute(asignacion_canal_admin_proyectos.delete().where(
             asignacion_canal_admin_proyectos.c.id_admin_proyectos == id_admin_proyectos))
 

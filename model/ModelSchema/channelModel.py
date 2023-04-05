@@ -85,8 +85,12 @@ class RegistrarVendedorModel(BaseModel):
     id_lider_peloton: Optional[int] = None
     # ciudad_gestion: str
     lider_check: Optional[bool] = False
-    meta_volumen: Optional[int] = 0
-    meta_dolares: Optional[float] = 0.0
+    meta_volumen_internet: Optional[int] = 0
+    meta_dolares_internet: Optional[float] = 0.0
+    meta_volumen_telefonia: Optional[int] = 0
+    meta_dolares_telefonia: Optional[float] = 0.0
+    meta_volumen_television: Optional[int] = 0
+    meta_dolares_television: Optional[float] = 0.0
     fecha_salida: Optional[str] = None
     sector_residencia: str
     email: str
