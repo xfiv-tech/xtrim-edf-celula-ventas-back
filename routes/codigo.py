@@ -12,7 +12,7 @@ class CodigoModel(BaseModel):
 @codigo.post("/codigo", tags=["Codigo"])
 async def BuscarCoder(data:CodigoModel):
     try:
-        print(data)
+        print(data.codigo)
         response = await ConsultarVendedor(data.codigo)
         return response
     except Exception as e:
