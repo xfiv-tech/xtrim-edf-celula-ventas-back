@@ -449,13 +449,21 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         data = await get_infoReporte(ciudad)
 
         ws.append([
-            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR","META VOLUMEN","META DOLARES","USUARIO EQUIFAX","CEDULA"
+            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR",
+            "META VOLUMEN INTERNET","META DOLARES INTRNET",
+            "META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
+            "META VOLUMEN TELEVISION","META DOLARES TELEVISION",
+            "USUARIO EQUIFAX","CEDULA",
         ])
         for i in data:
             k = ReporteExcel(**i)
             print(k)
             ws.append([
-                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, k.meta_volumen, k.meta_dolares, k.usuario_equifax, k.cedula
+                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, 
+                k.meta_volumen_internet, k.meta_dolares_internet, 
+                k.meta_volumen_telefonia, k.meta_dolares_telefonia,
+                k.meta_volumen_television, k.meta_dolares_television,
+                k.usuario_equifax, k.cedula
             ])
 
         wb.save(usuario)
