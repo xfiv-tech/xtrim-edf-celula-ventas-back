@@ -1,12 +1,14 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
+from typing import List, Optional
+from controller.AdminProyectController import SelectAdminProyectCiudad
 from function.ftp import ftp_close, ftp_connect, ftp_list, ftp_upload
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo 
+from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo 
 from database.db import db
 
 HOST = os.getenv("HOST_FTP")
@@ -36,11 +38,16 @@ class ReporteExcel(BaseModel):
     nombre_gerente_ciudad: str 
     id_jefe_venta: int = None
     nombre_jefe_venta: str 
+    nombre_admin_proyectos: Optional[str] = None
     # ciudad_gestion: str 
     lider_check: bool = False
     id_lider_peloton: int = 0
-    meta_volumen: int 
-    meta_dolares: float = None
+    meta_volumen_internet: Optional[int] = 0
+    meta_dolares_internet: Optional[float] = 0.0
+    meta_volumen_telefonia: Optional[int] = 0
+    meta_dolares_telefonia: Optional[float] = 0.0
+    meta_volumen_television: Optional[int] = 0
+    meta_dolares_television: Optional[float] = 0.0
     fecha_salida: str = None
     sector_residencia: str 
     email: str 
@@ -138,6 +145,7 @@ async def get_infoReporte(ciudad: list):
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen_internet": i.meta_volumen_internet,
@@ -189,6 +197,7 @@ async def get_infoReporte(ciudad: list):
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen_internet": i.meta_volumen_internet,
@@ -248,6 +257,7 @@ async def get_infoReporte(ciudad: list):
                     "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen_internet": i.meta_volumen_internet,
@@ -313,6 +323,7 @@ async def get_infoReporte(ciudad: list):
                     "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
                     "id_jefe_venta": i.id_jefe_venta,
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
+                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen_internet": i.meta_volumen_internet,
@@ -364,6 +375,7 @@ async def get_infoReporte(ciudad: list):
                     # "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": i.id_jefe_venta,
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
+                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen_internet": i.meta_volumen_internet,
@@ -387,6 +399,7 @@ async def get_infoReporte(ciudad: list):
                 })
                 
             else:
+                print("No hay datos")
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -411,6 +424,7 @@ async def get_infoReporte(ciudad: list):
                     "nombre_gerente_ciudad": "Sin Gerente Ciudad",
                     "id_jefe_venta": None,
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
                     "meta_volumen_internet": i.meta_volumen_internet,
@@ -449,7 +463,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         data = await get_infoReporte(ciudad)
 
         ws.append([
-            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON","JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR",
+            "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON", "ADMINISTRADOR PROYECTO", "JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD","FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR",
             "META VOLUMEN INTERNET","META DOLARES INTRNET",
             "META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
             "META VOLUMEN TELEVISION","META DOLARES TELEVISION",
@@ -458,8 +472,9 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         for i in data:
             k = ReporteExcel(**i)
             print(k)
+            k.id_lider_peloton = k.id_lider_peloton if k.id_lider_peloton != 0 else "SIN LIDER"
             ws.append([
-                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, 
+                k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_admin_proyectos, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, 
                 k.meta_volumen_internet, k.meta_dolares_internet, 
                 k.meta_volumen_telefonia, k.meta_dolares_telefonia,
                 k.meta_volumen_television, k.meta_dolares_television,
