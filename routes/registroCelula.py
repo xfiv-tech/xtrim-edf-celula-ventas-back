@@ -25,7 +25,7 @@ from routes.asignacion import asignacion_ciudades_administrador
 # moment.need()
 
 registro = APIRouter(route_class=ValidacionToken)
-registro = APIRouter()
+# registro = APIRouter()
 
 
 load_dotenv()
