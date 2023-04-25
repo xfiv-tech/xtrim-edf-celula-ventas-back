@@ -1,8 +1,13 @@
-FROM python:3.10.4-alpine
+FROM python:3.10-slim
+
+ENV PYTHONUNBUFFERED True
 
 RUN pip install --upgrade pip
 
-WORKDIR /xtrim
+ENV APP_HOME /xtrim
+WORKDIR $APP_HOME
+
+RUN apt-get update && apt-get install -y libpq-dev build-essential
 
 COPY ./requirements.txt /xtrim/requirements.txt
 
