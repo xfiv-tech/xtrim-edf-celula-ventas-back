@@ -2,7 +2,7 @@
 
 git add .
 
-git commit -m "$(date +%Y-%m-%d_%H:%M:%S) Nuevos parametrado de metas volumen y meta dolares"
+git commit -m "$(date +%Y-%m-%d_%H:%M:%S) Se refacturizo para que se acepte id_gerenre_regional valla con valor null y ya no sea obligatorio"
 
 git push origin celula_venta --force
 

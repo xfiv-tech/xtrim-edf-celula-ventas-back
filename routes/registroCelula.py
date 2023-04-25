@@ -1,14 +1,16 @@
+import io
+import pandas as pd
 from dotenv import load_dotenv
 import os
 from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
 from function.ExtraerCiuCanl import ExtraerCiuCanl
 from function.encrytPassword import encryptPassword
 from function.excelReporte import get_tdd_excel_workbook
-from function.ftp import ftp_connect, ftp_list
 from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
+from model.ModelExcel import ModelVendedorExcel
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarAdministradorModelNew, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
@@ -20,12 +22,10 @@ from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
 from model.channel import asignacion_ciudades_distribuidor, asignacion_canal_distribuidor
 from database.db import db
 from datetime import datetime
-
-from routes.asignacion import asignacion_ciudades_administrador
 # moment.need()
 
-registro = APIRouter(route_class=ValidacionToken)
-# registro = APIRouter()
+# registro = APIRouter(route_class=ValidacionToken)
+registro = APIRouter()
 
 
 load_dotenv()
@@ -383,8 +383,12 @@ async def get_registro(request: Request):
                     "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -426,8 +430,12 @@ async def get_registro(request: Request):
                     "nombre_jefe_venta": "Sin Jefe de Ventas",
                     # "ciudad_gestion": i.ciudad_gestion,
                     "lider_check": i.lider_check,
-                    "meta_volumen": i.meta_volumen,
-                    "meta_dolares": i.meta_dolares,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
                     "fecha_salida": i.fecha_salida,
                     "sector_residencia": i.sector_residencia,
                     "email": i.email,
@@ -1432,6 +1440,90 @@ async def delete_administrador_proyectos(id_admin_proyectos: int):
             "code": "0",
             "data": data
         }
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+
+
+#Cargar excel con los datos de vendedor y registras en la base de datos
+@registro.post("/cargar_excel_vendedores", tags=["Vendedores"])
+async def cargar_excel_vendedores(request: Request):
+    try:
+        form = await request.form()
+        file = form['file']
+        filename = file.filename
+        extension = filename.split(".")[-1]
+        df = None
+        if extension == "xlsx":
+            file = await file.read()
+            df = pd.read_excel(file)
+            df = df.to_dict(orient="records")
+        elif extension == "csv":
+            file = await file.read()
+            df = pd.read_csv(file)
+            df = df.to_dict(orient="records")
+            print(df)
+        else:
+            return {
+                "code": "1",
+                "message": "El archivo debe ser de tipo excel"
+            }
+        nueva_lista = []
+        for i in df:
+            print(i["id_gerente_regional"])
+            print(type(i["id_gerente_regional"]))
+
+            i["id_gerente_regional"] = None if i["id_gerente_regional"] == 0 else int(i["id_gerente_regional"])
+            i["fecha_ingreso"] = str(i["fecha_ingreso"]) if i["fecha_ingreso"] != "nan" else None
+            i["id_lider_peloton"] = None if i["id_lider_peloton"] == "nan" else None
+            i["id_jefe_venta"] = None if i["id_jefe_venta"] == "nan" else None
+            i["fecha_salida"] = str(i["fecha_salida"]) if i["fecha_salida"] != "nan" else None
+            i["sector_residencia"] = None if i["sector_residencia"] == "nan" else str(i["sector_residencia"])
+            i["meta_dolares_internet"] = float(str(i["meta_dolares_internet"]).replace(",", "."))
+            i["meta_dolares_telefonia"] = float(str(i["meta_dolares_telefonia"]).replace(",", "."))
+            i["meta_dolares_television"] = float(str(i["meta_dolares_television"]).replace(",", "."))
+            i["fecha_salida"] = str(i["fecha_salida"]) if i["fecha_salida"] != "nan" else None
+            print(ModelVendedorExcel(**i))
+            nueva_lista.append(ModelVendedorExcel(**i))
+
+        for i in nueva_lista:
+            query = RegistrarVendedor.insert().values(
+                id_channel=i.id_channel,
+                id_ciudad=i.id_ciudad,
+                id_operador=i.id_operador,
+                id_sistema_operativo=i.id_sistema_operativo,
+                id_estado=i.id_estado,
+                id_genero=i.id_genero,
+                id_modalidad=i.id_modalidad,
+                codigo_vendedor=i.codigo_vendedor,
+                usuario_equifax=i.usuario_equifax,
+                nombre_vendedor=i.nombre_vendedor,
+                fecha_ingreso=i.fecha_ingreso,
+                id_gerente_regional=i.id_gerente_regional,
+                id_gerente_ciudad=i.id_gerente_ciudad,
+                id_jefe_venta=i.id_jefe_venta,
+                id_lider_peloton=i.id_lider_peloton,
+                meta_volumen_internet=i.meta_volumen_internet,
+                meta_dolares_internet=i.meta_dolares_internet,
+                meta_volumen_telefonia=i.meta_volumen_telefonia,
+                meta_dolares_telefonia=i.meta_dolares_telefonia,
+                meta_volumen_television=i.meta_volumen_television,
+                meta_dolares_television=i.meta_dolares_television,
+                fecha_salida=i.fecha_salida,
+                sector_residencia=i.sector_residencia,
+                email=i.email,
+                cedula=i.cedula,
+                telefono=i.telefono,
+                dias_inactivo=i.dias_inactivo,
+            )
+            db.execute(query)
+        
+        return {
+            "code": "0",
+            "data": nueva_lista
+        }
+
     except Exception as e:
         return {
             "error": str(e)
