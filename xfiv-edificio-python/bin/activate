@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/djmarret/Documentos/DEV/xtrim-edificios-back/xfiv-edificio-python"
+VIRTUAL_ENV="/home/djmarret/Documentos/DEV/XTRIM/xtrim-edificios-back/xfiv-edificio-python"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

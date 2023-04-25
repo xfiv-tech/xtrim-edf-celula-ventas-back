@@ -30,7 +30,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/djmarret/Documentos/DEV/xtrim-edificios-back/xfiv-edificio-python"
+set -gx VIRTUAL_ENV "/home/djmarret/Documentos/DEV/XTRIM/xtrim-edificios-back/xfiv-edificio-python"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
