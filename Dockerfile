@@ -4,10 +4,12 @@ WORKDIR /xtrim
 
 COPY ./requirements.txt /xtrim/requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt && \
-    pip install --no-cache-dir --upgrade uvicorn[standard] && \
-    pip install --no-cache-dir --upgrade websockets && \
-    pip install --upgrade pip 
+RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt 
+# && 
+# \
+#     pip install --no-cache-dir --upgrade uvicorn[standard] && \
+#     pip install --no-cache-dir --upgrade websockets && \
+#     pip install --upgrade pip 
 
 COPY . /xtrim/
 
