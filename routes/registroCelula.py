@@ -1471,19 +1471,20 @@ async def cargar_excel_vendedores(request: Request):
             }
         nueva_lista = []
         for i in df:
-            print(i["id_gerente_regional"])
-            print(type(i["id_gerente_regional"]))
+            print(i["usuario_equifax"] == None)
+            print(type(i["usuario_equifax"]))
 
-            i["id_gerente_regional"] = None if i["id_gerente_regional"] == 0 else int(i["id_gerente_regional"])
-            i["fecha_ingreso"] = str(i["fecha_ingreso"]) if i["fecha_ingreso"] != "nan" else None
-            i["id_lider_peloton"] = None if i["id_lider_peloton"] == "nan" else None
-            i["id_jefe_venta"] = None if i["id_jefe_venta"] == "nan" else None
-            i["fecha_salida"] = str(i["fecha_salida"]) if i["fecha_salida"] != "nan" else None
-            i["sector_residencia"] = None if i["sector_residencia"] == "nan" else str(i["sector_residencia"])
+            i["id_gerente_regional"] = None if i["id_gerente_regional"] == "SIN REGISTRO" else int(i["id_gerente_regional"])
+            i["usuario_equifax"] = None if i["usuario_equifax"] == "SIN USUARIO" else i["usuario_equifax"]
+            i["fecha_ingreso"] = None if i["fecha_ingreso"] == "SIN REGISTRO" else i["fecha_ingreso"]
+            i["id_lider_peloton"] = 0 if i["id_lider_peloton"] == "SIN REGISTRO" else i["id_lider_peloton"]
+            i["id_jefe_venta"] = None if i["id_jefe_venta"] == "SIN REGISTRO" else i["id_jefe_venta"]
+            i["fecha_salida"] = None if i["fecha_salida"] == "SIN REGISTRO" else None
+            i["sector_residencia"] = "SIN REGISTRO" if i["sector_residencia"] == "SIN REGISTRO" else str(i["sector_residencia"])
             i["meta_dolares_internet"] = float(str(i["meta_dolares_internet"]).replace(",", "."))
             i["meta_dolares_telefonia"] = float(str(i["meta_dolares_telefonia"]).replace(",", "."))
             i["meta_dolares_television"] = float(str(i["meta_dolares_television"]).replace(",", "."))
-            i["fecha_salida"] = str(i["fecha_salida"]) if i["fecha_salida"] != "nan" else None
+            i["fecha_salida"] = None if i["fecha_salida"] == "SIN REGISTRO" else None
             print(ModelVendedorExcel(**i))
             nueva_lista.append(ModelVendedorExcel(**i))
 

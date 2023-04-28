@@ -20,6 +20,7 @@ class ArrayMandoModel(BaseModel):
 
 class CiudadModel(BaseModel):
     id_ciudad: Optional[int]
+    id: Optional[int] = None
     ciudad: str
     region: str
 
