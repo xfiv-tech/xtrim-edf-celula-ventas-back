@@ -458,6 +458,404 @@ async def get_registro(request: Request):
         return {"error": str(e)}
 
 
+@registro.get("/listar_registro_all", tags=["Vendedor"])
+async def get_registro(request: Request):
+    try:
+        header = request.headers
+        decodeToken = decode_token(header["authorization"].split(" ")[1])
+        print("decodeToken", decodeToken)
+        CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
+        ciudad = CanalCiudad["ciudad"]
+        print("Ciudades", ciudad)
+        data = []
+        for i in ciudad:
+            query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+                Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+                Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+                Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+                SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+                Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+                Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+                    Channel.c.channel,
+                    Ciudad.c.ciudad,
+                    Ciudad.c.region,
+                    Estados.c.estado,
+                    Operador.c.operador,
+                    Genero.c.genero,
+                    Modalidad.c.modalidad,
+                    RegistrarVendedor.c.id_sistema_operativo,
+                    SistemaOperativo.c.sistema_operativo,
+                    RegistrarVendedor.c.id_modalidad,
+                    RegistrarVendedor.c.id_lider_peloton,
+                    RegistrarVendedor.c.id_estado,
+                    RegistrarVendedor.c.id_genero,
+                    RegistrarVendedor.c.id_ciudad,
+                    RegistrarVendedor.c.id_registrar_vendedor,
+                    RegistrarVendedor.c.id_channel,
+                    RegistrarVendedor.c.id_gerente_regional,
+                    RegistrarVendedor.c.id_gerente_ciudad,
+                    RegistrarVendedor.c.id_jefe_venta,
+                    RegistrarVendedor.c.cedula,
+                    RegistrarVendedor.c.telefono,
+                    RegistrarVendedor.c.id_operador,
+                    RegistrarVendedor.c.codigo_vendedor,
+                    RegistrarVendedor.c.usuario_equifax,
+                    RegistrarVendedor.c.nombre_vendedor,
+                    RegistrarVendedor.c.fecha_ingreso,
+                    RegistrarVendedor.c.fecha_salida,
+                    RegistrarVendedor.c.sector_residencia,
+                    RegistrarVendedor.c.lider_check,
+                    RegistrarVendedor.c.meta_volumen_internet,
+                    RegistrarVendedor.c.meta_dolares_internet,
+                    RegistrarVendedor.c.meta_volumen_telefonia,
+                    RegistrarVendedor.c.meta_dolares_telefonia,
+                    RegistrarVendedor.c.meta_volumen_television,
+                    RegistrarVendedor.c.meta_dolares_television,
+                    RegistrarVendedor.c.email,
+                    RegistrarVendedor.c.dias_inactivo
+                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
+            res = db.execute(query).fetchall()
+            for i in res:
+                data.append(i)
+
+        dataInfo = []
+        for i in data:
+            if i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+                dataInfo.append({
+                    "id_registrar_vendedor": i.id_registrar_vendedor,
+                    "id_channel": i.id_channel,
+                    "id_ciudad": i.id_ciudad,
+                    "id_operador": i.id_operador,
+                    "id_sistema_operativo": i.id_sistema_operativo,
+                    "id_estado": i.id_estado,
+                    "id_genero": i.id_genero,
+                    "id_modalidad": i.id_modalidad,
+                    "cedula": i.cedula,
+                    "telefono": i.telefono,
+                    "codigo_vendedor": i.codigo_vendedor,
+                    "usuario_equifax": i.usuario_equifax,
+                    "nombre_vendedor": i.nombre_vendedor,
+                    "fecha_ingreso": i.fecha_ingreso,
+                    "id_lider_peloton": i.id_lider_peloton,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
+                    "id_gerente_regional": None,
+                    "nombre_gerente_regional": "Sin Gerente Regional",
+                    "id_gerente_ciudad": None,
+                    "nombre_gerente_ciudad": "Sin Gerente Ciudad",
+                    "id_jefe_venta": None,
+                    "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    # "ciudad_gestion": i.ciudad_gestion,
+                    "lider_check": i.lider_check,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
+                    "fecha_salida": i.fecha_salida,
+                    "sector_residencia": i.sector_residencia,
+                    "email": i.email,
+                    "dias_inactivo": i.dias_inactivo,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "region": i.region,
+                    "estado": i.estado,
+                    "operador": i.operador,
+                    "genero": i.genero,
+                    "modalidad": i.modalidad,
+                    "sistema_operativo": i.sistema_operativo
+                })
+
+            elif i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
+                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                    RegistrarGerenteRegional.c.nombre_gerente,
+                ])
+                data_gerente_regional = db.execute(
+                    query_gerente_regional).fetchone()
+                dataInfo.append({
+                    "id_registrar_vendedor": i.id_registrar_vendedor,
+                    "id_channel": i.id_channel,
+                    "id_ciudad": i.id_ciudad,
+                    "id_operador": i.id_operador,
+                    "id_sistema_operativo": i.id_sistema_operativo,
+                    "id_estado": i.id_estado,
+                    "id_genero": i.id_genero,
+                    "id_modalidad": i.id_modalidad,
+                    "cedula": i.cedula,
+                    "telefono": i.telefono,
+                    "codigo_vendedor": i.codigo_vendedor,
+                    "usuario_equifax": i.usuario_equifax,
+                    "nombre_vendedor": i.nombre_vendedor,
+                    "fecha_ingreso": i.fecha_ingreso,
+                    "id_lider_peloton": i.id_lider_peloton,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
+                    "id_gerente_regional": i.id_gerente_regional,
+                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
+                    "id_gerente_ciudad": None,
+                    "nombre_gerente_ciudad": "Sin Gerente Ciudad",
+                    "id_jefe_venta": None,
+                    "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    # "ciudad_gestion": i.ciudad_gestion,
+                    "lider_check": i.lider_check,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
+                    "fecha_salida": i.fecha_salida,
+                    "sector_residencia": i.sector_residencia,
+                    "email": i.email,
+                    "dias_inactivo": i.dias_inactivo,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "region": i.region,
+                    "estado": i.estado,
+                    "operador": i.operador,
+                    "genero": i.genero,
+                    "modalidad": i.modalidad,
+                    "sistema_operativo": i.sistema_operativo
+                })
+
+            elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente,
+                # ])
+                # data_gerente = db.execute(query_gerente).fetchone()
+                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                    RegistrarGerenteRegional.c.nombre_gerente,
+                ])
+                data_gerente_regional = db.execute(
+                    query_gerente_regional).fetchone()
+                query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
+                    RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+                ])
+                data_gerente_ciudad = db.execute(
+                    query_gerente_ciudad).fetchone()
+                dataInfo.append({
+                    "id_registrar_vendedor": i.id_registrar_vendedor,
+                    "id_channel": i.id_channel,
+                    "id_ciudad": i.id_ciudad,
+                    "id_operador": i.id_operador,
+                    "id_sistema_operativo": i.id_sistema_operativo,
+                    "id_estado": i.id_estado,
+                    "id_genero": i.id_genero,
+                    "id_modalidad": i.id_modalidad,
+                    "cedula": i.cedula,
+                    "telefono": i.telefono,
+                    "codigo_vendedor": i.codigo_vendedor,
+                    "usuario_equifax": i.usuario_equifax,
+                    "nombre_vendedor": i.nombre_vendedor,
+                    "fecha_ingreso": i.fecha_ingreso,
+                    "id_lider_peloton": i.id_lider_peloton,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
+                    "id_gerente_regional": i.id_gerente_regional,
+                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
+                    "id_gerente_ciudad": i.id_gerente_ciudad,
+                    "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
+                    "id_jefe_venta": None,
+                    "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    # "ciudad_gestion": i.ciudad_gestion,
+                    "lider_check": i.lider_check,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
+                    "fecha_salida": i.fecha_salida,
+                    "sector_residencia": i.sector_residencia,
+                    "email": i.email,
+                    "dias_inactivo": i.dias_inactivo,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "region": i.region,
+                    "estado": i.estado,
+                    "operador": i.operador,
+                    "genero": i.genero,
+                    "modalidad": i.modalidad,
+                    "sistema_operativo": i.sistema_operativo
+                })
+
+            elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
+                print("entro aca", i.id_gerente_regional,
+                      i.id_gerente_ciudad, i.id_jefe_venta)
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                #     RegistrarGerente.c.nombre_gerente,
+                # ])
+                # data_gerente = db.execute(query_gerente).fetchone()
+                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                    RegistrarGerenteRegional.c.nombre_gerente,
+                ])
+                data_gerente_regional = db.execute(
+                    query_gerente_regional).fetchone()
+                print("data_gerente_regional",
+                      data_gerente_regional.nombre_gerente)
+                query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
+                    RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+                ])
+                data_gerente_ciudad = db.execute(
+                    query_gerente_ciudad).fetchone()
+                query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
+                    RegistroJefeVentas.c.nombre_jefe,
+                ])
+                data_jefe_venta = db.execute(query_jefe_venta).fetchone()
+                dataInfo.append({
+                    "id_registrar_vendedor": i.id_registrar_vendedor,
+                    "id_channel": i.id_channel,
+                    "id_ciudad": i.id_ciudad,
+                    "id_operador": i.id_operador,
+                    "id_sistema_operativo": i.id_sistema_operativo,
+                    "id_estado": i.id_estado,
+                    "id_genero": i.id_genero,
+                    "id_modalidad": i.id_modalidad,
+                    "cedula": i.cedula,
+                    "telefono": i.telefono,
+                    "codigo_vendedor": i.codigo_vendedor,
+                    "usuario_equifax": i.usuario_equifax,
+                    "nombre_vendedor": i.nombre_vendedor,
+                    "fecha_ingreso": i.fecha_ingreso,
+                    "id_lider_peloton": i.id_lider_peloton,
+                    # "id_gerente": data_gerente.id_gerente,
+                    # "nombre_gerente": data_gerente.nombre_gerente,
+                    "id_gerente_regional": i.id_gerente_regional,
+                    "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
+                    "id_gerente_ciudad": i.id_gerente_ciudad,
+                    "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
+                    "id_jefe_venta": i.id_jefe_venta,
+                    "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
+                    # "ciudad_gestion": i.ciudad_gestion,
+                    "lider_check": i.lider_check,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
+                    "fecha_salida": i.fecha_salida,
+                    "sector_residencia": i.sector_residencia,
+                    "email": i.email,
+                    "dias_inactivo": i.dias_inactivo,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "region": i.region,
+                    "estado": i.estado,
+                    "operador": i.operador,
+                    "genero": i.genero,
+                    "modalidad": i.modalidad,
+                    "sistema_operativo": i.sistema_operativo
+                })
+            elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
+
+                query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
+                    RegistroJefeVentas.c.nombre_jefe,
+                ])
+                data_jefe_venta = db.execute(query_jefe_venta).fetchone()
+                dataInfo.append({
+                    "id_registrar_vendedor": i.id_registrar_vendedor,
+                    "id_channel": i.id_channel,
+                    "id_ciudad": i.id_ciudad,
+                    "id_operador": i.id_operador,
+                    "id_sistema_operativo": i.id_sistema_operativo,
+                    "id_estado": i.id_estado,
+                    "id_genero": i.id_genero,
+                    "id_modalidad": i.id_modalidad,
+                    "cedula": i.cedula,
+                    "telefono": i.telefono,
+                    "codigo_vendedor": i.codigo_vendedor,
+                    "usuario_equifax": i.usuario_equifax,
+                    "nombre_vendedor": i.nombre_vendedor,
+                    "fecha_ingreso": i.fecha_ingreso,
+                    "id_lider_peloton": i.id_lider_peloton,
+                    # "id_gerente": None,
+                    # "nombre_gerente": "Sin Gerente",
+                    # "id_gerente_regional": None,
+                    # "nombre_gerente_regional": "Sin Gerente Regional",
+                    # "id_gerente_ciudad": None,
+                    # "nombre_gerente_ciudad": "Sin Gerente Ciudad",
+                    "id_jefe_venta": i.id_jefe_venta,
+                    "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
+                    # "ciudad_gestion": i.ciudad_gestion,
+                    "lider_check": i.lider_check,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
+                    "fecha_salida": i.fecha_salida,
+                    "sector_residencia": i.sector_residencia,
+                    "email": i.email,
+                    "dias_inactivo": i.dias_inactivo,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "region": i.region,
+                    "estado": i.estado,
+                    "operador": i.operador,
+                    "genero": i.genero,
+                    "modalidad": i.modalidad,
+                    "sistema_operativo": i.sistema_operativo
+                })
+
+            else:
+                dataInfo.append({
+                    "id_registrar_vendedor": i.id_registrar_vendedor,
+                    "id_channel": i.id_channel,
+                    "id_ciudad": i.id_ciudad,
+                    "id_operador": i.id_operador,
+                    "id_sistema_operativo": i.id_sistema_operativo,
+                    "id_estado": i.id_estado,
+                    "id_genero": i.id_genero,
+                    "id_modalidad": i.id_modalidad,
+                    "cedula": i.cedula,
+                    "telefono": i.telefono,
+                    "codigo_vendedor": i.codigo_vendedor,
+                    "usuario_equifax": i.usuario_equifax,
+                    "nombre_vendedor": i.nombre_vendedor,
+                    "fecha_ingreso": i.fecha_ingreso,
+                    "id_lider_peloton": i.id_lider_peloton,
+                    # "id_gerente": None,
+                    # "nombre_gerente": "Sin Gerente",
+                    "id_gerente_regional": None,
+                    "nombre_gerente_regional": "Sin Gerente Regional",
+                    "id_gerente_ciudad": None,
+                    "nombre_gerente_ciudad": "Sin Gerente Ciudad",
+                    "id_jefe_venta": None,
+                    "nombre_jefe_venta": "Sin Jefe de Ventas",
+                    # "ciudad_gestion": i.ciudad_gestion,
+                    "lider_check": i.lider_check,
+                    "meta_volumen_internet": i.meta_volumen_internet,
+                    "meta_dolares_internet": i.meta_dolares_internet,
+                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                    "meta_volumen_television": i.meta_volumen_television,
+                    "meta_dolares_television": i.meta_dolares_television,
+                    "fecha_salida": i.fecha_salida,
+                    "sector_residencia": i.sector_residencia,
+                    "email": i.email,
+                    "dias_inactivo": i.dias_inactivo,
+                    "channel": i.channel,
+                    "ciudad": i.ciudad,
+                    "region": i.region,
+                    "estado": i.estado,
+                    "operador": i.operador,
+                    "genero": i.genero,
+                    "modalidad": i.modalidad,
+                    "sistema_operativo": i.sistema_operativo
+                })
+
+        return {
+            "code": "0",
+            "data": dataInfo
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+
 @registro.get("/listar_registro_id/{id_registrar_vendedor}", tags=["Vendedor"])
 async def get_registroID(id_registrar_vendedor: int, request: Request):
     try:
@@ -802,6 +1200,7 @@ async def post_registro(request: RegistrarVendedorModel):
 @registro.put("/actualizar_registro", tags=["Vendedor"])
 async def put_registro(request: RegistrarVendedorModel):
     try:
+        print("lo que e llegas",request)
         query = RegistrarVendedor.update().values(
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
