@@ -1215,6 +1215,7 @@ async def put_registro(request: RegistrarVendedorModel):
             usuario_equifax=request.usuario_equifax,
             nombre_vendedor=request.nombre_vendedor,
             fecha_ingreso=request.fecha_ingreso,
+            id_gerente_regional=request.id_gerente_regional,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
             id_lider_peloton=request.id_lider_peloton,
@@ -1230,13 +1231,13 @@ async def put_registro(request: RegistrarVendedorModel):
             email=request.email,
             dias_inactivo=request.dias_inactivo
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
-        data = db.execute(query)
+        data = db.execute(query).returned_defaults
         return {
             "code": "0",
             "data": data
         }
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": e.args}
 
 
 @registro.delete("/eliminar_registro/{id_registrar_vendedor}", tags=["Vendedor"])
