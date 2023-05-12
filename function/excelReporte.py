@@ -1,7 +1,7 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
 from typing import List, Optional
-from controller.AdminProyectController import SelectAdminProyectCiudad
+from controller.AdminProyectController import SelectAdminProyectCiudad, SelectLiderPeloton
 from function.ftp import ftp_close, ftp_connect, ftp_list, ftp_upload
 import os
 from dotenv import load_dotenv
@@ -60,7 +60,6 @@ class ReporteExcel(BaseModel):
     genero: str 
     modalidad: str 
     sistema_operativo: str
-
 
 
 async def get_infoReporte(ciudad: list):
@@ -188,7 +187,7 @@ async def get_infoReporte(ciudad: list):
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_lider_peloton": i.id_lider_peloton,
+                    "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton),
                     # "id_gerente": data_gerente.id_gerente,
                     # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": i.id_gerente_regional,
@@ -248,7 +247,7 @@ async def get_infoReporte(ciudad: list):
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_lider_peloton": i.id_lider_peloton,
+                    "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton),
                     # "id_gerente": data_gerente.id_gerente,
                     # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": i.id_gerente_regional,
@@ -314,7 +313,7 @@ async def get_infoReporte(ciudad: list):
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_lider_peloton": i.id_lider_peloton,
+                    "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton),
                     # "id_gerente": data_gerente.id_gerente,
                     # "nombre_gerente": data_gerente.nombre_gerente,
                     "id_gerente_regional": i.id_gerente_regional,
@@ -366,7 +365,7 @@ async def get_infoReporte(ciudad: list):
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_lider_peloton": i.id_lider_peloton,
+                    "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton),
                     # "id_gerente": None,
                     # "nombre_gerente": "Sin Gerente",
                     # "id_gerente_regional": None,
@@ -415,7 +414,7 @@ async def get_infoReporte(ciudad: list):
                     "usuario_equifax": i.usuario_equifax,
                     "nombre_vendedor": i.nombre_vendedor,
                     "fecha_ingreso": i.fecha_ingreso,
-                    "id_lider_peloton": i.id_lider_peloton,
+                    "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton),
                     # "id_gerente": None,
                     # "nombre_gerente": "Sin Gerente",
                     "id_gerente_regional": None,
@@ -472,7 +471,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         for i in data:
             k = ReporteExcel(**i)
             print(k)
-            k.id_lider_peloton = k.id_lider_peloton if k.id_lider_peloton != 0 else "SIN LIDER"
+            # k.id_lider_peloton = k.id_lider_peloton if k.id_lider_peloton != 0 else "SIN LIDER"
             ws.append([
                 k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_admin_proyectos, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, 
                 k.meta_volumen_internet, k.meta_dolares_internet, 

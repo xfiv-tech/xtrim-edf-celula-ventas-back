@@ -22,6 +22,7 @@ from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
 from model.channel import asignacion_ciudades_distribuidor, asignacion_canal_distribuidor
 from database.db import db
 from datetime import datetime
+import calendar
 # moment.need()
 
 # registro = APIRouter(route_class=ValidacionToken)
@@ -44,8 +45,19 @@ async def get_reporteFtp(request: Request):
         decodeToken = decode_token(header["authorization"].split(" ")[1])
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        usuario = fecha+"_" + \
-            str(decodeToken["usuario"]).replace(" ", "_")+".xlsx"
+        # validar que el dia sea el ultimo del mes actual
+        # Obtener la fecha actual
+        today = datetime.date.today()
+        # Obtener el último día del mes actual
+        last_day_of_month = calendar.monthrange(today.year, today.month)[1]
+        # Verificar si el día actual es el último día del mes
+        if today.day == last_day_of_month:
+            print("El día actual es el último día del mes")
+            usuario = "Celula_Ventas_" + fecha + ".xlsx"
+        else:
+            print("El día actual no es el último día del mes")
+            usuario = "Celula_Ventas.xlsx"
+
         resultado = await get_tdd_excel_workbook(ciudad, usuario)
         if resultado["success"]:
             return FileResponse(
