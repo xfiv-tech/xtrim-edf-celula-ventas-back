@@ -1168,6 +1168,10 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
 @registro.post("/crear_registro", tags=["Vendedor"])
 async def post_registro(request: RegistrarVendedorModel):
     try:
+        print("\n")
+        print("request: ", request)
+        print("\n")
+
         query = RegistrarVendedor.insert().values(
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
