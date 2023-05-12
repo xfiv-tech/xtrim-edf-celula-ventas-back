@@ -1,10 +1,9 @@
 
 
 
-from MigrationPy.migration import RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas
 from controller.AsignacionController import ListarCiudadesAPCiudad
 from database.db import db
-from model.channel import RegistrarAdminProyectos
+from model.channel import RegistrarAdminProyectos, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas
 
 
 async def SelectAdminProyectCiudad(id_ciudad:int):
