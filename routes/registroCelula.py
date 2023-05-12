@@ -21,7 +21,7 @@ from model.channel import asignacion_ciudades_admin_proyectos, asignacion_canal_
 from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
 from model.channel import asignacion_ciudades_distribuidor, asignacion_canal_distribuidor
 from database.db import db
-from datetime import datetime
+import datetime
 import calendar
 # moment.need()
 
@@ -40,7 +40,7 @@ PASS = os.getenv("PASS_FTP")
 @registro.get("/reporte_ftp", tags=["Vendedor"])
 async def get_reporteFtp(request: Request):
     try:
-        fecha = datetime.now().strftime("%Y-%m-%d")
+        fecha = datetime.datetime.now().strftime("%Y-%m-%d")
         header = request.headers
         decodeToken = decode_token(header["authorization"].split(" ")[1])
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
