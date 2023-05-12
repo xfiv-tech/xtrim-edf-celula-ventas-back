@@ -1186,7 +1186,7 @@ async def post_registro(request: RegistrarVendedorModel):
             id_gerente_regional=request.id_gerente_regional,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
-            id_lider_peloton=request.id_lider_peloton,
+            id_lider_peloton=0 if request.id_lider_peloton == None else request.id_lider_peloton,
             # ciudad_gestion=request.ciudad_gestion,
             lider_check=request.lider_check,
             meta_volumen_internet=request.meta_volumen_internet,
@@ -1198,7 +1198,7 @@ async def post_registro(request: RegistrarVendedorModel):
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
             email=request.email,
-            dias_inactivo=request.dias_inactivo
+            dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         )
         data = db.execute(query).lastrowid
         return {
@@ -1230,7 +1230,7 @@ async def put_registro(request: RegistrarVendedorModel):
             id_gerente_regional=request.id_gerente_regional,
             id_gerente_ciudad=request.id_gerente_ciudad,
             id_jefe_venta=request.id_jefe_venta,
-            id_lider_peloton=request.id_lider_peloton,
+            id_lider_peloton=0 if request.id_lider_peloton == None else request.id_lider_peloton,
             lider_check=request.lider_check,
             meta_volumen_internet=request.meta_volumen_internet,
             meta_dolares_internet=request.meta_dolares_internet,
@@ -1241,7 +1241,7 @@ async def put_registro(request: RegistrarVendedorModel):
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
             email=request.email,
-            dias_inactivo=request.dias_inactivo
+            dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
         data = db.execute(query).returned_defaults
         return {
