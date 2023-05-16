@@ -112,7 +112,6 @@ async def get_infoReporte(ciudad: list):
                 RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
             res = db.execute(query).fetchall()
-            print("res",res)
             for i in res:
                 data.append(i)
 
