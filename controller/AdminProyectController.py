@@ -3,7 +3,7 @@
 
 from controller.AsignacionController import ListarCiudadesAPCiudad
 from database.db import db
-from model.channel import RegistrarAdminProyectos, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas
+from model.channel import Channel, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas
 
 
 async def SelectAdminProyectCiudad(id_ciudad:int):
@@ -28,10 +28,23 @@ async def SelectAdminProyectCiudad(id_ciudad:int):
         return None
     
 
-async def SelectLiderPeloton(id_lider_peloton:int):
+async def SelectLiderPeloton(id_lider_peloton:int, id_channel:int):
     try:
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
+        
+        # sacar el nombre del canal
+        if id_channel == None or id_channel == 0:
+            return "NO APLICA"
+        
+        if id_channel == 1 or id_channel == 4 or id_channel == 5:
+            nombre_lider = RegistrarDistribuidor.select().where(RegistrarDistribuidor.c.id_registrar_distribuidor == id_lider_peloton)
+            query = db.execute(nombre_lider).fetchall()
+            for i in query:
+                return i["nombre_distribuidor"]
+
+
+
         nombre_lider = RegistrarVendedor.select().where(RegistrarVendedor.c.id_lider_peloton == id_lider_peloton)
         query = db.execute(nombre_lider).fetchall()
         for i in query:
