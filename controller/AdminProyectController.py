@@ -47,6 +47,7 @@ async def SelectLiderPeloton(id_lider_peloton:int, id_channel:int):
             nombre_lider = RegistrarVendedor.select().where(RegistrarVendedor.c.id_lider_peloton == id_lider_peloton)
             query = db.execute(nombre_lider).fetchone()
             for i in query:
+                print(i)
                 return i["nombre_vendedor"]
 
 
@@ -56,7 +57,7 @@ async def SelectLiderPeloton(id_lider_peloton:int, id_channel:int):
         for i in query:
             return i["nombre_vendedor"]
     except Exception as e:
-        print(e)
+        print("SelectLiderPeloton",e.args)
         return "NO APLICA"
     
 
