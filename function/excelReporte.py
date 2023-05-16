@@ -134,7 +134,7 @@ async def get_infoReporte(ciudad: list):
                 "usuario_equifax": i.usuario_equifax,
                 "nombre_vendedor": i.nombre_vendedor,
                 "fecha_ingreso": i.fecha_ingreso,
-                "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton),
+                "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton, i.id_channel),
                 # "id_gerente": data_gerente.id_gerente,
                 # "nombre_gerente": data_gerente.nombre_gerente,
                 "id_gerente_regional": i.id_gerente_regional,
