@@ -46,9 +46,7 @@ async def SelectLiderPeloton(id_lider_peloton:int, id_channel:int):
         if id_channel == 2:
             nombre_lider = RegistrarVendedor.select().where(RegistrarVendedor.c.id_lider_peloton == id_lider_peloton)
             query = db.execute(nombre_lider).fetchone()
-            for i in query:
-                print(i)
-                return i["nombre_vendedor"]
+            return i[0]
 
 
 
