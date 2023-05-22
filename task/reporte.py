@@ -2,12 +2,12 @@ import schedule
 import time
 import datetime
 import calendar
-from database.db import db
 from openpyxl import Workbook
 from function.excelReporte import ReporteExcel
-from model.channel import asignacion_ciudades_admin_proyectos,asignacion_canal_admin_proyectos
+from database.db import db
+from model.channel import asignacion_ciudades_admin_proyectos
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo
-from function.ftp import ftp_close, ftp_connect, ftp_list, ftp_upload
+from function.ftp import ftp_close, ftp_connect, ftp_list
 import os
 from dotenv import load_dotenv
 load_dotenv()

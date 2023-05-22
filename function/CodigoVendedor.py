@@ -24,7 +24,7 @@ async def LoginCodigo():
 
 async def ConsultarVendedor(codigo):
     try:
-        quey = db.execute(RegistrarVendedor.select().where(RegistrarVendedor.codigo == codigo)).fetchone()
+        quey = db.execute(RegistrarVendedor.select().where(RegistrarVendedor.codigo_vendedor == codigo)).fetchone()
         if quey == None:
             print("externalTransactionId",str(uuid.uuid1()))
             response = await LoginCodigo()

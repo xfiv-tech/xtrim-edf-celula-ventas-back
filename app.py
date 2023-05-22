@@ -17,10 +17,7 @@ import os
 load_dotenv()
 
 Token = os.getenv("Xtrim_token")
-DEV = os.getenv("DEV")
-
-if DEV != "DEV":
-    os.system("python3 task/reporte.py")    
+DEV = os.getenv("DEV")  
 
 app = FastAPI(
     title="XTRIM API",
@@ -57,5 +54,7 @@ app.include_router(channel)
 app.include_router(asignacion)
 app.include_router(codigo)
 
+if DEV != "DEV":
+    os.system("python3 task/reporte.py")  
 # from fastapi import FastAPI
 
