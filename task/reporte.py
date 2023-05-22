@@ -247,16 +247,16 @@ def tarea_programada():
     wb.save(usuario)
 
         
-    # ftp = ftp_connect(HOST, USER, PASS)
-    # ftplist = ftp_list(ftp, "QlikView")
-    # ftplistCelula = ftp_list(ftp, "Celula_Ventas")
-    # print("ftplist",ftplist)
-    # print("ftplistCelula",ftplistCelula)   
+    ftp = ftp_connect(HOST, USER, PASS)
+    ftplist = ftp_list(ftp, "QlikView")
+    ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+    print("ftplist",ftplist)
+    print("ftplistCelula",ftplistCelula)   
      
-    # print(f"STOR /QlikView/Celula_Ventas/{usuario}")
-    # ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
-    # print(ftp.nlst())
-    # ftp_close(ftp)
+    print(f"STOR /QlikView/Celula_Ventas/{usuario}")
+    ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
+    print(ftp.nlst())
+    ftp_close(ftp)
     return True        
     
   
