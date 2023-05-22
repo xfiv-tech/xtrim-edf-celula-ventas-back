@@ -2,6 +2,9 @@ import requests
 import uuid
 import json
 
+from model.channel import RegistrarVendedor
+from database.db import db
+
 async def LoginCodigo():
     try:
         payload = json.dumps({
@@ -21,20 +24,27 @@ async def LoginCodigo():
 
 async def ConsultarVendedor(codigo):
     try:
-        print("externalTransactionId",str(uuid.uuid1()))
-        response = await LoginCodigo()
-        payload = json.dumps({
-            "channel": "TYTAN",
-            "idVendor": codigo,
-            "application": "Marketplace",
-            "externalTransactionId": str(uuid.uuid1()),
-        })
-        code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data=payload, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
-        print(code)
-        vendedor = code.json()
-        if(vendedor["code"] == 400):
-            return False
+        quey = db.execute(RegistrarVendedor.select().where(RegistrarVendedor.codigo == codigo)).fetchone()
+        if quey == None:
+            print("externalTransactionId",str(uuid.uuid1()))
+            response = await LoginCodigo()
+            payload = json.dumps({
+                "channel": "TYTAN",
+                "idVendor": codigo,
+                "application": "Marketplace",
+                "externalTransactionId": str(uuid.uuid1()),
+            })
+            code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data=payload, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
+            print(code)
+            vendedor = code.json()
+            if(vendedor["code"] == 400):
+                return False
+            else:
+                return vendedor["data"]
         else:
-            return vendedor["data"]
+            return {
+                "code": 400,
+                "message": "El codigo ya existe"
+            }
     except Exception as e:
         print(e)

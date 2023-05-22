@@ -1,19 +1,19 @@
 from openpyxl import Workbook
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
 from controller.AdminProyectController import SelectAdminProyectCiudad, SelectGerenteCiudad, SelectGerenteRegional, SelectJefeVenta, SelectLiderPeloton
-from function.ftp import ftp_close, ftp_connect, ftp_list, ftp_upload
-import os
+# from function.ftp import ftp_close, ftp_connect, ftp_list
+# import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo 
+from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarVendedor, SistemaOperativo 
 from database.db import db
 
-HOST = os.getenv("HOST_FTP")
-USER = os.getenv("USER_FTP")
-PASS = os.getenv("PASS_FTP")
+# HOST = os.getenv("HOST_FTP")
+# USER = os.getenv("USER_FTP")
+# PASS = os.getenv("PASS_FTP")
 
 class ReporteExcel(BaseModel):
     id_registrar_vendedor: int
@@ -171,11 +171,11 @@ async def get_infoReporte(ciudad: list):
     
 async def get_tdd_excel_workbook(ciudad: list, usuario: str): 
     try:
-        ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "QlikView")
-        ftplistCelula = ftp_list(ftp, "Celula_Ventas")
-        print("ftplist",ftplist)
-        print("ftplistCelula",ftplistCelula)
+        # ftp = ftp_connect(HOST, USER, PASS)
+        # ftplist = ftp_list(ftp, "QlikView")
+        # ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+        # print("ftplist",ftplist)
+        # print("ftplistCelula",ftplistCelula)
         wb = Workbook() 
         ws = wb.active 
         data = await get_infoReporte(ciudad)
@@ -190,7 +190,6 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         for i in data:
             k = ReporteExcel(**i)
             print(k)
-            # k.id_lider_peloton = k.id_lider_peloton if k.id_lider_peloton != 0 else "SIN LIDER"
             ws.append([
                 k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_admin_proyectos, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, 
                 k.meta_volumen_internet, k.meta_dolares_internet, 
@@ -200,11 +199,12 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             ])
 
         wb.save(usuario)
+        
         # ftp.upload(usuario, f"/QlikView/{usuario}")
-        print(f"STOR /QlikView/Celula_Ventas/{usuario}")
-        ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
-        print(ftp.nlst())
-        ftp_close(ftp)
+        # print(f"STOR /QlikView/Celula_Ventas/{usuario}")
+        # ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
+        # print(ftp.nlst())
+        # ftp_close(ftp)
         return {
             "success": True,
         }

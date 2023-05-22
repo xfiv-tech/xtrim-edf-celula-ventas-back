@@ -1,6 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException
-from function.CodigoVendedor import LoginCodigo
-from middleware.validacionToken import ValidacionToken
+from fastapi import FastAPI
 from routes.usuario import usuarios
 from routes.admin import administradores
 from routes.edificio import edificios
@@ -12,9 +10,7 @@ from routes.channel import channel
 from routes.registroCelula import registro
 from routes.asignacion import asignacion
 from routes.codigo import codigo
-
 from fastapi.middleware.cors import CORSMiddleware
-import uuid
 from dotenv import load_dotenv
 import os
 
@@ -23,11 +19,14 @@ load_dotenv()
 Token = os.getenv("Xtrim_token")
 DEV = os.getenv("DEV")
 
+if DEV != "DEV":
+    os.system("python3 task/reporte.py")    
+
 app = FastAPI(
     title="XTRIM API",
     description="A simple API to manage contacts",
     version="1.0.0",
-    root_path="/back_edificios_dev" if DEV == "PRO" else "/",
+    root_path="/back_celula_prod" if DEV == "PRO" else "/",
     root_path_in_servers=True,
     authorizations={
         
