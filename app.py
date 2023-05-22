@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi_scheduler import SchedulerAdmin
 from routes.usuario import usuarios
 from routes.admin import administradores
 from routes.edificio import edificios
@@ -13,6 +14,8 @@ from routes.codigo import codigo
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+
+from task.reporte import tarea_programada
 
 load_dotenv()
 
@@ -42,6 +45,18 @@ app.add_middleware(
 # app.include_router(edificios, generate_unique_id_function=uuid.uuid1())
 # app.include_router(reporte, generate_unique_id_function=uuid.uuid1())
 
+# Create an instance of the scheduled task scheduler `SchedulerAdmin`
+scheduler = SchedulerAdmin.scheduler
+
+@scheduler.scheduled_job('interval', seconds=14400)
+def interval_task_test():
+    print('interval task is run...')
+    tarea_programada()
+
+# @scheduler.scheduled_job('cron', hour=3, minute=30)
+# def cron_task_test():
+#     print('cron task is run...')
+
 app.include_router(usuarios)
 app.include_router(administradores)
 app.include_router(edificios)
@@ -54,7 +69,11 @@ app.include_router(channel)
 app.include_router(asignacion)
 app.include_router(codigo)
 
-if DEV != "DEV":
-    os.system("python3 task/reporte.py")  
+@app.on_event("startup")
+async def startup():
+    # Mount the background management system
+    scheduler.start()
+# if DEV != "DEV":
+#     os.system("python3 task/reporte.py")  
 # from fastapi import FastAPI
 

@@ -247,17 +247,17 @@ def tarea_programada():
     wb.save(usuario)
 
         
-    ftp = ftp_connect(HOST, USER, PASS)
-    ftplist = ftp_list(ftp, "QlikView")
-    ftplistCelula = ftp_list(ftp, "Celula_Ventas")
-    print("ftplist",ftplist)
-    print("ftplistCelula",ftplistCelula)   
+    # ftp = ftp_connect(HOST, USER, PASS)
+    # ftplist = ftp_list(ftp, "QlikView")
+    # ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+    # print("ftplist",ftplist)
+    # print("ftplistCelula",ftplistCelula)   
      
-    print(f"STOR /QlikView/Celula_Ventas/{usuario}")
-    ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
-    print(ftp.nlst())
-    ftp_close(ftp)
-    return dataInfo        
+    # print(f"STOR /QlikView/Celula_Ventas/{usuario}")
+    # ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
+    # print(ftp.nlst())
+    # ftp_close(ftp)
+    return True        
     
   
 
@@ -268,12 +268,12 @@ def tarea_programada():
 
 
 
-def tarea_programada_init():
-    print("Tarea programada ejecutada")
-    tarea_programada()
+# def tarea_programada_init():
+#     print("Tarea programada ejecutada")
+#     tarea_programada()
 
 #Define la tarea programada para que se ejecute cada hora
-schedule.every(4).hours.do(tarea_programada_init)
+# schedule.every(4).hours.do(tarea_programada_init)
 # schedule.every(1).minutes.do(tarea_programada_init)
 # schedule.every(1).seconds.do(tarea_programada_init)
 # schedule.every(1).days.do(tarea_programada_init) 
@@ -284,9 +284,9 @@ schedule.every(4).hours.do(tarea_programada_init)
 # Define la tarea programada para que se ejecute todos los días a las 12 de la noche
 # schedule.every().day.at("00:00").do(tarea_programada_init)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#     schedule.run_pending()
+#     time.sleep(1)
 
 
 
