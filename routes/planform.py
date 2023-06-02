@@ -78,16 +78,16 @@ async def planform_integrate(data: Planform):
             response = await ConsultarVendedor(data.identificationNumber, data)
             return response
         elif data.cargo == "jefe_venta":
-            response = await ConsultarJevesVenta(data.identificationNumber, data)
+            response = await ConsultarJefesVenta(data)
             return response
         elif data.cargo == "distribuidor":
-            response = await ConsultarDistribuidor(data.identificationNumber, data)
+            response = await ConsultarDistribuidor(data)
             return response
         elif data.cargo == "gerente_ciudad":
-            response = await ConsultarGerenteCiudad(data.identificationNumber, data)
+            response = await ConsultarGerenteCiudad(data)
             return response
         elif data.cargo == "gerente_regional":
-            response = await ConsultarGerenteRegional(data.identificationNumber, data)
+            response = await ConsultarGerenteRegional(data)
             return response
         else:
             return {
@@ -233,7 +233,7 @@ async def ConsultarVendedor(identificationNumber, data):
         return {"status": "error"}
 
 
-async def ConsultarJevesVenta(data):
+async def ConsultarJefesVenta(data):
     try:
         return {
             "code": 200,
