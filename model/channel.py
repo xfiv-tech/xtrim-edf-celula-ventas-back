@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey, Float
+from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey, Float, Text
 from database.db import meta, db
 
 Ciudad = Table("ciudad", meta,
@@ -58,7 +58,11 @@ RegistrarGerenteRegional = Table("registrar_gerente_regional", meta,
     Column("id_channel", Integer, nullable=True),
     Column("id_ciudad", Integer, nullable=True),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
-    Column("nombre_gerente", String(255))
+    Column("nombre_gerente", String(255)),
+    Column("ciudad", Text, nullable=True),
+    Column("email", Text, nullable=True),
+    Column("telefono", Text, nullable=True),
+    Column("cedula", Text, nullable=True)
 )
 
 RegistrarGerenteCiudad = Table("registrar_gerente_ciudad", meta,
@@ -66,7 +70,11 @@ RegistrarGerenteCiudad = Table("registrar_gerente_ciudad", meta,
     Column("id_ciudad", Integer,nullable=True),
     Column("id_channel", Integer, nullable=True),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
-    Column("nombre_gerente_ciudad", String(255))
+    Column("nombre_gerente_ciudad", String(255)),
+    Column("ciudad", Text, nullable=True),
+    Column("email", Text, nullable=True),
+    Column("telefono", Text, nullable=True),
+    Column("cedula", Text, nullable=True)
 )
 
 RegistrarAdminProyectos = Table("registrar_admin_proyectos", meta,
@@ -83,7 +91,11 @@ RegistroJefeVentas = Table("registro_jefe_ventas", meta,
     Column("id_ciudad", Integer, nullable=True),
     Column("id_estado", Integer, ForeignKey("estados.id_estado")),
     Column("id_gerente_ciudad", Integer, ForeignKey("registrar_gerente_ciudad.id_gerente_ciudad"), nullable=True, default=None),
-    Column("nombre_jefe", String(255))
+    Column("nombre_jefe", String(255)),
+    Column("ciudad", Text, nullable=True),
+    Column("email", Text, nullable=True),
+    Column("telefono", Text, nullable=True),
+    Column("cedula", Text, nullable=True)
 )
 
 #tabla administrador de sistema

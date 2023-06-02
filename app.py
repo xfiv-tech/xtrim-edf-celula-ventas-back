@@ -10,6 +10,7 @@ from routes.login import login
 from routes.channel import channel
 from routes.registroCelula import registro
 from routes.asignacion import asignacion
+from routes.planform import planform
 from routes.codigo import codigo
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -40,11 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.include_router(usuarios,generate_unique_id_function=uuid.uuid1())
-# app.include_router(administradores, generate_unique_id_function=uuid.uuid1())
-# app.include_router(edificios, generate_unique_id_function=uuid.uuid1())
-# app.include_router(reporte, generate_unique_id_function=uuid.uuid1())
-
 # Create an instance of the scheduled task scheduler `SchedulerAdmin`
 scheduler = SchedulerAdmin.scheduler
 
@@ -52,10 +48,6 @@ scheduler = SchedulerAdmin.scheduler
 def interval_task_test():
     print('interval task is run...')
     tarea_programada()
-
-# @scheduler.scheduled_job('cron', hour=3, minute=30)
-# def cron_task_test():
-#     print('cron task is run...')
 
 app.include_router(usuarios)
 app.include_router(administradores)
@@ -68,12 +60,9 @@ app.include_router(registro)
 app.include_router(channel)
 app.include_router(asignacion)
 app.include_router(codigo)
+app.include_router(planform)
 
 @app.on_event("startup")
 async def startup():
-    # Mount the background management system
     scheduler.start()
-# if DEV != "DEV":
-#     os.system("python3 task/reporte.py")  
-# from fastapi import FastAPI
 
