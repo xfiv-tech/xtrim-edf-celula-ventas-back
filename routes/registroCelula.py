@@ -1387,7 +1387,11 @@ async def get_jefe_venta():
             RegistroJefeVentas.c.id_jefe_venta,
             RegistroJefeVentas.c.id_estado,
             RegistroJefeVentas.c.id_gerente_ciudad,
-            RegistroJefeVentas.c.nombre_jefe
+            RegistroJefeVentas.c.nombre_jefe,
+            RegistroJefeVentas.c.ciudad,
+            RegistroJefeVentas.c.email,
+            RegistroJefeVentas.c.telefono,
+            RegistroJefeVentas.c.cedula,
         ])
         data = db.execute(query).fetchall()
         infoData = []
@@ -1402,6 +1406,10 @@ async def get_jefe_venta():
                     "estado": estado.estado,
                     "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
+                    "ciudad": i.ciudad,
+                    "email": i.email,
+                    "telefono": i.telefono,
+                    "cedula": i.cedula,
                     "nombre_gerente": "Sin asignar",
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
@@ -1417,6 +1425,10 @@ async def get_jefe_venta():
                     "id_gerente_ciudad": i.id_gerente_ciudad,
                     "nombre_jefe": i.nombre_jefe,
                     "nombre_gerente": data.nombre_gerente_ciudad,
+                    "ciudad": i.ciudad,
+                    "email": i.email,
+                    "telefono": i.telefono,
+                    "cedula": i.cedula,
                     "ciudades_asignadas": await ListarCiudadesJVCiudad(i.id_jefe_venta),
                     "canales_asignados": await ListarCanalesJVCiudad(i.id_jefe_venta)
                 })
@@ -1438,7 +1450,11 @@ async def post_jefe_venta(request: RegistrarJefeModel):
             # id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
             id_gerente_ciudad=request.id_gerente_ciudad,
-            nombre_jefe=request.nombre_jefe
+            nombre_jefe=request.nombre_jefe,
+            ciudad=request.ciudad,
+            email=request.email,
+            telefono=request.telefono,
+            cedula=request.cedula,
         )
         data = db.execute(query).lastrowid
         return {
@@ -1459,6 +1475,10 @@ async def put_jefe_venta(request: RegistrarJefeModel):
             id_estado=request.id_estado,
             id_gerente_ciudad=request.id_gerente_ciudad,
             nombre_jefe=request.nombre_jefe,
+            ciudad=request.ciudad,
+            email=request.email,
+            telefono=request.telefono,
+            cedula=request.cedula,
         ).where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta)
         data = db.execute(query)
         return {
@@ -1609,7 +1629,11 @@ async def get_gerente_ciudad():
                 RegistrarGerenteRegional.c.id_gerente_regional,
                 Estados.c.estado,
                 Estados.c.id_estado,
-                RegistrarGerenteRegional.c.nombre_gerente
+                RegistrarGerenteRegional.c.nombre_gerente,
+                RegistrarGerenteRegional.c.ciudad,
+                RegistrarGerenteRegional.c.email,
+                RegistrarGerenteRegional.c.telefono,
+                RegistrarGerenteRegional.c.cedula
             ])
         data = db.execute(query).fetchall()
         infoData = []
@@ -1619,9 +1643,12 @@ async def get_gerente_ciudad():
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_gerente": i.nombre_gerente,
+                "ciudad": i.ciudad,
+                "email": i.email,
+                "telefono": i.telefono,
+                "cedula": i.cedula,
                 "ciudades_asignadas": await ListarCiudadesGRegional(i.id_gerente_regional),
                 "canales_asignados": await ListarCanalesGRciudad(i.id_gerente_regional)
-
             })
         return {
             "code": "0",
@@ -1639,7 +1666,11 @@ async def post_gerente_ciudad(request: RegistrarGerenteRegionalModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente=request.nombre_gerente
+            nombre_gerente=request.nombre_gerente,
+            ciudad=request.ciudad,
+            email=request.email,
+            telefono=request.telefono,
+            cedula=request.cedula,
         )
         data = db.execute(query).lastrowid
         return {
@@ -1657,7 +1688,11 @@ async def put_gerente_ciudad(request: RegistrarGerenteRegionalModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente=request.nombre_gerente
+            nombre_gerente=request.nombre_gerente,
+            ciudad=request.ciudad,
+            email=request.email,
+            telefono=request.telefono,
+            cedula=request.cedula,
         ).where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional))
         return {
             "code": "0"
@@ -1696,7 +1731,11 @@ async def get_gerente_ciudad():
                 RegistrarGerenteCiudad.c.id_gerente_ciudad,
                 Estados.c.estado,
                 Estados.c.id_estado,
-                RegistrarGerenteCiudad.c.nombre_gerente_ciudad
+                RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+                RegistrarGerenteCiudad.c.ciudad,
+                RegistrarGerenteCiudad.c.email,
+                RegistrarGerenteCiudad.c.telefono,
+                RegistrarGerenteCiudad.c.cedula,
             ])
         data = db.execute(query).fetchall()
         infodata = []
@@ -1706,6 +1745,10 @@ async def get_gerente_ciudad():
                 "id_estado": i.id_estado,
                 "estado": i.estado,
                 "nombre_gerente_ciudad": i.nombre_gerente_ciudad,
+                "ciudad":i.ciudad,
+                "email":i.email,
+                "telefono":i.telefono,
+                "cedula":i.cedula,
                 "ciudades_asignadas": await ListarCiudadesGCiudad(i.id_gerente_ciudad),
                 "canales_asignados": await ListarCanalesGCiudad(i.id_gerente_ciudad)
             })
@@ -1725,7 +1768,11 @@ async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente_ciudad=request.nombre_gerente_ciudad
+            nombre_gerente_ciudad=request.nombre_gerente_ciudad,
+            ciudad=request.ciudad,
+            email=request.email,
+            telefono=request.telefono,
+            cedula=request.cedula
         )
         data = db.execute(query).lastrowid
         return {
@@ -1743,7 +1790,11 @@ async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
-            nombre_gerente_ciudad=request.nombre_gerente_ciudad
+            nombre_gerente_ciudad=request.nombre_gerente_ciudad,
+            ciudad=request.ciudad,
+            email=request.email,
+            telefono=request.telefono,
+            cedula=request.cedula            
         ).where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad))
         return {
             "code": "0"

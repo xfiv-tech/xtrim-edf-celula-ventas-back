@@ -124,6 +124,10 @@ class RegistrarJefeModel(BaseModel):
     id_estado: Optional[int] = None
     id_gerente_ciudad: Optional[int] = None
     nombre_jefe: str
+    ciudad: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    cedula: Optional[str] = None
 
 class ArrayRegistrarJefeModel(BaseModel):
     data: List[RegistrarJefeModel]
@@ -157,12 +161,21 @@ class RegistrarGerenteRegionalModel(BaseModel):
     id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente: str
+    ciudad: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    cedula: Optional[str] = None    
+
 class RegistrarGerenteModel(BaseModel):
     id_gerente: Optional[int]
     id_channel: Optional[int]
     id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente: str
+    ciudad: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    cedula: Optional[str] = None      
 
 class ArrayRegistrarGerenteModel(BaseModel):
     data: List[RegistrarGerenteModel]
@@ -173,6 +186,10 @@ class RegistrarGerenteCiudadModel(BaseModel):
     id_ciudad: Optional[int]
     id_estado: int
     nombre_gerente_ciudad: str
+    ciudad: Optional[str] = None
+    email: Optional[str] = None
+    telefono: Optional[str] = None
+    cedula: Optional[str] = None    
 
 class ArrayRegistrarGerenteCiudadModel(BaseModel):
     data: List[RegistrarGerenteCiudadModel]

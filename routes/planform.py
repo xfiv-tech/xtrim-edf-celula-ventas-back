@@ -7,10 +7,11 @@ import uuid
 
 import os
 from controller.AdminProyectController import SelectAdminProyectCiudad, SelectGerenteCiudad, SelectGerenteRegional, SelectJefeVenta, SelectLiderPeloton
+from controller.AsignacionController import ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesJVCiudad
 from function.excelReporte import ReporteExcel
 from middleware.validacionToken import ValidacionToken
 
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarVendedor, SistemaOperativo
+from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo
 from database.db import db
 
 planform = APIRouter(route_class=ValidacionToken)
@@ -109,6 +110,9 @@ async def ConsultarVendedor(identificationNumber, data):
             Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
             SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
             Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+            RegistroJefeVentas, RegistrarVendedor.c.id_jefe_venta == RegistroJefeVentas.c.id_jefe_venta).join(
+            RegistrarGerenteRegional, RegistrarVendedor.c.id_gerente_regional == RegistrarGerenteRegional.c.id_gerente_regional).join(
+            RegistrarGerenteCiudad, RegistrarVendedor.c.id_gerente_ciudad == RegistrarGerenteCiudad.c.id_gerente_ciudad).join(            
             Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
                 Channel.c.channel,
                 Ciudad.c.ciudad,
@@ -117,6 +121,10 @@ async def ConsultarVendedor(identificationNumber, data):
                 Operador.c.operador,
                 Genero.c.genero,
                 Modalidad.c.modalidad,
+                # crear un alias para RegistroJefeVentas.c.cedula y no se repita el nombre
+                RegistroJefeVentas.c.cedula.label("cedula_jefe_venta"),
+                RegistrarGerenteRegional.c.cedula.label("cedula_gerente_regional"),
+                RegistrarGerenteCiudad.c.cedula.label("cedula_gerente_ciudad"),
                 RegistrarVendedor.c.id_sistema_operativo,
                 SistemaOperativo.c.sistema_operativo,
                 RegistrarVendedor.c.id_modalidad,
@@ -150,56 +158,13 @@ async def ConsultarVendedor(identificationNumber, data):
             ]).where(RegistrarVendedor.c.cedula == identificationNumber)
         res = db.execute(query).fetchone()
         if res is None:
-            return {"status": "error"}
+            return {
+                "code": 400,
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "Numero de cedula no existe",                
+            }
         else:
-            dataInfo = []
-            for i in [res]:
-                dataInfo.append({
-                    "id_registrar_vendedor": i.id_registrar_vendedor,
-                    "id_channel": i.id_channel,
-                    "id_ciudad": i.id_ciudad,
-                    "id_operador": i.id_operador,
-                    "id_sistema_operativo": i.id_sistema_operativo,
-                    "id_estado": i.id_estado,
-                    "id_genero": i.id_genero,
-                    "id_modalidad": i.id_modalidad,
-                    "cedula": i.cedula,
-                    "telefono": i.telefono,
-                    "codigo_vendedor": i.codigo_vendedor,
-                    "usuario_equifax": i.usuario_equifax,
-                    "nombre_vendedor": i.nombre_vendedor,
-                    "fecha_ingreso": i.fecha_ingreso,
-                    "id_lider_peloton": await SelectLiderPeloton(i.id_lider_peloton, i.id_channel),
-                    # "id_gerente": data_gerente.id_gerente,
-                    # "nombre_gerente": data_gerente.nombre_gerente,
-                    "id_gerente_regional": i.id_gerente_regional,
-                    "nombre_gerente_regional": await SelectGerenteRegional(i.id_gerente_regional),
-                    "id_gerente_ciudad": i.id_gerente_ciudad,
-                    "nombre_gerente_ciudad": await SelectGerenteCiudad(i.id_gerente_ciudad),
-                    "id_jefe_venta": i.id_jefe_venta,
-                    "nombre_jefe_venta": await SelectJefeVenta(i.id_jefe_venta),
-                    "nombre_admin_proyectos": await SelectAdminProyectCiudad(i.id_ciudad),
-                    # "ciudad_gestion": i.ciudad_gestion,
-                    "lider_check": i.lider_check,
-                    "meta_volumen_internet": i.meta_volumen_internet,
-                    "meta_dolares_internet": i.meta_dolares_internet,
-                    "meta_volumen_telefonia": i.meta_volumen_telefonia,
-                    "meta_dolares_telefonia": i.meta_dolares_telefonia,
-                    "meta_volumen_television": i.meta_volumen_television,
-                    "meta_dolares_television": i.meta_dolares_television,
-                    "fecha_salida": i.fecha_salida,
-                    "sector_residencia": i.sector_residencia,
-                    "email": i.email,
-                    "dias_inactivo": i.dias_inactivo,
-                    "channel": i.channel,
-                    "ciudad": i.ciudad,
-                    "region": i.region,
-                    "estado": i.estado,
-                    "operador": i.operador,
-                    "genero": i.genero,
-                    "modalidad": i.modalidad,
-                    "sistema_operativo": i.sistema_operativo
-                })
             return {
                 "code": 200,
                 "data": {
@@ -219,10 +184,10 @@ async def ConsultarVendedor(identificationNumber, data):
                     },
                     "salesChannel": res.channel,
                     "leader": 1 if res.lider_check == True else 0,
-                    "in_boss": None,  # cédula del jefe
+                    "in_boss": res.cedula_jefe_venta,  # cédula del jefe id_jefe_venta
                     "distributor": None,  # cédula / ruc del distribuidor / pasaporte
-                    "in_manager_regional": None,  # cédula del gerente regional
-                    "id_manager_city": None,  # cédula del gerente de ciudad
+                    "in_manager_regional": res.cedula_gerente_regional,  # cédula del gerente regional id_gerente_regional
+                    "id_manager_city": res.cedula_gerente_ciudad,  # cédula del gerente de ciudad id_gerente_ciudad
                 },
                 "externalTransactionId": data.externalTransactionId,
                 "internalTransactionId": uuid.uuid4().hex,
@@ -230,30 +195,61 @@ async def ConsultarVendedor(identificationNumber, data):
             }
     except Exception as e:
         print(e)
-        return {"status": "error"}
+        return {
+            "code": 500,
+            "externalTransactionId": data.externalTransactionId,
+            "internalTransactionId": uuid.uuid4().hex,
+            "message": "Error interno",
+        }
 
 
 async def ConsultarJefesVenta(data):
     try:
-        return {
-            "code": 200,
-            "data": {
-                "identificationNumber": None,
-                "nameBoss": None,
-                "city": None,
-                "status": None,
-                "email": None,
-                "cellphone": None,
-                "salesChannel": None,
-                "id_manager_city": None
-            },
-            "externalTransactionId": data.externalTransactionId,
-            "internalTransactionId": uuid.uuid4().hex,
-            "message": "OK",
-        }            
+        query = RegistroJefeVentas.join(Estados, Estados.c.id_estado == RegistroJefeVentas.c.id_estado).select().with_only_columns([
+            Estados.c.estado,
+            RegistroJefeVentas.c.id_jefe_venta,
+            RegistroJefeVentas.c.id_estado,
+            RegistroJefeVentas.c.id_gerente_ciudad,
+            RegistroJefeVentas.c.nombre_jefe,
+            RegistroJefeVentas.c.ciudad,
+            RegistroJefeVentas.c.email,
+            RegistroJefeVentas.c.telefono,
+            RegistroJefeVentas.c.cedula,
+        ]).where(RegistroJefeVentas.c.cedula == data.identificationNumber)
+        res = db.execute(query).fetchone()
+        if res is None:
+           return {
+                "code": 400,
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "Numero de cedula no existe",
+           }
+        else:
+            channel = await ListarCanalesJVCiudad(res.id_jefe_venta)
+            return {
+                "code": 200,
+                "data": {
+                    "identificationNumber": data.identificationNumber,
+                    "nameBoss": res.nombre_jefe,
+                    "city": res.ciudad,
+                    "status": res.estado,
+                    "email": res.email,
+                    "cellphone": res.telefono,
+                    "salesChannel": [i["channel"] for i in channel][0],
+                    "id_manager_city": res.cedula
+                },
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "OK",
+            }            
     except Exception as e:
         print(e)
-        return {"status": "error"}
+        return {
+            "code": 500,
+            "externalTransactionId": data.externalTransactionId,
+            "internalTransactionId": uuid.uuid4().hex,
+            "message": "Error interno",
+        }
 
 
 async def ConsultarDistribuidor(data):
@@ -291,45 +287,95 @@ async def ConsultarDistribuidor(data):
 
 async def ConsultarGerenteRegional(data):
     try:
-        return {
-            "code": 200,
-            "data": {
-                "identificationNumber": None,
-                "nameManager": None,
-                "city": None,
-                "status": None,
-                "email": None,
-                "cellphone": None,
-                "salesChannel": None,
-                "position": None
-            },
-            "externalTransactionId": data.externalTransactionId,
-            "internalTransactionId": uuid.uuid4().hex,
-            "message": "OK",
-        }
+        query = RegistrarGerenteRegional.join(Estados, Estados.c.id_estado == RegistrarGerenteRegional.c.id_estado).select().with_only_columns([
+            Estados.c.estado,
+            RegistrarGerenteRegional.c.id_gerente_regional,
+            RegistrarGerenteRegional.c.id_estado,
+            RegistrarGerenteRegional.c.nombre_gerente,
+            RegistrarGerenteRegional.c.ciudad,
+            RegistrarGerenteRegional.c.email,
+            RegistrarGerenteRegional.c.telefono,
+            RegistrarGerenteRegional.c.cedula,
+        ]).where(RegistrarGerenteRegional.c.cedula == data.identificationNumber)
+        res = db.execute(query).fetchone()
+        if res is None:
+           return {
+                "code": 400,
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "Numero de cedula no existe",
+           }
+        else:    
+            channel = await ListarCanalesGRciudad(res.id_gerente_regional)    
+            return {
+                "code": 200,
+                "data": {
+                    "identificationNumber": data.identificationNumber,
+                    "nameManager": res.nombre_gerente,
+                    "city": res.ciudad,
+                    "status": res.estado,
+                    "email": res.email,
+                    "cellphone": res.telefono,
+                    "salesChannel": [i["channel"] for i in channel][0],
+                    "position": data.cargo
+                },
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "OK",
+            }
     except Exception as e:
         print(e)
-        return {"status": "error"}
+        return {
+            "code": 500,
+            "externalTransactionId": data.externalTransactionId,
+            "internalTransactionId": uuid.uuid4().hex,
+            "message": "Error interno",
+        }
 
 
 async def ConsultarGerenteCiudad(data):
     try:
-        return {
-            "code": 200,
-            "data": {
-                "identificationNumber": None,
-                "nameManager": None,
-                "city": None,
-                "status": None,
-                "email": None,
-                "cellphone": None,
-                "salesChannel": None,
-                "position": None
-            },
-            "externalTransactionId": data.externalTransactionId,
-            "internalTransactionId": uuid.uuid4().hex,
-            "message": "OK",
-        }
+        query = RegistrarGerenteCiudad.join(
+            Estados, Estados.c.id_estado == RegistrarGerenteCiudad.c.id_estado).select().with_only_columns([
+                RegistrarGerenteCiudad.c.id_gerente_ciudad,
+                Estados.c.estado,
+                Estados.c.id_estado,
+                RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+                RegistrarGerenteCiudad.c.ciudad,
+                RegistrarGerenteCiudad.c.email,
+                RegistrarGerenteCiudad.c.telefono,
+                RegistrarGerenteCiudad.c.cedula,
+            ])
+        res = db.execute(query).fetchone()
+        if res is None:
+            return {
+                "code": 400,
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "Numero de cedula no existe",                
+            }
+        else:        
+            return {
+                "code": 200,
+                "data": {
+                    "identificationNumber": data.identificationNumber,
+                    "nameManager": res.nombre_gerente_ciudad,
+                    "city": res.ciudad,
+                    "status": res.estado,
+                    "email": res.email,
+                    "cellphone": res.telefono,
+                    "salesChannel": None,
+                    "position": data.cargo
+                },
+                "externalTransactionId": data.externalTransactionId,
+                "internalTransactionId": uuid.uuid4().hex,
+                "message": "OK",
+            }
     except Exception as e:
         print(e)
-        return {"status": "error"}
+        return {
+            "code": 500,
+            "externalTransactionId": data.externalTransactionId,
+            "internalTransactionId": uuid.uuid4().hex,
+            "message": "Error interno",
+        }
