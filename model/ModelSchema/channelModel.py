@@ -96,6 +96,7 @@ class RegistrarVendedorModel(BaseModel):
     sector_residencia: str
     email: str
     cedula: str
+    campana: str
     dias_inactivo: Optional[int] = 0
 
 class ArrayRegistrarVendedorModel(BaseModel):

@@ -153,6 +153,7 @@ RegistrarVendedor = Table("registrar_vendedor", meta,
     Column("email", String(255)),
     Column("cedula", String(13)),
     Column("telefono", String(12)),
+    Column("campana", String(255)),
     Column("dias_inactivo", Integer, default=0),
 )
 

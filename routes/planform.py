@@ -20,8 +20,7 @@ planform = APIRouter(route_class=ValidacionToken)
 class Planform(BaseModel):
     channel: str
     identificationNumber: str
-    cargo: str = Field(description="Channel",
-                       regex="^(vendedor|gerente_regional|gerente_ciudad|jefe_venta|distribuidor)$")
+    cargo: str = Field(description="Channel",regex="^(vendedor|gerente_regional|gerente_ciudad|jefe_venta|distribuidor)$")
     externalTransactionId: str
 
 

@@ -1201,6 +1201,7 @@ async def post_registro(request: RegistrarVendedorModel):
             meta_dolares_television=request.meta_dolares_television,
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
+            campana=request.campana,
             email=request.email,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         )
@@ -1245,6 +1246,7 @@ async def put_registro(request: RegistrarVendedorModel):
             fecha_salida=request.fecha_salida,
             sector_residencia=request.sector_residencia,
             email=request.email,
+            campana=request.campana,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
         data = db.execute(query).returned_defaults
