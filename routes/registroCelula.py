@@ -127,6 +127,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.meta_volumen_television,
                     RegistrarVendedor.c.meta_dolares_television,
                     RegistrarVendedor.c.email,
+                    RegistrarVendedor.c.campana,
                     RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
@@ -179,6 +180,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -231,6 +233,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -292,6 +295,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -361,6 +365,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -412,6 +417,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -459,6 +465,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -524,6 +531,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.meta_volumen_television,
                     RegistrarVendedor.c.meta_dolares_television,
                     RegistrarVendedor.c.email,
+                    RegistrarVendedor.c.campana,
                     RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
@@ -576,6 +584,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -628,6 +637,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -689,6 +699,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -758,6 +769,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -809,6 +821,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -856,6 +869,7 @@ async def get_registro(request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -915,6 +929,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                 RegistrarVendedor.c.lider_check,
                 RegistrarVendedor.c.meta_volumen,
                 RegistrarVendedor.c.meta_dolares,
+                RegistrarVendedor.c.campana,
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo
             ]).where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
@@ -983,6 +998,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 }
             elif i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
@@ -1025,6 +1041,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 }
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
@@ -1066,6 +1083,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 }
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
@@ -1107,6 +1125,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 }
             else:
@@ -1148,6 +1167,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "operador": i.operador,
                     "genero": i.genero,
                     "modalidad": i.modalidad,
+                    "campana": i.campana,
                     "sistema_operativo": i.sistema_operativo
                 }
 

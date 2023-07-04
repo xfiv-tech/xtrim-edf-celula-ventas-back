@@ -58,7 +58,8 @@ class ReporteExcel(BaseModel):
     estado: str 
     operador: str 
     genero: str 
-    modalidad: str 
+    modalidad: str
+    campana: Optional[str] = None
     sistema_operativo: str
 
 
@@ -109,7 +110,8 @@ async def get_infoReporte(ciudad: list):
                 RegistrarVendedor.c.meta_volumen_television,
                 RegistrarVendedor.c.meta_dolares_television,
                 RegistrarVendedor.c.email,
-                RegistrarVendedor.c.dias_inactivo
+                RegistrarVendedor.c.dias_inactivo,
+                RegistrarVendedor.c.campana
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
             res = db.execute(query).fetchall()
             for i in res:
@@ -162,6 +164,7 @@ async def get_infoReporte(ciudad: list):
                 "operador": i.operador,
                 "genero": i.genero,
                 "modalidad": i.modalidad,
+                "campana": i.campana,
                 "sistema_operativo": i.sistema_operativo
             })
 
@@ -185,7 +188,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             "META VOLUMEN INTERNET","META DOLARES INTRNET",
             "META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
             "META VOLUMEN TELEVISION","META DOLARES TELEVISION",
-            "USUARIO EQUIFAX","CEDULA",
+            "USUARIO EQUIFAX","CEDULA", "CAMPANA"
         ])
         for i in data:
             k = ReporteExcel(**i)
@@ -195,7 +198,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
                 k.meta_volumen_internet, k.meta_dolares_internet, 
                 k.meta_volumen_telefonia, k.meta_dolares_telefonia,
                 k.meta_volumen_television, k.meta_dolares_television,
-                k.usuario_equifax, k.cedula
+                k.usuario_equifax, k.cedula, k.campana
             ])
 
         wb.save(usuario)

@@ -161,7 +161,8 @@ def tarea_programada():
                 RegistrarVendedor.c.meta_volumen_television,
                 RegistrarVendedor.c.meta_dolares_television,
                 RegistrarVendedor.c.email,
-                RegistrarVendedor.c.dias_inactivo
+                RegistrarVendedor.c.dias_inactivo,
+                RegistrarVendedor.c.campana
                 ])
     res = db.execute(query).fetchall()
 
@@ -211,6 +212,7 @@ def tarea_programada():
                 "operador": i.operador,
                 "genero": i.genero,
                 "modalidad": i.modalidad,
+                "campana": i.campana,
                 "sistema_operativo": i.sistema_operativo
         })
 
@@ -221,7 +223,7 @@ def tarea_programada():
         "META VOLUMEN INTERNET","META DOLARES INTRNET",
         "META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
         "META VOLUMEN TELEVISION","META DOLARES TELEVISION",
-        "USUARIO EQUIFAX","CEDULA",
+        "USUARIO EQUIFAX","CEDULA", "CAMPAÑA"
     ])
     for i in dataInfo:
         k = ReporteExcel(**i)
@@ -231,7 +233,7 @@ def tarea_programada():
             k.meta_volumen_internet, k.meta_dolares_internet, 
             k.meta_volumen_telefonia, k.meta_dolares_telefonia,
             k.meta_volumen_television, k.meta_dolares_television,
-            k.usuario_equifax, k.cedula
+            k.usuario_equifax, k.cedula, k.campana
         ])
     
     fecha = datetime.datetime.now().strftime("%Y-%m-%d")
