@@ -8,7 +8,7 @@ from database.db import db
 async def LoginCodigo():
     try:
         payload = json.dumps({
-            "channel": "Celula_Ventas",
+            "channel": "TYTAM",
             "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
             "realm": "realm-ecommerce-autoservicio",
             "type": "Basic"
