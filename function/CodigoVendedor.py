@@ -9,8 +9,8 @@ async def LoginCodigo():
     try:
         payload = json.dumps({
             "channel": "Celula_Ventas",
-            "key": "YXBpbS1jbGllbnQ6N2M4ZmEyMDgtMmZjZC00YjhiLTk1ZjktYTIwZWJkODliYmRi",
-            "realm": "realm-ecommerce",
+            "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
+            "realm": "realm-ecommerce-autoservicio",
             "type": "Basic"
         })
         login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data=payload, headers={'Content-Type': 'application/json'})
