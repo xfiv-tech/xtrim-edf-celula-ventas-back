@@ -47,4 +47,4 @@ async def ConsultarVendedor(codigo):
                 "message": "El codigo ya existe"
             }
     except Exception as e:
-        print("Error: ".e.args)
+        print("Error: ",e.args)
