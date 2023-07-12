@@ -19,7 +19,7 @@ async def LoginCodigo():
         return response["data"]["token"]
 
     except Exception as e:
-        print(e)
+        print("Error: 22",e.args)
 
 
 async def ConsultarVendedor(codigo):
@@ -47,4 +47,4 @@ async def ConsultarVendedor(codigo):
                 "message": "El codigo ya existe"
             }
     except Exception as e:
-        print(e)
+        print("Error: ".e.args)
