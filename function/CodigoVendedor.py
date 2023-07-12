@@ -13,7 +13,7 @@ async def LoginCodigo():
             "realm": "realm-ecommerce-autoservicio",
             "type": "Basic"
         })
-        login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data=payload, headers={'Content-Type': 'application/json'}, verify=False)
+        login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data=payload, headers={'Content-Type': 'application/json'})
         print("Login",login.json())
         response = login.json()
         return response["data"]["token"]
@@ -34,7 +34,7 @@ async def ConsultarVendedor(codigo):
                 "application": "Marketplace",
                 "externalTransactionId": str(uuid.uuid1()),
             })
-            code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data=payload, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'}, verify=False)
+            code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data=payload, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
             print(code)
             vendedor = code.json()
             if(vendedor["code"] == 400):
