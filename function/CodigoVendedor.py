@@ -21,23 +21,36 @@ async def LoginCodigo():
         ctx.load_default_certs()
         ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
         with urllib3.PoolManager(ssl_context=ctx) as http:
-            r = http.request("GET", "https://apix.grupotvcable.com/rest/token-api/v1.0/generate")
-            print(r.status)
-            print(r)
+            url = "https://apix.grupotvcable.com/rest/token-api/v1.0/generate"
+            data = {
+                "channel": "Web",
+                "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
+                "realm": "realm-ecommerce-autoservicio",
+                "type": "Basic"
+            }
+            encoded_data = json.dumps(data).encode('utf-8')
+            r = http.request("POST", url, body=encoded_data, headers={'Content-Type': 'application/json'})
+            if r.status == 200:
+                print("Login",r.json())
+                response = r.json()
+                return response["data"]["token"]
+            else:
+                print("Login",r.json())
+                response = r.json()
 
-        payload = json.dumps({
-            "channel": "Web",
-            "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
-            "realm": "realm-ecommerce-autoservicio",
-            "type": "Basic"
-        })
-        login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data=payload, headers={'Content-Type': 'application/json'})
-        print("Login",login.json())
-        response = login.json()
-        return response["data"]["token"]
+        # payload = json.dumps({
+        #     "channel": "Web",
+        #     "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
+        #     "realm": "realm-ecommerce-autoservicio",
+        #     "type": "Basic"
+        # })
+        # login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data=payload, headers={'Content-Type': 'application/json'})
+        # print("Login",login.json())
+        # response = login.json()
+        # return response["data"]["token"]
 
     except Exception as e:
-        print("Error: 22",e.args)
+        print("Error: 53",e.args)
 
 
 async def ConsultarVendedor(codigo):
@@ -46,19 +59,41 @@ async def ConsultarVendedor(codigo):
         if quey == None:
             print("externalTransactionId",str(uuid.uuid1()))
             response = await LoginCodigo()
-            payload = json.dumps({
+            ctx = create_urllib3_context()
+            ctx.load_default_certs()
+            ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
+            with urllib3.PoolManager(ssl_context=ctx) as http:
+            url = "https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor"
+            data = {
                 "channel": "TYTAN",
                 "idVendor": codigo,
                 "application": "Marketplace",
                 "externalTransactionId": str(uuid.uuid1()),
-            })
-            code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data=payload, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
-            print(code)
-            vendedor = code.json()
-            if(vendedor["code"] == 400):
-                return False
-            else:
-                return vendedor["data"]
+            }
+            encoded_data = json.dumps(data).encode('utf-8')
+            r = http.request("POST", url, body=encoded_data, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
+            if r.status == 200:
+                print(r.json())
+                vendedor = r.json()
+                if(vendedor["code"] == 400):
+                    return False
+                else:
+                    return vendedor["data"]
+
+
+            # payload = json.dumps({
+            #     "channel": "TYTAN",
+            #     "idVendor": codigo,
+            #     "application": "Marketplace",
+            #     "externalTransactionId": str(uuid.uuid1()),
+            # })
+            # code = requests.post("https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor", data=payload, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
+            # print(code)
+            # vendedor = code.json()
+            # if(vendedor["code"] == 400):
+            #     return False
+            # else:
+            #     return vendedor["data"]
         else:
             return {
                 "code": 400,
