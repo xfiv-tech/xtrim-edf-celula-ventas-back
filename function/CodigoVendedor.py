@@ -5,11 +5,9 @@ import json
 from model.channel import RegistrarVendedor
 from database.db import db
 import urllib3
+import urllib3
+from urllib3.util.ssl_ import create_urllib3_context
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-import ssl
-
-print(ssl.OPENSSL_VERSION) 
-
 
 # python -c 'import ssl; 
 # print(ssl.OPENSSL_VERSION) = OpenSSL 3.0.3 3 May 2022  
@@ -19,6 +17,14 @@ print(ssl.OPENSSL_VERSION)
 
 async def LoginCodigo():
     try:
+        ctx = create_urllib3_context()
+        ctx.load_default_certs()
+        ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
+        with urllib3.PoolManager(ssl_context=ctx) as http:
+            r = http.request("GET", "https://apix.grupotvcable.com/rest/token-api/v1.0/generate")
+            print(r.status)
+            print(r)
+
         payload = json.dumps({
             "channel": "Web",
             "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
