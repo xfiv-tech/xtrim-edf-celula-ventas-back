@@ -4,6 +4,11 @@ import json
 
 from model.channel import RegistrarVendedor
 from database.db import db
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+# corregir (MaxRetryError("HTTPSConnectionPool(host='apix.grupotvcable.com', port=443): Max retries exceeded with url: /rest/token-api/v1.0/generate (Caused by SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)')))"),)
 
 async def LoginCodigo():
     try:
