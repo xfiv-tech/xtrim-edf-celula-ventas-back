@@ -31,12 +31,11 @@ async def LoginCodigo():
             encoded_data = json.dumps(data).encode('utf-8')
             r = http.request("POST", url, body=encoded_data, headers={'Content-Type': 'application/json'})
             if r.status == 200:
+                data = r.data.decode('utf-8')
                 print("Login",r.data.decode('utf-8'))
-                response = r.json()
-                return response["data"]["token"]
+                return data["data"]["token"]
             else:
-                print("Login",r.json())
-                response = r.json()
+                return False
 
         # payload = json.dumps({
         #     "channel": "Web",
@@ -73,12 +72,12 @@ async def ConsultarVendedor(codigo):
                 encoded_data = json.dumps(data).encode('utf-8')
                 r = http.request("POST", url, body=encoded_data, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
                 if r.status == 200:
-                    print(r.json())
-                    vendedor = r.json()
-                    if(vendedor["code"] == 400):
+                    data = r.data.decode('utf-8')
+                    print(data["data"])
+                    if(data["code"] == 400):
                         return False
                     else:
-                        return vendedor["data"]
+                        return data["data"]
 
 
             # payload = json.dumps({
