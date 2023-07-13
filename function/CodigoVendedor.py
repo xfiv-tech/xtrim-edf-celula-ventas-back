@@ -63,22 +63,22 @@ async def ConsultarVendedor(codigo):
             ctx.load_default_certs()
             ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
             with urllib3.PoolManager(ssl_context=ctx) as http:
-            url = "https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor"
-            data = {
-                "channel": "TYTAN",
-                "idVendor": codigo,
-                "application": "Marketplace",
-                "externalTransactionId": str(uuid.uuid1()),
-            }
-            encoded_data = json.dumps(data).encode('utf-8')
-            r = http.request("POST", url, body=encoded_data, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
-            if r.status == 200:
-                print(r.json())
-                vendedor = r.json()
-                if(vendedor["code"] == 400):
-                    return False
-                else:
-                    return vendedor["data"]
+                url = "https://apix.grupotvcable.com/rest/salesperson-api/v1.0/queryvendor"
+                data = {
+                    "channel": "TYTAN",
+                    "idVendor": codigo,
+                    "application": "Marketplace",
+                    "externalTransactionId": str(uuid.uuid1()),
+                }
+                encoded_data = json.dumps(data).encode('utf-8')
+                r = http.request("POST", url, body=encoded_data, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
+                if r.status == 200:
+                    print(r.json())
+                    vendedor = r.json()
+                    if(vendedor["code"] == 400):
+                        return False
+                    else:
+                        return vendedor["data"]
 
 
             # payload = json.dumps({
