@@ -31,7 +31,7 @@ async def LoginCodigo():
             encoded_data = json.dumps(data).encode('utf-8')
             r = http.request("POST", url, body=encoded_data, headers={'Content-Type': 'application/json'})
             if r.status == 200:
-                print("Login",r)
+                print("Login",r.data.decode('utf-8'))
                 response = r.json()
                 return response["data"]["token"]
             else:
