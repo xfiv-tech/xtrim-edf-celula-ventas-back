@@ -33,7 +33,7 @@ async def LoginCodigo():
             if r.status == 200:
                 data = r.data.decode('utf-8')
                 print("Login",r.data.decode('utf-8'))
-                print("Login",data["data"]["token"])
+                print("Login",type(data["data"]["token"]))
                 return data["data"]["token"]
             else:
                 return False
