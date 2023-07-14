@@ -31,12 +31,19 @@ async def LoginCodigo():
             encoded_data = json.dumps(data).encode('utf-8')
             r = http.request("POST", url, body=encoded_data, headers={'Content-Type': 'application/json'})
             if r.status == 200:
+                # convertir la respuesta en  Diccionario
+                diccionario = json.loads(r.data.decode('utf-8'))
+                print("Login",diccionario)
+                print("Login",type(diccionario))
+                print("\n")
+                print("Login",diccionario["data"]["token"])
+
                 response = r.data.decode('utf-8')
                 print("Login",r.data.decode('utf-8'))
                 print("Login",type(response))
                 print("\n")
                 print("Login",response)
-                return response["data"]["token"]
+                return diccionario["data"]["token"]
             else:
                 return False
 
@@ -75,12 +82,15 @@ async def ConsultarVendedor(codigo):
                 encoded_data = json.dumps(data).encode('utf-8')
                 r = http.request("POST", url, body=encoded_data, headers={'Authorization': 'Bearer ' + response, 'Content-Type': 'application/json'})
                 if r.status == 200:
-                    resp = r.data.decode('utf-8')
-                    print(resp["data"])
-                    if(resp["code"] == 400):
+                    diccionario = json.loads(r.data.decode('utf-8'))
+                    print("Login",diccionario)
+                    print("Login",type(diccionario))
+                    print("\n")
+                    print(diccionario["data"])
+                    if(diccionario["code"] == 400):
                         return False
                     else:
-                        return resp["data"]
+                        return diccionario["data"]
 
 
             # payload = json.dumps({
