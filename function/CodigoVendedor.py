@@ -33,7 +33,9 @@ async def LoginCodigo():
             if r.status == 200:
                 response = r.data.decode('utf-8')
                 print("Login",r.data.decode('utf-8'))
-                print("Login",type(response["data"]["token"]))
+                print("Login",type(response))
+                print("\n")
+                print("Login",response)
                 return response["data"]["token"]
             else:
                 return False
