@@ -37,3 +37,12 @@ class ModelVendedorExcel(BaseModel):
     dias_inactivo: Optional[int] = 0
 
 
+class ModelVendedorExcelProsupuesto(BaseModel):
+    # id_registrar_vendedor: Optional[int] = None
+    codigo_vendedor: Optional[str]
+    meta_volumen_internet: Optional[int]
+    meta_dolares_internet: Optional[float]
+    meta_volumen_telefonia: Optional[int]
+    meta_dolares_telefonia: Optional[float]
+    meta_volumen_television: Optional[int]
+    meta_dolares_television: Optional[float]

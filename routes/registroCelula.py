@@ -11,7 +11,7 @@ from function.function_jwt import decode_token
 from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
-from model.ModelExcel import ModelVendedorExcel
+from model.ModelExcel import ModelVendedorExcel, ModelVendedorExcelProsupuesto
 from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarAdministradorModelNew, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
 from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
 from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
@@ -2008,6 +2008,70 @@ async def cargar_excel_vendedores(request: Request):
                 dias_inactivo=i.dias_inactivo,
             )
             db.execute(query)
+        
+        return {
+            "code": "0",
+            "data": nueva_lista
+        }
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+    
+
+# descargar ejemplo de excel prosupuesto
+@registro.get("/descargar_excel_prosupuesto", tags=["Vendedores"])
+async def descargar_excel_prosupuesto():
+    try:
+        df = pd.read_excel("static/ejemplo_prosupuesto.xlsx")
+        df.to_csv("static/ejemplo_prosupuesto.xlsx", index=False)
+        return FileResponse("static/ejemplo_prosupuesto.xlsx", media_type="application/octet-stream", filename="ejemplo_prosupuesto.xlsx")
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+
+#Cargar excel con los datos de vendedor y registras en la base de datos
+@registro.post("/cargar_excel_vendedores_presupuesto", tags=["Vendedores"])
+async def cargar_excel_vendedores(request: Request):
+    try:
+        form = await request.form()
+        file = form['file']
+        filename = file.filename
+        extension = filename.split(".")[-1]
+        df = None
+        if extension == "xlsx":
+            file = await file.read()
+            df = pd.read_excel(file)
+            df = df.to_dict(orient="records")
+        elif extension == "csv":
+            file = await file.read()
+            df = pd.read_csv(file)
+            df = df.to_dict(orient="records")
+            print(df)
+        else:
+            return {
+                "code": "1",
+                "message": "El archivo debe ser de tipo excel"
+            }
+        nueva_lista = []
+        for i in df:
+            print(ModelVendedorExcelProsupuesto(**i))
+            nueva_lista.append(ModelVendedorExcelProsupuesto(**i))
+
+        for i in nueva_lista:
+            # acutalizar vendedor
+            query = RegistrarVendedor.update().values(
+                meta_volumen_internet=i.meta_volumen_internet,
+                meta_dolares_internet=i.meta_dolares_internet,
+                meta_volumen_telefonia=i.meta_volumen_telefonia,
+                meta_dolares_telefonia=i.meta_dolares_telefonia,
+                meta_volumen_television=i.meta_volumen_television,
+                meta_dolares_television=i.meta_dolares_television,
+            ).where(RegistrarVendedor.c.codigo_vendedor == i.codigo_vendedor)
+            insert = db.execute(query).rowcount
+            print(insert)
         
         return {
             "code": "0",
