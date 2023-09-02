@@ -28,7 +28,7 @@ async def ListarIslas():
 @isla.post("/crear_isla", tags=["Islas"])
 async def CrearIsla(data: Isla):
     try:
-        return RegistrarIsla(data)
+        return await RegistrarIsla(data)
     except Exception as e:
         raise HTTPException(status_code=400, detail={
             "code": "-1",
