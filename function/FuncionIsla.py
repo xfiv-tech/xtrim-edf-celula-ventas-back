@@ -35,7 +35,7 @@ async def RegistrarIsla(data:Isla):
 async def ListarIslaAll():
     try:
         print("ListarIslaAll")
-        query = db.execute(isla).fetchall()
+        query = db.execute(isla.select()).fetchall()
         return {
             "status": 200,
             "data": query
