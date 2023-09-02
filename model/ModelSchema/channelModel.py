@@ -1,6 +1,6 @@
-from pydantic import BaseModel
 from typing import List, Optional
 
+from pydantic import BaseModel
 
 
 class ChanellModel(BaseModel):
@@ -97,7 +97,9 @@ class RegistrarVendedorModel(BaseModel):
     email: str
     cedula: str
     campana: str
+    isla: Optional[str] = None
     dias_inactivo: Optional[int] = 0
+    
 
 class ArrayRegistrarVendedorModel(BaseModel):
     data: List[RegistrarVendedorModel]

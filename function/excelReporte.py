@@ -1,15 +1,22 @@
-from openpyxl import Workbook
-from pydantic import BaseModel
 from typing import Optional
-from controller.AdminProyectController import SelectAdminProyectCiudad, SelectGerenteCiudad, SelectGerenteRegional, SelectJefeVenta, SelectLiderPeloton
+
 # from function.ftp import ftp_close, ftp_connect, ftp_list
 # import os
 from dotenv import load_dotenv
+from openpyxl import Workbook
+from pydantic import BaseModel
+
+from controller.AdminProyectController import (SelectAdminProyectCiudad,
+                                               SelectGerenteCiudad,
+                                               SelectGerenteRegional,
+                                               SelectJefeVenta,
+                                               SelectLiderPeloton)
 
 load_dotenv()
 
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarVendedor, SistemaOperativo 
 from database.db import db
+from model.channel import (Channel, Ciudad, Estados, Genero, Modalidad,
+                           Operador, RegistrarVendedor, SistemaOperativo)
 
 # HOST = os.getenv("HOST_FTP")
 # USER = os.getenv("USER_FTP")
@@ -60,6 +67,7 @@ class ReporteExcel(BaseModel):
     genero: str 
     modalidad: str
     campana: Optional[str] = None
+    isla: Optional[str] = None
     sistema_operativo: str
 
 
@@ -111,6 +119,7 @@ async def get_infoReporte(ciudad: list):
                 RegistrarVendedor.c.meta_dolares_television,
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo,
+                RegistrarVendedor.c.isla,
                 RegistrarVendedor.c.campana
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
             res = db.execute(query).fetchall()
@@ -165,6 +174,7 @@ async def get_infoReporte(ciudad: list):
                 "genero": i.genero,
                 "modalidad": i.modalidad,
                 "campana": i.campana,
+                "isla": i.isla,
                 "sistema_operativo": i.sistema_operativo
             })
 
@@ -188,7 +198,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             "META VOLUMEN INTERNET","META DOLARES INTRNET",
             "META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
             "META VOLUMEN TELEVISION","META DOLARES TELEVISION",
-            "USUARIO EQUIFAX","CEDULA", "CAMPANA"
+            "USUARIO EQUIFAX","CEDULA", "CAMPANA", "ISLA"
         ])
         for i in data:
             k = ReporteExcel(**i)
@@ -198,7 +208,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
                 k.meta_volumen_internet, k.meta_dolares_internet, 
                 k.meta_volumen_telefonia, k.meta_dolares_telefonia,
                 k.meta_volumen_television, k.meta_dolares_television,
-                k.usuario_equifax, k.cedula, k.campana
+                k.usuario_equifax, k.cedula, k.campana, k.isla
             ])
 
         wb.save(usuario)

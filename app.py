@@ -1,21 +1,23 @@
-from fastapi import FastAPI
-from fastapi_scheduler import SchedulerAdmin
-from routes.usuario import usuarios
-from routes.admin import administradores
-from routes.edificio import edificios
-from routes.reporte import reporte
-from routes.roles import roles
-from routes.menu import menu
-from routes.login import login
-from routes.channel import channel
-from routes.registroCelula import registro
-from routes.asignacion import asignacion
-from routes.planform import planform
-from routes.codigo import codigo
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
 import os
 
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi_scheduler import SchedulerAdmin
+
+from routes.admin import administradores
+from routes.asignacion import asignacion
+from routes.channel import channel
+from routes.codigo import codigo
+from routes.edificio import edificios
+from routes.isla import isla
+from routes.login import login
+from routes.menu import menu
+from routes.planform import planform
+from routes.registroCelula import registro
+from routes.reporte import reporte
+from routes.roles import roles
+from routes.usuario import usuarios
 from task.reporte import tarea_programada
 
 load_dotenv()
@@ -60,6 +62,7 @@ app.include_router(registro)
 app.include_router(channel)
 app.include_router(asignacion)
 app.include_router(codigo)
+app.include_router(isla)
 app.include_router(planform)
 
 @app.on_event("startup")

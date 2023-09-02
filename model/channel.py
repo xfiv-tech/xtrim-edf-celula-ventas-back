@@ -1,5 +1,7 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, Boolean, ForeignKey, Float, Text
-from database.db import meta, db
+from sqlalchemy import (Boolean, Column, DateTime, Float, ForeignKey, Integer,
+                        String, Table, Text)
+
+from database.db import db, meta
 
 Ciudad = Table("ciudad", meta,
     Column("id_ciudad", Integer, primary_key=True, autoincrement=True),
@@ -141,6 +143,7 @@ RegistrarVendedor = Table("registrar_vendedor", meta,
     Column("telefono", String(12)),
     Column("campana", String(255)),
     Column("dias_inactivo", Integer, default=0),
+    Column("isla", Text, nullable=True),
 )
 
 # # Tablas de asignacion de gerentes a ciudades y canales
@@ -215,5 +218,13 @@ asignacion_canal_distribuidor = Table("asignacion_canal_distribuidor", meta,
     Column("id_channel", Integer, ForeignKey("channel.id_channel")),
     Column("id_registrar_distribuidor", Integer, ForeignKey("registrar_distribuidor.id_registrar_distribuidor"))
 )
+
+isla = Table("isla", meta,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("id_ciudad", Integer, ForeignKey("ciudad.id_ciudad")),
+    Column("isla",Text, nullable=True)
+)
+
+
 
 meta.create_all(db)

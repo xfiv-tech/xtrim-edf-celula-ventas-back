@@ -1,29 +1,64 @@
+import calendar
+import datetime
 import io
+import os
+
 import pandas as pd
 from dotenv import load_dotenv
-import os
-from controller.AdminProyectController import SelectAdminProyectCiudad, SelectGerenteCiudad, SelectGerenteRegional, SelectJefeVenta, SelectLiderPeloton
-from controller.AsignacionController import ListarCanalesAPCiudad, ListarCanalesAdminCiudad, ListarCanalesDistribuidor, ListarCanalesGCiudad, ListarCanalesGRciudad, ListarCanalesJVCiudad, ListarCiudadesAPCiudad, ListarCiudadesAdminCiudad, ListarCiudadesDistribuidor, ListarCiudadesGCiudad, ListarCiudadesGRegional, ListarCiudadesJVCiudad
-from function.ExtraerCiuCanl import ExtraerCiuCanl
-from function.encrytPassword import encryptPassword
-from function.excelReporte import get_tdd_excel_workbook
-from function.function_jwt import decode_token
-from middleware.validacionToken import ValidacionToken
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
-from model.ModelExcel import ModelVendedorExcel, ModelVendedorExcelProsupuesto
-from model.ModelSchema.channelModel import RegistrarAdminProyectosModel, RegistrarAdministradorModel, RegistrarAdministradorModelNew, RegistrarDistribuidorModel, RegistrarGerenteCiudadModel, RegistrarGerenteRegionalModel, RegistrarJefeModel, RegistrarVendedorModel
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroAdministrador, RegistroJefeVentas, SistemaOperativo
-from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
-from model.channel import asiganacion_canal_gerente_regional, asignacion_ciudades_gerente_regional
-from model.channel import asignacion_ciudades_gerente_ciudad, asignacion_canal_gerente_ciudad
-from model.channel import asignacion_ciudades_jefe_ventas, asignacion_canal_jefe_ventas
-from model.channel import asignacion_ciudades_admin_proyectos, asignacion_canal_admin_proyectos
-from model.channel import asignacion_ciudades_admin, asignacion_canal_admin
-from model.channel import asignacion_ciudades_distribuidor, asignacion_canal_distribuidor
+
+from controller.AdminProyectController import (SelectAdminProyectCiudad,
+                                               SelectGerenteCiudad,
+                                               SelectGerenteRegional,
+                                               SelectJefeVenta,
+                                               SelectLiderPeloton)
+from controller.AsignacionController import (ListarCanalesAdminCiudad,
+                                             ListarCanalesAPCiudad,
+                                             ListarCanalesDistribuidor,
+                                             ListarCanalesGCiudad,
+                                             ListarCanalesGRciudad,
+                                             ListarCanalesJVCiudad,
+                                             ListarCiudadesAdminCiudad,
+                                             ListarCiudadesAPCiudad,
+                                             ListarCiudadesDistribuidor,
+                                             ListarCiudadesGCiudad,
+                                             ListarCiudadesGRegional,
+                                             ListarCiudadesJVCiudad)
 from database.db import db
-import datetime
-import calendar
+from function.encrytPassword import encryptPassword
+from function.excelReporte import get_tdd_excel_workbook
+from function.ExtraerCiuCanl import ExtraerCiuCanl
+from function.function_jwt import decode_token
+from middleware.validacionToken import ValidacionToken
+from model.channel import (Channel, Ciudad, Estados, Genero, Modalidad,
+                           Operador, RegistrarAdminProyectos,
+                           RegistrarDistribuidor, RegistrarGerenteCiudad,
+                           RegistrarGerenteRegional, RegistrarVendedor,
+                           RegistroAdministrador, RegistroJefeVentas,
+                           SistemaOperativo,
+                           asiganacion_canal_gerente_regional,
+                           asignacion_canal_admin,
+                           asignacion_canal_admin_proyectos,
+                           asignacion_canal_distribuidor,
+                           asignacion_canal_gerente_ciudad,
+                           asignacion_canal_jefe_ventas,
+                           asignacion_ciudades_admin,
+                           asignacion_ciudades_admin_proyectos,
+                           asignacion_ciudades_distribuidor,
+                           asignacion_ciudades_gerente_ciudad,
+                           asignacion_ciudades_gerente_regional,
+                           asignacion_ciudades_jefe_ventas)
+from model.ModelExcel import ModelVendedorExcel, ModelVendedorExcelProsupuesto
+from model.ModelSchema.channelModel import (RegistrarAdministradorModel,
+                                            RegistrarAdministradorModelNew,
+                                            RegistrarAdminProyectosModel,
+                                            RegistrarDistribuidorModel,
+                                            RegistrarGerenteCiudadModel,
+                                            RegistrarGerenteRegionalModel,
+                                            RegistrarJefeModel,
+                                            RegistrarVendedorModel)
+
 # moment.need()
 
 # registro = APIRouter(route_class=ValidacionToken)
@@ -128,6 +163,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.meta_dolares_television,
                     RegistrarVendedor.c.email,
                     RegistrarVendedor.c.campana,
+                    RegistrarVendedor.c.isla,
                     RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
@@ -181,6 +217,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -234,6 +271,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -296,6 +334,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -366,6 +405,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -418,6 +458,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -466,6 +507,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -532,6 +574,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.meta_dolares_television,
                     RegistrarVendedor.c.email,
                     RegistrarVendedor.c.campana,
+                    RegistrarVendedor.c.isla,
                     RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
@@ -585,6 +628,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -638,6 +682,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -700,6 +745,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -770,6 +816,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -822,6 +869,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -870,6 +918,7 @@ async def get_registro(request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -931,6 +980,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                 RegistrarVendedor.c.meta_dolares,
                 RegistrarVendedor.c.campana,
                 RegistrarVendedor.c.email,
+                RegistrarVendedor.c.isla,
                 RegistrarVendedor.c.dias_inactivo
             ]).where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query).fetchall()
@@ -999,6 +1049,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "campana": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 }
             elif i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
@@ -1042,6 +1093,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 }
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
@@ -1084,6 +1136,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 }
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
@@ -1126,6 +1179,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 }
             else:
@@ -1168,6 +1222,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                     "genero": i.genero,
                     "modalidad": i.modalidad,
                     "campana": i.campana,
+                    "isla": i.isla,
                     "sistema_operativo": i.sistema_operativo
                 }
 
@@ -1223,6 +1278,7 @@ async def post_registro(request: RegistrarVendedorModel):
             sector_residencia=request.sector_residencia,
             campana=request.campana,
             email=request.email,
+            isla=request.isla,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         )
         data = db.execute(query).lastrowid
@@ -1267,6 +1323,7 @@ async def put_registro(request: RegistrarVendedorModel):
             sector_residencia=request.sector_residencia,
             email=request.email,
             campana=request.campana,
+            isla=request.isla,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
         data = db.execute(query).returned_defaults

@@ -206,7 +206,7 @@ def tarea_programada():
                 "email": i.email,
                 "dias_inactivo": i.dias_inactivo,
                 "channel": i.channel,
-                "ciudad": i.ciudad,  
+                "ciudad": i.ciudad,
                 "region": i.region,
                 "estado": i.estado,
                 "operador": i.operador,
@@ -216,10 +216,10 @@ def tarea_programada():
                 "sistema_operativo": i.sistema_operativo
         })
 
-    wb = Workbook() 
-    ws = wb.active 
+    wb = Workbook()
+    ws = wb.active
     ws.append([
-        "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON", "ADMINISTRADOR PROYECTO", 
+        "CIUDAD","ESTADO","COD. VENDEDOR","VENDEDOR","LIDER DE PELOTON", "ADMINISTRADOR PROYECTO",
         "JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD",
         "FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR",
         "META VOLUMEN INTERNET","META DOLARES INTRNET","META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
@@ -231,7 +231,7 @@ def tarea_programada():
         print(k)
         ws.append([
             k.ciudad, k.estado, k.codigo_vendedor, k.nombre_vendedor, k.id_lider_peloton, k.nombre_admin_proyectos, k.nombre_jefe_venta, k.nombre_gerente_ciudad, k.nombre_gerente_regional, k.channel, k.operador, k.sistema_operativo, k.genero, k.modalidad, k.fecha_ingreso, k.fecha_salida, k.sector_residencia, k.email, k.dias_inactivo, k.telefono, 
-            k.meta_volumen_internet, k.meta_dolares_internet, 
+            k.meta_volumen_internet, k.meta_dolares_internet,
             k.meta_volumen_telefonia, k.meta_dolares_telefonia,
             k.meta_volumen_television, k.meta_dolares_television,
             k.usuario_equifax, k.cedula, k.campana
@@ -246,7 +246,7 @@ def tarea_programada():
         usuario = "Celula_Ventas_" + fecha + ".xlsx"
     else:
         print("El día actual no es el último día del mes")
-        usuario = "Celula_Ventas.xlsx"        
+        usuario = "Celula_Ventas.xlsx"
     wb.save(usuario)
 
         
