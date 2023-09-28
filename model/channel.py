@@ -67,6 +67,15 @@ RegistrarGerenteRegional = Table("registrar_gerente_regional", meta,
     Column("cedula", Text, nullable=True)
 )
 
+
+RegistrarGerenteZonal = Table("registrar_gerente_zonal", meta,
+    Column("id_gerente_zonal", Integer, primary_key=True, autoincrement=True),
+    Column("nombre", String(255)),
+    Column("email", Text, nullable=True),
+    Column("telefono", Text, nullable=True),
+    Column("cedula", Text, nullable=True)
+)
+
 RegistrarGerenteCiudad = Table("registrar_gerente_ciudad", meta,
     Column("id_gerente_ciudad", Integer, primary_key=True, autoincrement=True),
     Column("id_ciudad", Integer,nullable=True),
@@ -143,6 +152,7 @@ RegistrarVendedor = Table("registrar_vendedor", meta,
     Column("telefono", String(12)),
     Column("campana", String(255)),
     Column("dias_inactivo", Integer, default=0),
+    Column("id_gerente_zonal", Integer, default=None),
     Column("isla", Text, nullable=True),
 )
 

@@ -12,7 +12,8 @@ from controller.AdminProyectController import (SelectAdminProyectCiudad,
                                                SelectGerenteCiudad,
                                                SelectGerenteRegional,
                                                SelectJefeVenta,
-                                               SelectLiderPeloton)
+                                               SelectLiderPeloton,
+                                               ZonalIdGerente)
 from controller.AsignacionController import (ListarCanalesAdminCiudad,
                                              ListarCanalesAPCiudad,
                                              ListarCanalesDistribuidor,
@@ -64,14 +65,12 @@ from model.ModelSchema.channelModel import (RegistrarAdministradorModel,
 # registro = APIRouter(route_class=ValidacionToken)
 registro = APIRouter()
 
-
 load_dotenv()
 HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
 # lista de vendedores
-
 @registro.get("/reporte_ftp", tags=["Vendedor"])
 async def get_reporteFtp(request: Request):
     try:
@@ -116,7 +115,7 @@ async def get_registro(request: Request):
         print("decodeToken", decodeToken)
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        print("Ciudades", ciudad)
+        # print("Ciudades", ciudad)
         data = []
         for i in ciudad:
             query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
@@ -164,6 +163,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.email,
                     RegistrarVendedor.c.campana,
                     RegistrarVendedor.c.isla,
+                    RegistrarVendedor.c.id_gerente_zonal,
                     RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
@@ -218,6 +218,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -272,6 +274,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -335,6 +339,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -406,6 +412,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -459,6 +467,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -508,6 +518,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -575,6 +587,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.email,
                     RegistrarVendedor.c.campana,
                     RegistrarVendedor.c.isla,
+                    RegistrarVendedor.c.id_gerente_zonal,
                     RegistrarVendedor.c.dias_inactivo
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
@@ -629,6 +642,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),                    
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -683,6 +698,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),                    
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -746,6 +763,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),                    
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -817,6 +836,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),                    
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -870,6 +891,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),                    
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -919,6 +942,8 @@ async def get_registro(request: Request):
                     "modalidad": i.modalidad,
                     "campana": i.campana,
                     "isla": i.isla,
+                    "id_gerente_zonal": i.id_gerente_zonal,
+                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),                    
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -1279,6 +1304,7 @@ async def post_registro(request: RegistrarVendedorModel):
             campana=request.campana,
             email=request.email,
             isla=request.isla,
+            id_gerente_zonal=request.id_gerente_zonal,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         )
         data = db.execute(query).lastrowid
@@ -1324,6 +1350,7 @@ async def put_registro(request: RegistrarVendedorModel):
             email=request.email,
             campana=request.campana,
             isla=request.isla,
+            id_gerente_zonal=request.id_gerente_zonal,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
         data = db.execute(query).returned_defaults
@@ -1524,9 +1551,6 @@ async def get_jefe_venta():
 async def post_jefe_venta(request: RegistrarJefeModel):
     try:
         query = RegistroJefeVentas.insert().values(
-            # id_jefe_venta=request.id_jefe_venta,
-            # id_channel=request.id_channel,
-            # id_ciudad=request.id_ciudad,
             id_estado=request.id_estado,
             id_gerente_ciudad=request.id_gerente_ciudad,
             nombre_jefe=request.nombre_jefe,

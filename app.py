@@ -18,6 +18,7 @@ from routes.registroCelula import registro
 from routes.reporte import reporte
 from routes.roles import roles
 from routes.usuario import usuarios
+from routes.Zonal import zonal
 from task.reporte import tarea_programada
 
 load_dotenv()
@@ -63,6 +64,7 @@ app.include_router(channel)
 app.include_router(asignacion)
 app.include_router(codigo)
 app.include_router(isla)
+app.include_router(zonal)
 app.include_router(planform)
 
 @app.on_event("startup")

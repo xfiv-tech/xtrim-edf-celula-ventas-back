@@ -3,7 +3,10 @@
 
 from controller.AsignacionController import ListarCiudadesAPCiudad
 from database.db import db
-from model.channel import Channel, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas
+from model.channel import (Channel, RegistrarAdminProyectos,
+                           RegistrarDistribuidor, RegistrarGerenteCiudad,
+                           RegistrarGerenteRegional, RegistrarGerenteZonal,
+                           RegistrarVendedor, RegistroJefeVentas)
 
 
 async def SelectAdminProyectCiudad(id_ciudad:int):
@@ -90,3 +93,16 @@ async def SelectGerenteRegional(id_gerente_regional:int):
     except Exception as e:
         print(e)
         return "SIN GERENTE REGIONAL"
+    
+async def ZonalIdGerente(id:int):
+    try:
+        print("ZonalIdGerente")
+        if id == None or id == 0:
+            return "SIN GERENTE ZONAL"
+        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_regional == id)).fetchall()
+        if len(query) > 0:
+            return query[0]["nombre"]
+        return "SIN GERENTE ZONAL"
+    except Exception as e:
+        print(e)
+        return "SIN GERENTE ZONAL"

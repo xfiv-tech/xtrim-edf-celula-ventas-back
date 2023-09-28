@@ -99,6 +99,7 @@ class RegistrarVendedorModel(BaseModel):
     campana: str
     isla: Optional[str] = None
     dias_inactivo: Optional[int] = 0
+    id_gerente_zonal: Optional[int] = 0
     
 
 class ArrayRegistrarVendedorModel(BaseModel):
@@ -167,7 +168,7 @@ class RegistrarGerenteRegionalModel(BaseModel):
     ciudad: Optional[str] = None
     email: Optional[str] = None
     telefono: Optional[str] = None
-    cedula: Optional[str] = None    
+    cedula: Optional[str] = None
 
 class RegistrarGerenteModel(BaseModel):
     id_gerente: Optional[int]

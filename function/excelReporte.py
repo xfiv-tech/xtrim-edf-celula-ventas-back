@@ -10,7 +10,8 @@ from controller.AdminProyectController import (SelectAdminProyectCiudad,
                                                SelectGerenteCiudad,
                                                SelectGerenteRegional,
                                                SelectJefeVenta,
-                                               SelectLiderPeloton)
+                                               SelectLiderPeloton,
+                                               ZonalIdGerente)
 
 load_dotenv()
 
@@ -68,6 +69,7 @@ class ReporteExcel(BaseModel):
     modalidad: str
     campana: Optional[str] = None
     isla: Optional[str] = None
+    id_gerente_zonal: Optional[int] = None
     sistema_operativo: str
 
 
@@ -120,6 +122,7 @@ async def get_infoReporte(ciudad: list):
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo,
                 RegistrarVendedor.c.isla,
+                RegistrarVendedor.c.id_gerente_zonal,
                 RegistrarVendedor.c.campana
                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
             res = db.execute(query).fetchall()
@@ -175,6 +178,8 @@ async def get_infoReporte(ciudad: list):
                 "modalidad": i.modalidad,
                 "campana": i.campana,
                 "isla": i.isla,
+                "id_gerente_zonal": i.id_gerente_zonal,
+                "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
                 "sistema_operativo": i.sistema_operativo
             })
 
@@ -198,7 +203,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
             "META VOLUMEN INTERNET","META DOLARES INTRNET",
             "META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
             "META VOLUMEN TELEVISION","META DOLARES TELEVISION",
-            "USUARIO EQUIFAX","CEDULA", "CAMPANA", "ISLA"
+            "USUARIO EQUIFAX","CEDULA", "CAMPANA", "ISLA", "GERENTE ZONAL"
         ])
         for i in data:
             k = ReporteExcel(**i)
@@ -208,7 +213,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
                 k.meta_volumen_internet, k.meta_dolares_internet, 
                 k.meta_volumen_telefonia, k.meta_dolares_telefonia,
                 k.meta_volumen_television, k.meta_dolares_television,
-                k.usuario_equifax, k.cedula, k.campana, k.isla
+                k.usuario_equifax, k.cedula, k.campana, k.isla, k.gerente_zonal
             ])
 
         wb.save(usuario)
