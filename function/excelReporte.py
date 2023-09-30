@@ -70,6 +70,7 @@ class ReporteExcel(BaseModel):
     campana: Optional[str] = None
     isla: Optional[str] = None
     id_gerente_zonal: Optional[int] = None
+    gerente_zonal: Optional[str] = None
     sistema_operativo: str
 
 

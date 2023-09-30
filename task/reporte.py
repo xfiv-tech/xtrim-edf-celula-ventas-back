@@ -1,15 +1,23 @@
-import schedule
-import time
-import datetime
 import calendar
-from openpyxl import Workbook
-from function.excelReporte import ReporteExcel
-from database.db import db
-from model.channel import asignacion_ciudades_admin_proyectos
-from model.channel import Channel, Ciudad, Estados, Genero, Modalidad, Operador, RegistrarAdminProyectos, RegistrarDistribuidor, RegistrarGerenteCiudad, RegistrarGerenteRegional, RegistrarVendedor, RegistroJefeVentas, SistemaOperativo
-from function.ftp import ftp_close, ftp_connect, ftp_list
+import datetime
 import os
+import time
+
+import schedule
 from dotenv import load_dotenv
+from openpyxl import Workbook
+
+from database.db import db
+from function.excelReporte import ReporteExcel
+from function.ftp import ftp_close, ftp_connect, ftp_list
+from model.channel import (Channel, Ciudad, Estados, Genero, Modalidad,
+                           Operador, RegistrarAdminProyectos,
+                           RegistrarDistribuidor, RegistrarGerenteCiudad,
+                           RegistrarGerenteRegional, RegistrarGerenteZonal,
+                           RegistrarVendedor, RegistroJefeVentas,
+                           SistemaOperativo,
+                           asignacion_ciudades_admin_proyectos)
+
 load_dotenv()
 
 HOST = os.getenv("HOST_FTP")
@@ -116,6 +124,20 @@ def SelectAdminProyectCiudad(id_ciudad:int):
         print(e)
         return None
 
+
+def ZonalIdGerente(id:int):
+    try:
+        print("ZonalIdGerente")
+        if id == None or id == 0:
+            return "SIN GERENTE ZONAL"
+        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_regional == id)).fetchall()
+        if len(query) > 0:
+            return query[0]["nombre"]
+        return "SIN GERENTE ZONAL"
+    except Exception as e:
+        print(e)
+        return "SIN GERENTE ZONAL"
+
 def tarea_programada():
     print("Tarea programada ejecutada a las 12 de la noche.")
     query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
@@ -162,6 +184,8 @@ def tarea_programada():
                 RegistrarVendedor.c.meta_dolares_television,
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo,
+                RegistrarVendedor.c.isla,
+                RegistrarVendedor.c.id_gerente_zonal,                
                 RegistrarVendedor.c.campana
                 ])
     res = db.execute(query).fetchall()
@@ -213,6 +237,9 @@ def tarea_programada():
                 "genero": i.genero,
                 "modalidad": i.modalidad,
                 "campana": i.campana,
+                "isla": i.isla,
+                "id_gerente_zonal": i.id_gerente_zonal,
+                "gerente_zonal": ZonalIdGerente(i.id_gerente_zonal),
                 "sistema_operativo": i.sistema_operativo
         })
 
@@ -223,7 +250,7 @@ def tarea_programada():
         "JEFE DE VENTAS","GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA","OPERADOR","SISTEMA OPERATIVO","GENERO","MODALIDAD",
         "FECHA INGRESO","FECHA SALIDA","SECTOR RESIDENCIA","EMAIL","DIAS INACTIVO","CELULAR",
         "META VOLUMEN INTERNET","META DOLARES INTRNET","META VOLUMEN TELEFONIA","META DOLARES TELEFONIA",
-        "META VOLUMEN TELEVISION","META DOLARES TELEVISION","USUARIO EQUIFAX","CEDULA", "CAMPAÑA"
+        "META VOLUMEN TELEVISION","META DOLARES TELEVISION","USUARIO EQUIFAX","CEDULA", "CAMPAÑA", "ISLA", "GERENTE ZONAL"
     ])
     
     for i in dataInfo:
@@ -234,7 +261,7 @@ def tarea_programada():
             k.meta_volumen_internet, k.meta_dolares_internet,
             k.meta_volumen_telefonia, k.meta_dolares_telefonia,
             k.meta_volumen_television, k.meta_dolares_television,
-            k.usuario_equifax, k.cedula, k.campana
+            k.usuario_equifax, k.cedula, k.campana, k.isla, k.gerente_zonal
         ])
     
     fecha = datetime.datetime.now().strftime("%Y-%m-%d")
