@@ -65,7 +65,7 @@ async def ZonalId(id:int):
 async def UpdateZonal(data:Zonal):
     try:
         print("UpdateZonal")
-        db.execute(RegistrarGerenteZonal.update().where(RegistrarGerenteZonal.c.id_gerente_regional == data.id).values(
+        db.execute(RegistrarGerenteZonal.update().where(RegistrarGerenteZonal.c.id_gerente_zonal == data.id_gerente_zonal).values(
             nombre = data.nombre,
             email = data.email,
             telefono = data.telefono,
