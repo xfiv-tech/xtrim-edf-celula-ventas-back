@@ -59,6 +59,8 @@ from model.ModelSchema.channelModel import (RegistrarAdministradorModel,
                                             RegistrarGerenteRegionalModel,
                                             RegistrarJefeModel,
                                             RegistrarVendedorModel)
+from redisConexion.RedisQuerys import (AddRedis, DeleteRedis, GetterRedis,
+                                       SetterRedis, UpdateRedis)
 
 # moment.need()
 
@@ -115,6 +117,12 @@ async def get_registro(request: Request):
         print("decodeToken", decodeToken)
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
+        dataRedis = await GetterRedis("vendedor")
+        if dataRedis:
+            return {
+                "code": "0",
+                "data": dataRedis
+            }
         # print("Ciudades", ciudad)
         data = []
         for i in ciudad:
@@ -345,28 +353,26 @@ async def get_registro(request: Request):
                 })
 
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta != None:
-                print("entro aca", i.id_gerente_regional,
-                      i.id_gerente_ciudad, i.id_jefe_venta)
-                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
-                #     RegistrarGerente.c.nombre_gerente,
-                # ])
-                # data_gerente = db.execute(query_gerente).fetchone()
+                print("entro aca", i.id_gerente_regional, i.id_gerente_ciudad, i.id_jefe_venta)
+
                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
                     RegistrarGerenteRegional.c.nombre_gerente,
                 ])
                 data_gerente_regional = db.execute(
                     query_gerente_regional).fetchone()
-                print("data_gerente_regional",
-                      data_gerente_regional.nombre_gerente)
+                
+                print("data_gerente_regional", data_gerente_regional.nombre_gerente)
                 query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
                     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
                 ])
-                data_gerente_ciudad = db.execute(
-                    query_gerente_ciudad).fetchone()
+                
+                data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
+                
                 query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
                     RegistroJefeVentas.c.nombre_jefe,
                 ])
                 data_jefe_venta = db.execute(query_jefe_venta).fetchone()
+                
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
                     "id_channel": i.id_channel,
@@ -523,6 +529,7 @@ async def get_registro(request: Request):
                     "sistema_operativo": i.sistema_operativo
                 })
 
+        await SetterRedis("vendedor", dataInfo)
         return {
             "code": "0",
             "data": dataInfo
@@ -540,6 +547,13 @@ async def get_registro(request: Request):
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
         print("Ciudades", ciudad)
+        dataRedis = await GetterRedis("vendedor")
+        if dataRedis:
+            return {
+                "code": "0",
+                "data": dataRedis
+            }
+            
         data = []
         for i in ciudad:
             query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
@@ -947,6 +961,7 @@ async def get_registro(request: Request):
                     "sistema_operativo": i.sistema_operativo
                 })
 
+        await SetterRedis("vendedor", dataInfo)
         return {
             "code": "0",
             "data": dataInfo
@@ -1308,6 +1323,128 @@ async def post_registro(request: RegistrarVendedorModel):
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         )
         data = db.execute(query).lastrowid
+        
+        
+        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns([
+            RegistrarGerenteRegional.c.nombre_gerente,
+        ])
+        data_gerente_regional = db.execute(
+            query_gerente_regional).fetchone()
+        
+        print("data_gerente_regional", data_gerente_regional.nombre_gerente)
+        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns([
+            RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+        ])
+        
+        data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
+        
+        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
+            RegistroJefeVentas.c.nombre_jefe,
+        ])
+        data_jefe_venta = db.execute(query_jefe_venta).fetchone()
+        
+        # consultar el ultimo id insertado para guardarlo en redis con todas sus relaciones
+        query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+            Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+            Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+            Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+            SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+            Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+                    Channel.c.channel,
+                    Ciudad.c.ciudad,
+                    Ciudad.c.region,
+                    Estados.c.estado,
+                    Operador.c.operador,
+                    Genero.c.genero,
+                    Modalidad.c.modalidad,
+                    RegistrarVendedor.c.id_sistema_operativo,
+                    SistemaOperativo.c.sistema_operativo,
+                    RegistrarVendedor.c.id_modalidad,
+                    RegistrarVendedor.c.id_lider_peloton,
+                    RegistrarVendedor.c.id_estado,
+                    RegistrarVendedor.c.id_genero,
+                    RegistrarVendedor.c.id_ciudad,
+                    RegistrarVendedor.c.id_registrar_vendedor,
+                    RegistrarVendedor.c.id_channel,
+                    RegistrarVendedor.c.id_gerente_regional,
+                    RegistrarVendedor.c.id_gerente_ciudad,
+                    RegistrarVendedor.c.id_jefe_venta,
+                    RegistrarVendedor.c.cedula,
+                    RegistrarVendedor.c.telefono,
+                    RegistrarVendedor.c.id_operador,
+                    RegistrarVendedor.c.codigo_vendedor,
+                    RegistrarVendedor.c.usuario_equifax,
+                    RegistrarVendedor.c.nombre_vendedor,
+                    RegistrarVendedor.c.fecha_ingreso,
+                    RegistrarVendedor.c.fecha_salida,
+                    RegistrarVendedor.c.sector_residencia,
+                    RegistrarVendedor.c.lider_check,
+                    RegistrarVendedor.c.meta_volumen_internet,
+                    RegistrarVendedor.c.meta_dolares_internet,
+                    RegistrarVendedor.c.meta_volumen_telefonia,
+                    RegistrarVendedor.c.meta_dolares_telefonia,
+                    RegistrarVendedor.c.meta_volumen_television,
+                    RegistrarVendedor.c.meta_dolares_television,
+                    RegistrarVendedor.c.email,
+                    RegistrarVendedor.c.campana,
+                    RegistrarVendedor.c.isla,
+                    RegistrarVendedor.c.id_gerente_zonal,
+                    RegistrarVendedor.c.dias_inactivo
+            ]).where(RegistrarVendedor.c.id_registrar_vendedor == data)
+        data = db.execute(query).fetchall()
+        # serializar el objeto para guardarlo en redis
+        serializable = {
+            "id_registrar_vendedor": data[0].id_registrar_vendedor,
+            "id_channel": data[0].id_channel,
+            "id_ciudad": data[0].id_ciudad,
+            "id_operador": data[0].id_operador,
+            "id_sistema_operativo": data[0].id_sistema_operativo,
+            "id_estado": data[0].id_estado,
+            "id_genero": data[0].id_genero,
+            "id_modalidad": data[0].id_modalidad,
+            "cedula": data[0].cedula,
+            "telefono": data[0].telefono,
+            "codigo_vendedor": data[0].codigo_vendedor,
+            "usuario_equifax": data[0].usuario_equifax,
+            "nombre_vendedor": data[0].nombre_vendedor,
+            "fecha_ingreso": data[0].fecha_ingreso,
+            "id_lider_peloton": data[0].id_lider_peloton,
+            # "id_gerente": data_gerente.id_gerente,
+            # "nombre_gerente": data_gerente.nombre_gerente,
+            "id_gerente_regional": data[0].id_gerente_regional,
+            "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
+            "id_gerente_ciudad": data[0].id_gerente_ciudad,
+            "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
+            "id_jefe_venta": data[0].id_jefe_venta,
+            "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
+            # "ciudad_gestion": i.ciudad_gestion,
+            "lider_check": data[0].lider_check,
+            "meta_volumen_internet": data[0].meta_volumen_internet,
+            "meta_dolares_internet": data[0].meta_dolares_internet,
+            "meta_volumen_telefonia": data[0].meta_volumen_telefonia,
+            "meta_dolares_telefonia": data[0].meta_dolares_telefonia,
+            "meta_volumen_television": data[0].meta_volumen_television,
+            "meta_dolares_television": data[0].meta_dolares_television,
+            "fecha_salida": data[0].fecha_salida,
+            "sector_residencia": data[0].sector_residencia,
+            "email": data[0].email,
+            "dias_inactivo": data[0].dias_inactivo,
+            "channel": data[0].channel,
+            "ciudad": data[0].ciudad,
+            "region": data[0].region,
+            "estado": data[0].estado,
+            "operador": data[0].operador,
+            "genero": data[0].genero,
+            "modalidad": data[0].modalidad,
+            "campana": data[0].campana,
+            "isla": data[0].isla,
+            "id_gerente_zonal": data[0].id_gerente_zonal,
+            "gerente_zonal": await ZonalIdGerente(data[0].id_gerente_zonal),
+            "sistema_operativo": data[0].sistema_operativo
+        }
+        await AddRedis("vendedor", serializable)
+        
         return {
             "code": "0",
             "id_insert": data
@@ -1353,12 +1490,135 @@ async def put_registro(request: RegistrarVendedorModel):
             id_gerente_zonal=request.id_gerente_zonal,
             dias_inactivo= 0 if request.dias_inactivo == None else request.dias_inactivo,
         ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
-        data = db.execute(query).returned_defaults
+        data = db.execute(query).lastrowid
+        
+        print("data", data)
+       
+        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns([
+            RegistrarGerenteRegional.c.nombre_gerente,
+        ])
+        data_gerente_regional = db.execute(
+            query_gerente_regional).fetchone()
+        
+        print("data_gerente_regional", data_gerente_regional.nombre_gerente)
+        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns([
+            RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+        ])
+        
+        data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
+        
+        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
+            RegistroJefeVentas.c.nombre_jefe,
+        ])
+        data_jefe_venta = db.execute(query_jefe_venta).fetchone()
+        # consultar el ultimo id insertado para guardarlo en redis con todas sus relaciones
+        query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+            Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+            Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+            Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+            SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+            Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+                    Channel.c.channel,
+                    Ciudad.c.ciudad,
+                    Ciudad.c.region,
+                    Estados.c.estado,
+                    Operador.c.operador,
+                    Genero.c.genero,
+                    Modalidad.c.modalidad,
+                    RegistrarVendedor.c.id_sistema_operativo,
+                    SistemaOperativo.c.sistema_operativo,
+                    RegistrarVendedor.c.id_modalidad,
+                    RegistrarVendedor.c.id_lider_peloton,
+                    RegistrarVendedor.c.id_estado,
+                    RegistrarVendedor.c.id_genero,
+                    RegistrarVendedor.c.id_ciudad,
+                    RegistrarVendedor.c.id_registrar_vendedor,
+                    RegistrarVendedor.c.id_channel,
+                    RegistrarVendedor.c.id_gerente_regional,
+                    RegistrarVendedor.c.id_gerente_ciudad,
+                    RegistrarVendedor.c.id_jefe_venta,
+                    RegistrarVendedor.c.cedula,
+                    RegistrarVendedor.c.telefono,
+                    RegistrarVendedor.c.id_operador,
+                    RegistrarVendedor.c.codigo_vendedor,
+                    RegistrarVendedor.c.usuario_equifax,
+                    RegistrarVendedor.c.nombre_vendedor,
+                    RegistrarVendedor.c.fecha_ingreso,
+                    RegistrarVendedor.c.fecha_salida,
+                    RegistrarVendedor.c.sector_residencia,
+                    RegistrarVendedor.c.lider_check,
+                    RegistrarVendedor.c.meta_volumen_internet,
+                    RegistrarVendedor.c.meta_dolares_internet,
+                    RegistrarVendedor.c.meta_volumen_telefonia,
+                    RegistrarVendedor.c.meta_dolares_telefonia,
+                    RegistrarVendedor.c.meta_volumen_television,
+                    RegistrarVendedor.c.meta_dolares_television,
+                    RegistrarVendedor.c.email,
+                    RegistrarVendedor.c.campana,
+                    RegistrarVendedor.c.isla,
+                    RegistrarVendedor.c.id_gerente_zonal,
+                    RegistrarVendedor.c.dias_inactivo
+            ]).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
+        data = db.execute(query).fetchall()
+        # serializar el objeto para guardarlo en redis
+        serializable = {
+            "id_registrar_vendedor": data[0].id_registrar_vendedor,
+            "id_channel": data[0].id_channel,
+            "id_ciudad": data[0].id_ciudad,
+            "id_operador": data[0].id_operador,
+            "id_sistema_operativo": data[0].id_sistema_operativo,
+            "id_estado": data[0].id_estado,
+            "id_genero": data[0].id_genero,
+            "id_modalidad": data[0].id_modalidad,
+            "cedula": data[0].cedula,
+            "telefono": data[0].telefono,
+            "codigo_vendedor": data[0].codigo_vendedor,
+            "usuario_equifax": data[0].usuario_equifax,
+            "nombre_vendedor": data[0].nombre_vendedor,
+            "fecha_ingreso": data[0].fecha_ingreso,
+            "id_lider_peloton": data[0].id_lider_peloton,
+            # "id_gerente": data_gerente.id_gerente,
+            # "nombre_gerente": data_gerente.nombre_gerente,
+            "id_gerente_regional": data[0].id_gerente_regional,
+            "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
+            "id_gerente_ciudad": data[0].id_gerente_ciudad,
+            "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
+            "id_jefe_venta": data[0].id_jefe_venta,
+            "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
+            # "ciudad_gestion": i.ciudad_gestion,
+            "lider_check": data[0].lider_check,
+            "meta_volumen_internet": data[0].meta_volumen_internet,
+            "meta_dolares_internet": data[0].meta_dolares_internet,
+            "meta_volumen_telefonia": data[0].meta_volumen_telefonia,
+            "meta_dolares_telefonia": data[0].meta_dolares_telefonia,
+            "meta_volumen_television": data[0].meta_volumen_television,
+            "meta_dolares_television": data[0].meta_dolares_television,
+            "fecha_salida": data[0].fecha_salida,
+            "sector_residencia": data[0].sector_residencia,
+            "email": data[0].email,
+            "dias_inactivo": data[0].dias_inactivo,
+            "channel": data[0].channel,
+            "ciudad": data[0].ciudad,
+            "region": data[0].region,
+            "estado": data[0].estado,
+            "operador": data[0].operador,
+            "genero": data[0].genero,
+            "modalidad": data[0].modalidad,
+            "campana": data[0].campana,
+            "isla": data[0].isla,
+            "id_gerente_zonal": data[0].id_gerente_zonal,
+            "gerente_zonal": await ZonalIdGerente(data[0].id_gerente_zonal),
+            "sistema_operativo": data[0].sistema_operativo
+        }
+        await UpdateRedis("vendedor", serializable)
+       
         return {
             "code": "0",
             "data": data
         }
     except Exception as e:
+        print("error", e)
         return {"error": e.args}
 
 
@@ -1368,6 +1628,7 @@ async def delete_registro(id_registrar_vendedor: int):
         query = RegistrarVendedor.delete().where(
             RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query)
+        await DeleteRedis("vendedor", id_registrar_vendedor)
         return {
             "code": "0",
             "data": data

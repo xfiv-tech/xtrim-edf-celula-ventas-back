@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_scheduler import SchedulerAdmin
 
+import redisConexion.conexionRedis
 from routes.admin import administradores
 from routes.asignacion import asignacion
 from routes.channel import channel
