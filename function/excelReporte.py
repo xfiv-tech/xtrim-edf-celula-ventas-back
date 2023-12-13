@@ -125,7 +125,7 @@ async def get_infoReporte(ciudad: list):
                 RegistrarVendedor.c.isla,
                 RegistrarVendedor.c.id_gerente_zonal,
                 RegistrarVendedor.c.campana
-                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])         
+                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
             for i in res:
                 data.append(i)

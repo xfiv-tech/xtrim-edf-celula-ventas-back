@@ -130,7 +130,7 @@ def ZonalIdGerente(id:int):
         print("ZonalIdGerente")
         if id == None or id == 0:
             return "SIN GERENTE ZONAL"
-        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_regional == id)).fetchall()
+        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_zonal == id)).fetchall()
         if len(query) > 0:
             return query[0]["nombre"]
         return "SIN GERENTE ZONAL"
@@ -185,7 +185,7 @@ def tarea_programada():
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.dias_inactivo,
                 RegistrarVendedor.c.isla,
-                RegistrarVendedor.c.id_gerente_zonal,                
+                RegistrarVendedor.c.id_gerente_zonal,
                 RegistrarVendedor.c.campana
                 ])
     res = db.execute(query).fetchall()

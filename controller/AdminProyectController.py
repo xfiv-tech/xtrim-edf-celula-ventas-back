@@ -96,10 +96,11 @@ async def SelectGerenteRegional(id_gerente_regional:int):
     
 async def ZonalIdGerente(id:int):
     try:
-        print("ZonalIdGerente")
+        print("ZonalIdGerente: ", id)
         if id == None or id == 0:
             return "SIN GERENTE ZONAL"
-        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_regional == id)).fetchall()
+        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_zonal == id)).fetchall()
+        print(query)
         if len(query) > 0:
             return query[0]["nombre"]
         return "SIN GERENTE ZONAL"
