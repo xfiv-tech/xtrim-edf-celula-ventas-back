@@ -535,6 +535,7 @@ async def get_registro(request: Request):
             "data": dataInfo
         }
     except Exception as e:
+        print("error", e)
         return {"error": str(e)}
 
 
@@ -970,7 +971,6 @@ async def get_registro(request: Request):
         return {"error": str(e)}
 
 
-
 @registro.get("/listar_registro_id/{id_registrar_vendedor}", tags=["Vendedor"])
 async def get_registroID(id_registrar_vendedor: int, request: Request):
     try:
@@ -1286,7 +1286,6 @@ async def post_registro(request: RegistrarVendedorModel):
         print("\n")
         print("request: ", request)
         print("\n")
-
         query = RegistrarVendedor.insert().values(
             id_channel=request.id_channel,
             id_ciudad=request.id_ciudad,
@@ -1392,56 +1391,56 @@ async def post_registro(request: RegistrarVendedorModel):
                     RegistrarVendedor.c.id_gerente_zonal,
                     RegistrarVendedor.c.dias_inactivo
             ]).where(RegistrarVendedor.c.id_registrar_vendedor == data)
-        data = db.execute(query).fetchall()
+        data_ = db.execute(query).fetchall()
         # serializar el objeto para guardarlo en redis
         serializable = {
-            "id_registrar_vendedor": data[0].id_registrar_vendedor,
-            "id_channel": data[0].id_channel,
-            "id_ciudad": data[0].id_ciudad,
-            "id_operador": data[0].id_operador,
-            "id_sistema_operativo": data[0].id_sistema_operativo,
-            "id_estado": data[0].id_estado,
-            "id_genero": data[0].id_genero,
-            "id_modalidad": data[0].id_modalidad,
-            "cedula": data[0].cedula,
-            "telefono": data[0].telefono,
-            "codigo_vendedor": data[0].codigo_vendedor,
-            "usuario_equifax": data[0].usuario_equifax,
-            "nombre_vendedor": data[0].nombre_vendedor,
-            "fecha_ingreso": data[0].fecha_ingreso,
-            "id_lider_peloton": data[0].id_lider_peloton,
+            "id_registrar_vendedor": data_[0].id_registrar_vendedor,
+            "id_channel": data_[0].id_channel,
+            "id_ciudad": data_[0].id_ciudad,
+            "id_operador": data_[0].id_operador,
+            "id_sistema_operativo": data_[0].id_sistema_operativo,
+            "id_estado": data_[0].id_estado,
+            "id_genero": data_[0].id_genero,
+            "id_modalidad": data_[0].id_modalidad,
+            "cedula": data_[0].cedula,
+            "telefono": data_[0].telefono,
+            "codigo_vendedor": data_[0].codigo_vendedor,
+            "usuario_equifax": data_[0].usuario_equifax,
+            "nombre_vendedor": data_[0].nombre_vendedor,
+            "fecha_ingreso": data_[0].fecha_ingreso,
+            "id_lider_peloton": data_[0].id_lider_peloton,
             # "id_gerente": data_gerente.id_gerente,
             # "nombre_gerente": data_gerente.nombre_gerente,
             "id_gerente_regional": data[0].id_gerente_regional,
             "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
-            "id_gerente_ciudad": data[0].id_gerente_ciudad,
+            "id_gerente_ciudad": data_[0].id_gerente_ciudad,
             "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
-            "id_jefe_venta": data[0].id_jefe_venta,
+            "id_jefe_venta": data_[0].id_jefe_venta,
             "nombre_jefe_venta": data_jefe_venta.nombre_jefe,
             # "ciudad_gestion": i.ciudad_gestion,
-            "lider_check": data[0].lider_check,
-            "meta_volumen_internet": data[0].meta_volumen_internet,
-            "meta_dolares_internet": data[0].meta_dolares_internet,
-            "meta_volumen_telefonia": data[0].meta_volumen_telefonia,
-            "meta_dolares_telefonia": data[0].meta_dolares_telefonia,
-            "meta_volumen_television": data[0].meta_volumen_television,
-            "meta_dolares_television": data[0].meta_dolares_television,
-            "fecha_salida": data[0].fecha_salida,
-            "sector_residencia": data[0].sector_residencia,
-            "email": data[0].email,
-            "dias_inactivo": data[0].dias_inactivo,
-            "channel": data[0].channel,
-            "ciudad": data[0].ciudad,
-            "region": data[0].region,
-            "estado": data[0].estado,
-            "operador": data[0].operador,
-            "genero": data[0].genero,
-            "modalidad": data[0].modalidad,
-            "campana": data[0].campana,
-            "isla": data[0].isla,
-            "id_gerente_zonal": data[0].id_gerente_zonal,
-            "gerente_zonal": await ZonalIdGerente(data[0].id_gerente_zonal),
-            "sistema_operativo": data[0].sistema_operativo
+            "lider_check": data_[0].lider_check,
+            "meta_volumen_internet": data_[0].meta_volumen_internet,
+            "meta_dolares_internet": data_[0].meta_dolares_internet,
+            "meta_volumen_telefonia": data_[0].meta_volumen_telefonia,
+            "meta_dolares_telefonia": data_[0].meta_dolares_telefonia,
+            "meta_volumen_television": data_[0].meta_volumen_television,
+            "meta_dolares_television": data_[0].meta_dolares_television,
+            "fecha_salida": data_[0].fecha_salida,
+            "sector_residencia": data_[0].sector_residencia,
+            "email": data_[0].email,
+            "dias_inactivo": data_[0].dias_inactivo,
+            "channel": data_[0].channel,
+            "ciudad": data_[0].ciudad,
+            "region": data_[0].region,
+            "estado": data_[0].estado,
+            "operador": data_[0].operador,
+            "genero": data_[0].genero,
+            "modalidad": data_[0].modalidad,
+            "campana": data_[0].campana,
+            "isla": data_[0].isla,
+            "id_gerente_zonal": data_[0].id_gerente_zonal,
+            "gerente_zonal": await ZonalIdGerente(data_[0].id_gerente_zonal),
+            "sistema_operativo": data_[0].sistema_operativo
         }
         await AddRedis("vendedor", serializable)
         
@@ -1450,6 +1449,7 @@ async def post_registro(request: RegistrarVendedorModel):
             "id_insert": data
         }
     except Exception as e:
+        print("error", e)
         return {"error": str(e)}
 
 

@@ -20,7 +20,7 @@ from routes.reporte import reporte
 from routes.roles import roles
 from routes.usuario import usuarios
 from routes.Zonal import zonal
-from task.reporte import tarea_programada
+from task.reporte import tarea_Inicial, tarea_programada
 
 load_dotenv()
 
@@ -71,4 +71,11 @@ app.include_router(planform)
 @app.on_event("startup")
 async def startup():
     scheduler.start()
-
+    #await tarea_Inicial()
+    print("startup")
+    
+    
+@app.on_event("shutdown")
+async def shutdown():
+    scheduler.shutdown()
+    print("shutdown")

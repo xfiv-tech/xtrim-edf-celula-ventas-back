@@ -17,6 +17,7 @@ from model.channel import (Channel, Ciudad, Estados, Genero, Modalidad,
                            RegistrarVendedor, RegistroJefeVentas,
                            SistemaOperativo,
                            asignacion_ciudades_admin_proyectos)
+from redisConexion.RedisQuerys import SetterRedis
 
 load_dotenv()
 
@@ -287,7 +288,120 @@ def tarea_programada():
     ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
     print(ftp.nlst())
     ftp_close(ftp)
-    return True        
+    return True
+
+
+
+
+
+
+async def tarea_Inicial():
+    query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+                Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+                Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+                Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+                SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+                Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+                Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+                Channel.c.channel,
+                Ciudad.c.ciudad,
+                Ciudad.c.region,
+                Estados.c.estado,
+                Operador.c.operador,
+                Genero.c.genero,
+                Modalidad.c.modalidad,
+                RegistrarVendedor.c.id_sistema_operativo,
+                SistemaOperativo.c.sistema_operativo,
+                RegistrarVendedor.c.id_modalidad,
+                RegistrarVendedor.c.id_lider_peloton,
+                RegistrarVendedor.c.id_estado,
+                RegistrarVendedor.c.id_genero,
+                RegistrarVendedor.c.id_ciudad,
+                RegistrarVendedor.c.id_registrar_vendedor,
+                RegistrarVendedor.c.id_channel,
+                RegistrarVendedor.c.id_gerente_regional,
+                RegistrarVendedor.c.id_gerente_ciudad,
+                RegistrarVendedor.c.id_jefe_venta,
+                RegistrarVendedor.c.cedula,
+                RegistrarVendedor.c.telefono,
+                RegistrarVendedor.c.id_operador,
+                RegistrarVendedor.c.codigo_vendedor,
+                RegistrarVendedor.c.usuario_equifax,
+                RegistrarVendedor.c.nombre_vendedor,
+                RegistrarVendedor.c.fecha_ingreso,
+                RegistrarVendedor.c.fecha_salida,
+                RegistrarVendedor.c.sector_residencia,
+                RegistrarVendedor.c.lider_check,
+                RegistrarVendedor.c.meta_volumen_internet,
+                RegistrarVendedor.c.meta_dolares_internet,
+                RegistrarVendedor.c.meta_volumen_telefonia,
+                RegistrarVendedor.c.meta_dolares_telefonia,
+                RegistrarVendedor.c.meta_volumen_television,
+                RegistrarVendedor.c.meta_dolares_television,
+                RegistrarVendedor.c.email,
+                RegistrarVendedor.c.dias_inactivo,
+                RegistrarVendedor.c.isla,
+                RegistrarVendedor.c.id_gerente_zonal,
+                RegistrarVendedor.c.campana
+                ])
+    res = db.execute(query).fetchall()
+
+    dataInfo = []
+    for i in res:
+        dataInfo.append({
+                "id_registrar_vendedor": i.id_registrar_vendedor,
+                "id_channel": i.id_channel,
+                "id_ciudad": i.id_ciudad,
+                "id_operador": i.id_operador,
+                "id_sistema_operativo": i.id_sistema_operativo,
+                "id_estado": i.id_estado,
+                "id_genero": i.id_genero,
+                "id_modalidad": i.id_modalidad,
+                "cedula": i.cedula,
+                "telefono": i.telefono,
+                "codigo_vendedor": i.codigo_vendedor,
+                "usuario_equifax": i.usuario_equifax,
+                "nombre_vendedor": i.nombre_vendedor,
+                "fecha_ingreso": i.fecha_ingreso,
+                "id_lider_peloton": SelectLiderPeloton(i.id_lider_peloton, i.id_channel),
+                # "id_gerente": data_gerente.id_gerente,
+                # "nombre_gerente": data_gerente.nombre_gerente,
+                "id_gerente_regional": i.id_gerente_regional,
+                "nombre_gerente_regional": SelectGerenteRegional(i.id_gerente_regional),
+                "id_gerente_ciudad": i.id_gerente_ciudad,
+                "nombre_gerente_ciudad": SelectGerenteCiudad(i.id_gerente_ciudad),
+                "id_jefe_venta": i.id_jefe_venta,
+                "nombre_jefe_venta": SelectJefeVenta(i.id_jefe_venta),
+                "nombre_admin_proyectos": SelectAdminProyectCiudad(i.id_ciudad),
+                # "ciudad_gestion": i.ciudad_gestion,
+                "lider_check": i.lider_check,
+                "meta_volumen_internet": i.meta_volumen_internet,
+                "meta_dolares_internet": i.meta_dolares_internet,
+                "meta_volumen_telefonia": i.meta_volumen_telefonia,
+                "meta_dolares_telefonia": i.meta_dolares_telefonia,
+                "meta_volumen_television": i.meta_volumen_television,
+                "meta_dolares_television": i.meta_dolares_television,
+                "fecha_salida": i.fecha_salida,
+                "sector_residencia": i.sector_residencia,
+                "email": i.email,
+                "dias_inactivo": i.dias_inactivo,
+                "channel": i.channel,
+                "ciudad": i.ciudad,
+                "region": i.region,
+                "estado": i.estado,
+                "operador": i.operador,
+                "genero": i.genero,
+                "modalidad": i.modalidad,
+                "campana": i.campana,
+                "isla": i.isla,
+                "id_gerente_zonal": i.id_gerente_zonal,
+                "gerente_zonal": ZonalIdGerente(i.id_gerente_zonal),
+                "sistema_operativo": i.sistema_operativo
+        })
+
+    
+    await SetterRedis("vendedor", dataInfo)
+    return True
     
   
 

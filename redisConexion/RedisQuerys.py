@@ -31,7 +31,7 @@ async def AddRedis(key, value):
         if data is None:
             return False
         data = json.loads(data)
-        print("AddRedis", value)
+        # print("AddRedis", value)
         data.append(value)
         dbRedis.set(key, json.dumps(data))
         return True
@@ -48,13 +48,13 @@ async def UpdateRedis(key, value):
                 return False
             data = json.loads(data)
             # actualizamos un item de todo el array de objetos
-            print("UpdateRedis", value)
+            # print("UpdateRedis", value)
             for i in range(len(data)):
                 if data[i]['id_registrar_vendedor'] == value['id_registrar_vendedor']:
                     data[i] = value
                     break
             dbRedis.set(key, json.dumps(data))
-            print("UpdateRedis", data)
+            # print("UpdateRedis", data)
             return True
     except Exception as e:
         print("Error al actualizar redis", e)
