@@ -105,5 +105,21 @@ async def ZonalIdGerente(id:int):
             return query[0]["nombre"]
         return "SIN GERENTE ZONAL"
     except Exception as e:
-        print(e)
+        print(e.args)
+        return "SIN GERENTE ZONAL"
+    
+async def ZonalGerente():
+    try:
+        info = []
+        query = db.execute(RegistrarGerenteZonal.select()).fetchall()
+        if len(query) > 0:
+            for i in query:
+                info.append({
+                    "id_gerente_zonal": i["id_gerente_zonal"],
+                    "nombre": i["nombre"]
+                })
+            return info
+        return "SIN GERENTE ZONAL"
+    except Exception as e:
+        print(e.args)
         return "SIN GERENTE ZONAL"

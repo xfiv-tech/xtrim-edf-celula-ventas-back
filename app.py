@@ -70,8 +70,9 @@ app.include_router(planform)
 
 @app.on_event("startup")
 async def startup():
-    scheduler.start()
-    #await tarea_Inicial()
+    if DEV == "PRO":
+        scheduler.start()
+    # await tarea_Inicial()
     print("startup")
     
     

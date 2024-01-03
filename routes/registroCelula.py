@@ -13,7 +13,7 @@ from controller.AdminProyectController import (SelectAdminProyectCiudad,
                                                SelectGerenteRegional,
                                                SelectJefeVenta,
                                                SelectLiderPeloton,
-                                               ZonalIdGerente)
+                                               ZonalGerente, ZonalIdGerente)
 from controller.AsignacionController import (ListarCanalesAdminCiudad,
                                              ListarCanalesAPCiudad,
                                              ListarCanalesDistribuidor,
@@ -35,9 +35,9 @@ from middleware.validacionToken import ValidacionToken
 from model.channel import (Channel, Ciudad, Estados, Genero, Modalidad,
                            Operador, RegistrarAdminProyectos,
                            RegistrarDistribuidor, RegistrarGerenteCiudad,
-                           RegistrarGerenteRegional, RegistrarVendedor,
-                           RegistroAdministrador, RegistroJefeVentas,
-                           SistemaOperativo,
+                           RegistrarGerenteRegional, RegistrarGerenteZonal,
+                           RegistrarVendedor, RegistroAdministrador,
+                           RegistroJefeVentas, SistemaOperativo,
                            asiganacion_canal_gerente_regional,
                            asignacion_canal_admin,
                            asignacion_canal_admin_proyectos,
@@ -117,12 +117,13 @@ async def get_registro(request: Request):
         print("decodeToken", decodeToken)
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        dataRedis = await GetterRedis("vendedor")
-        if dataRedis:
-            return {
-                "code": "0",
-                "data": dataRedis
-            }
+        genteZonal = await ZonalGerente()
+        # dataRedis = await GetterRedis("vendedor")
+        # if dataRedis == False:
+        #     return {
+        #         "code": "0",
+        #         "data": dataRedis
+        #     }
         # print("Ciudades", ciudad)
         data = []
         for i in ciudad:
@@ -227,7 +228,7 @@ async def get_registro(request: Request):
                     "campana": i.campana,
                     "isla": i.isla,
                     "id_gerente_zonal": i.id_gerente_zonal,
-                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
+                    "gerente_zonal": next((x["nombre"] for x in genteZonal if x["id_gerente_zonal"] == i.id_gerente_zonal), None),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -283,7 +284,7 @@ async def get_registro(request: Request):
                     "campana": i.campana,
                     "isla": i.isla,
                     "id_gerente_zonal": i.id_gerente_zonal,
-                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
+                    "gerente_zonal": next((x["nombre"] for x in genteZonal if x["id_gerente_zonal"] == i.id_gerente_zonal), None),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -348,7 +349,7 @@ async def get_registro(request: Request):
                     "campana": i.campana,
                     "isla": i.isla,
                     "id_gerente_zonal": i.id_gerente_zonal,
-                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
+                    "gerente_zonal": next((x["nombre"] for x in genteZonal if x["id_gerente_zonal"] == i.id_gerente_zonal), None),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -419,7 +420,7 @@ async def get_registro(request: Request):
                     "campana": i.campana,
                     "isla": i.isla,
                     "id_gerente_zonal": i.id_gerente_zonal,
-                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
+                    "gerente_zonal": next((x["nombre"] for x in genteZonal if x["id_gerente_zonal"] == i.id_gerente_zonal), None),
                     "sistema_operativo": i.sistema_operativo
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
@@ -474,7 +475,7 @@ async def get_registro(request: Request):
                     "campana": i.campana,
                     "isla": i.isla,
                     "id_gerente_zonal": i.id_gerente_zonal,
-                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
+                    "gerente_zonal": next((x["nombre"] for x in genteZonal if x["id_gerente_zonal"] == i.id_gerente_zonal), None),
                     "sistema_operativo": i.sistema_operativo
                 })
 
@@ -525,11 +526,11 @@ async def get_registro(request: Request):
                     "campana": i.campana,
                     "isla": i.isla,
                     "id_gerente_zonal": i.id_gerente_zonal,
-                    "gerente_zonal": await ZonalIdGerente(i.id_gerente_zonal),
+                    "gerente_zonal": next((x["nombre"] for x in genteZonal if x["id_gerente_zonal"] == i.id_gerente_zonal), None),
                     "sistema_operativo": i.sistema_operativo
                 })
 
-        await SetterRedis("vendedor", dataInfo)
+        # await SetterRedis("vendedor", dataInfo)
         return {
             "code": "0",
             "data": dataInfo
@@ -1324,74 +1325,74 @@ async def post_registro(request: RegistrarVendedorModel):
         data = db.execute(query).lastrowid
         
         
-        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns([
-            RegistrarGerenteRegional.c.nombre_gerente,
-        ])
-        data_gerente_regional = db.execute(
-            query_gerente_regional).fetchone()
+        # query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns([
+        #     RegistrarGerenteRegional.c.nombre_gerente,
+        # ])
+        # data_gerente_regional = db.execute(
+        #     query_gerente_regional).fetchone()
         
-        print("data_gerente_regional", data_gerente_regional.nombre_gerente)
-        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns([
-            RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
-        ])
+        # print("data_gerente_regional", data_gerente_regional.nombre_gerente)
+        # query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns([
+        #     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+        # ])
         
-        data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
+        # data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
         
-        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
-            RegistroJefeVentas.c.nombre_jefe,
-        ])
-        data_jefe_venta = db.execute(query_jefe_venta).fetchone()
+        # query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
+        #     RegistroJefeVentas.c.nombre_jefe,
+        # ])
+        # data_jefe_venta = db.execute(query_jefe_venta).fetchone()
         
         # consultar el ultimo id insertado para guardarlo en redis con todas sus relaciones
-        query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
-            Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
-            Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
-            Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
-            SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
-            Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
-                    Channel.c.channel,
-                    Ciudad.c.ciudad,
-                    Ciudad.c.region,
-                    Estados.c.estado,
-                    Operador.c.operador,
-                    Genero.c.genero,
-                    Modalidad.c.modalidad,
-                    RegistrarVendedor.c.id_sistema_operativo,
-                    SistemaOperativo.c.sistema_operativo,
-                    RegistrarVendedor.c.id_modalidad,
-                    RegistrarVendedor.c.id_lider_peloton,
-                    RegistrarVendedor.c.id_estado,
-                    RegistrarVendedor.c.id_genero,
-                    RegistrarVendedor.c.id_ciudad,
-                    RegistrarVendedor.c.id_registrar_vendedor,
-                    RegistrarVendedor.c.id_channel,
-                    RegistrarVendedor.c.id_gerente_regional,
-                    RegistrarVendedor.c.id_gerente_ciudad,
-                    RegistrarVendedor.c.id_jefe_venta,
-                    RegistrarVendedor.c.cedula,
-                    RegistrarVendedor.c.telefono,
-                    RegistrarVendedor.c.id_operador,
-                    RegistrarVendedor.c.codigo_vendedor,
-                    RegistrarVendedor.c.usuario_equifax,
-                    RegistrarVendedor.c.nombre_vendedor,
-                    RegistrarVendedor.c.fecha_ingreso,
-                    RegistrarVendedor.c.fecha_salida,
-                    RegistrarVendedor.c.sector_residencia,
-                    RegistrarVendedor.c.lider_check,
-                    RegistrarVendedor.c.meta_volumen_internet,
-                    RegistrarVendedor.c.meta_dolares_internet,
-                    RegistrarVendedor.c.meta_volumen_telefonia,
-                    RegistrarVendedor.c.meta_dolares_telefonia,
-                    RegistrarVendedor.c.meta_volumen_television,
-                    RegistrarVendedor.c.meta_dolares_television,
-                    RegistrarVendedor.c.email,
-                    RegistrarVendedor.c.campana,
-                    RegistrarVendedor.c.isla,
-                    RegistrarVendedor.c.id_gerente_zonal,
-                    RegistrarVendedor.c.dias_inactivo
-            ]).where(RegistrarVendedor.c.id_registrar_vendedor == data)
-        data_ = db.execute(query).fetchall()
+        # query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
+        #     Estados, RegistrarVendedor.c.id_estado == Estados.c.id_estado).join(
+        #     Channel, RegistrarVendedor.c.id_channel == Channel.c.id_channel).join(
+        #     Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
+        #     SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
+        #     Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
+        #     Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+        #             Channel.c.channel,
+        #             Ciudad.c.ciudad,
+        #             Ciudad.c.region,
+        #             Estados.c.estado,
+        #             Operador.c.operador,
+        #             Genero.c.genero,
+        #             Modalidad.c.modalidad,
+        #             RegistrarVendedor.c.id_sistema_operativo,
+        #             SistemaOperativo.c.sistema_operativo,
+        #             RegistrarVendedor.c.id_modalidad,
+        #             RegistrarVendedor.c.id_lider_peloton,
+        #             RegistrarVendedor.c.id_estado,
+        #             RegistrarVendedor.c.id_genero,
+        #             RegistrarVendedor.c.id_ciudad,
+        #             RegistrarVendedor.c.id_registrar_vendedor,
+        #             RegistrarVendedor.c.id_channel,
+        #             RegistrarVendedor.c.id_gerente_regional,
+        #             RegistrarVendedor.c.id_gerente_ciudad,
+        #             RegistrarVendedor.c.id_jefe_venta,
+        #             RegistrarVendedor.c.cedula,
+        #             RegistrarVendedor.c.telefono,
+        #             RegistrarVendedor.c.id_operador,
+        #             RegistrarVendedor.c.codigo_vendedor,
+        #             RegistrarVendedor.c.usuario_equifax,
+        #             RegistrarVendedor.c.nombre_vendedor,
+        #             RegistrarVendedor.c.fecha_ingreso,
+        #             RegistrarVendedor.c.fecha_salida,
+        #             RegistrarVendedor.c.sector_residencia,
+        #             RegistrarVendedor.c.lider_check,
+        #             RegistrarVendedor.c.meta_volumen_internet,
+        #             RegistrarVendedor.c.meta_dolares_internet,
+        #             RegistrarVendedor.c.meta_volumen_telefonia,
+        #             RegistrarVendedor.c.meta_dolares_telefonia,
+        #             RegistrarVendedor.c.meta_volumen_television,
+        #             RegistrarVendedor.c.meta_dolares_television,
+        #             RegistrarVendedor.c.email,
+        #             RegistrarVendedor.c.campana,
+        #             RegistrarVendedor.c.isla,
+        #             RegistrarVendedor.c.id_gerente_zonal,
+        #             RegistrarVendedor.c.dias_inactivo
+        #     ]).where(RegistrarVendedor.c.id_registrar_vendedor == data)
+        # data_ = db.execute(query).fetchall()
         # serializar el objeto para guardarlo en redis
         serializable = {
             "id_registrar_vendedor": data_[0].id_registrar_vendedor,
@@ -1442,7 +1443,7 @@ async def post_registro(request: RegistrarVendedorModel):
             "gerente_zonal": await ZonalIdGerente(data_[0].id_gerente_zonal),
             "sistema_operativo": data_[0].sistema_operativo
         }
-        await AddRedis("vendedor", serializable)
+        # await AddRedis("vendedor", serializable)
         
         return {
             "code": "0",

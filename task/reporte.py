@@ -128,7 +128,7 @@ def SelectAdminProyectCiudad(id_ciudad:int):
 
 def ZonalIdGerente(id:int):
     try:
-        print("ZonalIdGerente")
+        print("ZonalIdGerente", id)
         if id == None or id == 0:
             return "SIN GERENTE ZONAL"
         query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_zonal == id)).fetchall()
