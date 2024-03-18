@@ -1,0 +1,5 @@
+./venv/*
+./xfiv-edificio-python/*
+*.pyc
+.idea/*
+*.xlsx

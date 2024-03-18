@@ -59,6 +59,7 @@ from model.ModelSchema.channelModel import (RegistrarAdministradorModel,
                                             RegistrarGerenteRegionalModel,
                                             RegistrarJefeModel,
                                             RegistrarVendedorModel)
+from rabbitMQConexion.emmitRabbitMQ import  EmitRabbitMQNewUser, EmitRabbitMQEditUser
 from redisConexion.RedisQuerys import (AddRedis, DeleteRedis, GetterRedis,
                                        SetterRedis, UpdateRedis)
 
@@ -1339,6 +1340,7 @@ async def post_registro(request: RegistrarVendedorModel):
         
         query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
             RegistroJefeVentas.c.nombre_jefe,
+            RegistroJefeVentas.c.cedula,
         ])
         data_jefe_venta = db.execute(query_jefe_venta).fetchone()
         
@@ -1411,7 +1413,7 @@ async def post_registro(request: RegistrarVendedorModel):
             "id_lider_peloton": data_[0].id_lider_peloton,
             # "id_gerente": data_gerente.id_gerente,
             # "nombre_gerente": data_gerente.nombre_gerente,
-            "id_gerente_regional": data[0].id_gerente_regional,
+            "id_gerente_regional": data_[0].id_gerente_regional,
             "nombre_gerente_regional": data_gerente_regional.nombre_gerente,
             "id_gerente_ciudad": data_[0].id_gerente_ciudad,
             "nombre_gerente_ciudad": data_gerente_ciudad.nombre_gerente_ciudad,
@@ -1443,7 +1445,25 @@ async def post_registro(request: RegistrarVendedorModel):
             "sistema_operativo": data_[0].sistema_operativo
         }
         await AddRedis("vendedor", serializable)
-        
+        #Enviar registro a xtrim por rabbitMQ
+        body_new = {
+            "enable": request.id_estado != 2,
+            "attributes": {
+                "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
+                "cedula": f"{request.cedula}", "ciudad": f"{data_[0].ciudad}",
+                "telefono": f"{data_[0].telefono}",
+                "channel": f"{data_[0].channel}", "operador": f"{data_[0].operador}",
+                "modalidad": f"{data_[0].modalidad}",
+                "usuario_equipax": f"{data_[0].usuario_equifax}", "fecha_ingreso": f"{data_[0].fecha_ingreso}",
+                "fecha_salida": f"{data_[0].fecha_salida}",
+                "sector_residencia": f"{data_[0].sector_residencia}"
+            },
+            "email": f"{data_[0].email}", "last_name": "", "name": f"{data_[0].nombre_vendedor}",
+            "rol": "vendedor",
+            "user_name": f"{request.codigo_vendedor}"
+        }
+        a = EmitRabbitMQNewUser(body_new)
+        a.start()
         return {
             "code": "0",
             "id_insert": data
@@ -1509,6 +1529,7 @@ async def put_registro(request: RegistrarVendedorModel):
         
         query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
             RegistroJefeVentas.c.nombre_jefe,
+            RegistroJefeVentas.c.cedula,
         ])
         data_jefe_venta = db.execute(query_jefe_venta).fetchone()
         # consultar el ultimo id insertado para guardarlo en redis con todas sus relaciones
@@ -1612,7 +1633,26 @@ async def put_registro(request: RegistrarVendedorModel):
             "sistema_operativo": data[0].sistema_operativo
         }
         await UpdateRedis("vendedor", serializable)
-       
+        body_new = {
+            "edited": {"enable": request.id_estado != 2,
+                       "attributes": {
+                           "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
+                           "cedula": f"{request.cedula}", "ciudad": f"{data[0].ciudad}",
+                           "telefono": f"{data[0].telefono}",
+                           "channel": f"{data[0].channel}", "operador": f"{data[0].operador}",
+                           "modalidad": f"{data[0].modalidad}",
+                           "usuario_equipax": f"{data[0].usuario_equifax}", "fecha_ingreso": f"{data[0].fecha_ingreso}",
+                           "fecha_salida": f"{data[0].fecha_salida}",
+                           "sector_residencia": f"{data[0].sector_residencia}"
+                       },
+                       "email": f"{data[0].email}", "last_name": "", "name": f"{data[0].nombre_vendedor}",
+                       "rol": "vendedor",
+                       "user_name": f"{request.codigo_vendedor}"
+                       },
+            "cedula": f"{request.cedula}",
+        }
+        a = EmitRabbitMQEditUser(body_new)
+        a.start()
         return {
             "code": "0",
             "data": data
