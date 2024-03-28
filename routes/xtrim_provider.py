@@ -1,6 +1,6 @@
 import requests
-from fastapi import APIRouter, Response, Depends, HTTPException, status, File, RedirectResponse
-from schemas.loginDistributor import LoginToken, DistributorLogin, DistributorLoginResponse
+from fastapi import APIRouter, Response, Depends, HTTPException, status, File
+from schemas.loginDistributor import LoginToken, DistributorLogin, DistributorLoginResponse, DistributorLoginDecrypt
 from datetime import datetime
 from middleware.validacionToken import ValidacionToken
 from function.encryptMethods import encrypt_object, decrypt_object
@@ -15,8 +15,8 @@ import os
 load_dotenv()
 
 
-distributor = APIRouter(route_class=ValidacionToken)
-@distributor.post("/create_qr_to_login", tags=["Distributors"])
+xtrim_provider = APIRouter()
+@xtrim_provider.post("/create_qr_to_login", tags=["Distributors"])
 async def create_qr_to_login(distributorLogin:DistributorLogin):
     try:
         memory = BytesIO()
@@ -24,7 +24,8 @@ async def create_qr_to_login(distributorLogin:DistributorLogin):
 
         user = json.dumps({
             "dni": distributorLogin.dni,
-            "password": distributorLogin.password
+            "password": distributorLogin.password,
+            "distributor": distributorLogin.distributor
         })
 
         encrypt = encrypt_object(user)
@@ -51,11 +52,20 @@ async def create_qr_to_login(distributorLogin:DistributorLogin):
         })
 
 
-@distributor.post("/redirect/", tags=["Distributors"])
+@xtrim_provider.get("/redirect/", tags=["Distributors"])
 async def decrypt_url_and_login(encode: str):
     try:
         decrypt = decrypt_object(encode)
-        user_dict = DistributorLogin(**decrypt)
+        print(decrypt)
+
+        try:
+            json_data = json.loads(decrypt)
+        except json.JSONDecodeError as e:
+            print(f"Error al decodificar JSON: {e}")
+            json_data = {}
+
+        user_dict = DistributorLogin(**json_data)
+        print(f"user_dict decrypt: {user_dict}")
 
         print("Send to login...")
         login_access_xtrim_provider(user_dict)
@@ -108,7 +118,7 @@ def login_access_xtrim_provider(distributorLogin:DistributorLogin):
         if response.status_code == 200: 
             data_dict = response.json()
             login_response = DistributorLoginResponse(**data_dict)
-            return RedirectResponse(url="/vendor/compra-en-linea/cobertura/16")
+            return login_response.user
         else:
             return json.dumps({'error': 'Error'})
     except Exception as e:

@@ -1,5 +1,10 @@
 from typing import Optional
 from pydantic import BaseModel
+from enum import Enum
+
+class DistributorEnum(str, Enum):
+    Mardis = "Mardis"
+    XtrimPro = "XtrimPro"
 
 class LoginToken(BaseModel):
     code: str
@@ -9,6 +14,13 @@ class LoginToken(BaseModel):
 class DistributorLogin(BaseModel):
     dni: str
     password: str
+    distributor: DistributorEnum
+
+
+class DistributorLoginDecrypt(BaseModel):
+    dni: str
+    password: str
+    distributor: str
 
 class User(BaseModel):
     displayName: str
