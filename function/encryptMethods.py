@@ -8,21 +8,44 @@ import base64
 from dotenv import load_dotenv
 import os
 
-key = b'\x86$\x02\xc9VQ\x95\x8b\\O\x7f\x00\xb3\x8e\x11a\xab\xc2\x9c\x83U\xed|\xf7\xc0?h\xba\xf0{\x97&'
-def encrypt_object(obj):
-    serialized_obj = pickle.dumps(obj)
-    cipher = AES.new(key, AES.MODE_ECB)
-    padded_data = pad(serialized_obj, AES.block_size)
-    encrypted_data = cipher.encrypt(padded_data)
-    encrypted_data = base64.b64encode(encrypted_data).decode('utf-8')
+key = b'_\x18N\x92\xa8\x07\x90\xd43\x8f\xfe5#\xa0&\xd5'
+iv = b'\nS/\x84\xbfeZ\xbdG\x9f\xcaW\xe8\xa1\xb3\xe4'
 
-    return encrypted_data
+
+def encrypt_object(obj):
+    # Convertir el objeto a bytes
+    obj_bytes = pickle.dumps(obj)
+    
+    # Añadir relleno a los datos
+    padded_data = pad(obj_bytes, AES.block_size)
+    
+    # Crear el objeto de cifrado en modo CBC
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    
+    # Cifrar los datos
+    encrypted_data = cipher.encrypt(padded_data)
+    
+    # Devolver los datos cifrados en base64 para facilitar el transporte
+    return base64.b64encode(iv + encrypted_data).decode()
+
 
 def decrypt_object(encrypted_data):
+    # Decodificar los datos cifrados en base64
     encrypted_data = base64.b64decode(encrypted_data)
-    cipher = AES.new(key, AES.MODE_ECB)
-    decrypted_data = cipher.decrypt(encrypted_data)
+    
+    # Extraer el IV de los datos cifrados
+    iv = encrypted_data[:AES.block_size]
+    
+    # Crear el objeto de cifrado en modo CBC
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    
+    # Descifrar los datos (ignorando el IV en los datos cifrados)
+    decrypted_data = cipher.decrypt(encrypted_data[AES.block_size:])
+    
+    # Eliminar el relleno de los datos descifrados
     unpadded_data = unpad(decrypted_data, AES.block_size)
+    
+    # Convertir los datos descifrados de bytes a objeto Python
     obj = pickle.loads(unpadded_data)
     
     return obj

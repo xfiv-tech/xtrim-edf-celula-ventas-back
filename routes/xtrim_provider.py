@@ -1,5 +1,6 @@
 import requests
 from fastapi import APIRouter, Response, Depends, HTTPException, status, File
+from fastapi.responses import RedirectResponse
 from schemas.loginDistributor import LoginToken, DistributorLogin, DistributorLoginResponse, DistributorLoginDecrypt
 from datetime import datetime
 from middleware.validacionToken import ValidacionToken
@@ -44,7 +45,6 @@ async def create_qr_to_login(distributorLogin:DistributorLogin):
         img.save(memory)
         memory.seek(0)
 
-
         return Response(content=memory.getvalue(), media_type="image/png")
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -52,11 +52,11 @@ async def create_qr_to_login(distributorLogin:DistributorLogin):
         })
 
 
+
 @xtrim_provider.get("/redirect/", tags=["Distributors"])
 async def decrypt_url_and_login(encode: str):
     try:
         decrypt = decrypt_object(encode)
-        print(decrypt)
 
         try:
             json_data = json.loads(decrypt)
@@ -65,10 +65,29 @@ async def decrypt_url_and_login(encode: str):
             json_data = {}
 
         user_dict = DistributorLogin(**json_data)
-        print(f"user_dict decrypt: {user_dict}")
+        login_token = get_login_token()
+        print(f"login_token: {login_token}")
+        user_login = login_access_xtrim_provider(user_dict, login_token)
 
-        print("Send to login...")
-        login_access_xtrim_provider(user_dict)
+        user_access = user_login["user"]
+        user_data_access = json.dumps(user_access)
+        print(f"user login: {user_data_access}")
+
+        responseSite = RedirectResponse(url="https://ecommerce-web.intelnexo.com/vendor/compra-en-linea/cobertura/16")
+        responseSite.set_cookie(
+            key="user",
+            value=user_data_access, 
+            max_age=3600,
+            httponly=True,
+        )
+        responseSite.set_cookie(
+            key="token",
+            value=f"Bearer {login_token}",
+            max_age=3600 * 12,
+            httponly=True,
+        )
+
+        return responseSite
 
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -97,9 +116,8 @@ def get_login_token():
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
-def login_access_xtrim_provider(distributorLogin:DistributorLogin):
+def login_access_xtrim_provider(distributorLogin:DistributorLogin, login_token):
     try:
-        login_token = get_login_token()
         tenant = os.getenv("TENANT_ENGINE_V2")
         url = os.getenv("URL_LOGIN_ACCESS_XTRIM_PROVIDER")
 
@@ -117,8 +135,7 @@ def login_access_xtrim_provider(distributorLogin:DistributorLogin):
 
         if response.status_code == 200: 
             data_dict = response.json()
-            login_response = DistributorLoginResponse(**data_dict)
-            return login_response.user
+            return data_dict
         else:
             return json.dumps({'error': 'Error'})
     except Exception as e:

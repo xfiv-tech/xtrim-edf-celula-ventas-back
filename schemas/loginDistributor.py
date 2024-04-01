@@ -14,7 +14,7 @@ class LoginToken(BaseModel):
 class DistributorLogin(BaseModel):
     dni: str
     password: str
-    distributor: DistributorEnum
+    distributor: str
 
 
 class DistributorLoginDecrypt(BaseModel):
