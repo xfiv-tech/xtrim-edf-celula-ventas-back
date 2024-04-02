@@ -18,7 +18,7 @@ load_dotenv()
 
 xtrim_provider = APIRouter()
 @xtrim_provider.post("/create_qr_to_login", tags=["Distributors"])
-async def create_qr_to_login(distributorLogin:DistributorLogin):
+def create_qr_to_login(distributorLogin:DistributorLogin):
     try:
         memory = BytesIO()
         base_url = os.getenv("URL_TO_EXPOSE_QR")
@@ -53,8 +53,8 @@ async def create_qr_to_login(distributorLogin:DistributorLogin):
 
 
 
-@xtrim_provider.get("/redirect/", tags=["Distributors"])
-async def decrypt_url_and_login(encode: str):
+@xtrim_provider.get("/redirect/", tags=["Distributors"],response_class=RedirectResponse)
+def decrypt_url_and_login(encode: str)-> RedirectResponse:
     try:
         decrypt = decrypt_object(encode)
 
@@ -67,27 +67,29 @@ async def decrypt_url_and_login(encode: str):
         user_dict = DistributorLogin(**json_data)
         login_token = get_login_token()
         print(f"login_token: {login_token}")
-        user_login = login_access_xtrim_provider(user_dict, login_token)
 
+        user_login = login_access_xtrim_provider(user_dict, login_token)
         user_access = user_login["user"]
         user_data_access = json.dumps(user_access)
         print(f"user login: {user_data_access}")
 
-        responseSite = RedirectResponse(url="https://ecommerce-web.intelnexo.com/vendor/compra-en-linea/cobertura/16")
-        responseSite.set_cookie(
+        response = RedirectResponse(url="https://ecommerce-web.intelnexo.com/vendor/compra-en-linea/cobertura/16", status_code=308)
+        response.set_cookie(
             key="user",
             value=user_data_access, 
             max_age=3600,
             httponly=True,
+            secure=True, 
+            samesite='none'
         )
-        responseSite.set_cookie(
+        response.set_cookie(
             key="token",
             value=f"Bearer {login_token}",
             max_age=3600 * 12,
             httponly=True,
         )
 
-        return responseSite
+        return response
 
     except Exception as e:
         raise HTTPException(status_code=400, detail={
