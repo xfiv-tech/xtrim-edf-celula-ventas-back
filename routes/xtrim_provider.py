@@ -1,8 +1,5 @@
 import requests
 
-from database.db import db
-from model.ModelSchema.distributorModel import DistributorModel
-from model.distributor import Distributor
 from sqlalchemy import func, and_
 
 from fastapi import APIRouter, Response, Depends, HTTPException, status, File
@@ -27,7 +24,7 @@ xtrim_provider = APIRouter()
 def create_qr_to_login(distributorLogin:DistributorLogin):
     try:
         memory = BytesIO()
-        base_url = os.getenv("URL_TO_EXPOSE_QR")
+        base_url = "https://ecommerce-web.intelnexo.com/backend/expose"
 
         user = json.dumps({
             "dni": distributorLogin.dni,
@@ -83,7 +80,7 @@ def decrypt_url_and_login(encode: str)-> RedirectResponse:
         }
         encoded_response = json.dumps(response_data)
 
-        url_to_redirect = f"http://localhost:4200/compra-en-linea/login?_Response={encoded_response}"
+        url_to_redirect = f"https://ecommerce-web.intelnexo.com/vendor/compra-en-linea/login?_Response={encoded_response}"
         return RedirectResponse(url=url_to_redirect)
     except Exception as e:
         raise HTTPException(status_code=400, detail={
@@ -91,51 +88,9 @@ def decrypt_url_and_login(encode: str)-> RedirectResponse:
         })
 
 
-def add_distributor_login(distributorLogin: DistributorModel):
-    try:
-        result = db.execute(Distributor.insert()
-            .values(user = distributorLogin.user,
-                    userId = (distributorLogin.userId),
-                    distributor = (distributorLogin.distributor),
-                    token = (distributorLogin.token),
-                    created_at = (datetime.now())))
-        return "success"
-    except Exception as e:
-        raise HTTPException(status_code=400, detail={
-            "code": "-1",
-            "data": str(e)
-        })
-
-
-def search_valid_token(dist: str):
-    current_datetime = func.now()
-    try:
-        print(f"Searching token for: {dist}")
-        query = Distributor.select().where(and_(Distributor.c.distributor == dist, Distributor.c.created_at <= current_datetime))
-        first_result = db.execute(query).first()
-
-        if first_result:
-            id_, user, userId, distributor, token, created_at = first_result
-            json_data = {
-                "id": id_,
-                "user": user,
-                "userId": userId,
-                "distributor": distributor,
-                "token": token,
-                "created_at": created_at.strftime("%Y-%m-%d %H:%M:%S")  # Convertir el objeto datetime a una cadena en el formato deseado
-            }
-
-            result = json.dumps(json_data)
-            return result
-        else:
-            print("No se encontraron resultados.")
-    except Exception as e:
-        print(f"Error al ejecutar la consulta: {e}")
-    
-    
 def get_login_token():
     try:
-        url = os.getenv("URL_LOGIN_TOKEN")
+        url = "https://enginecoretest-backend.azurewebsites.net/api/Xtrim/getLoginToken"
         
         payload = {}
         headers = {
@@ -157,8 +112,8 @@ def get_login_token():
 
 def login_access_xtrim_provider(distributorLogin:DistributorLogin, login_token):
     try:
-        tenant = os.getenv("TENANT_ENGINE_V2")
-        url = os.getenv("URL_LOGIN_ACCESS_XTRIM_PROVIDER")
+        tenant = "EngineV2"
+        url ="https://enginecoretest-backend.azurewebsites.net/api/Xtrim/getLoginAccesoXtrimProveedor"
 
         payload = json.dumps({
             "dni": distributorLogin.dni,
