@@ -1,4 +1,10 @@
 import requests
+
+from database.db import db
+from model.ModelSchema.distributorModel import DistributorModel
+from model.distributor import Distributor
+from sqlalchemy import func, and_
+
 from fastapi import APIRouter, Response, Depends, HTTPException, status, File
 from fastapi.responses import RedirectResponse
 from schemas.loginDistributor import LoginToken, DistributorLogin, DistributorLoginResponse, DistributorLoginDecrypt
@@ -65,37 +71,64 @@ def decrypt_url_and_login(encode: str)-> RedirectResponse:
             json_data = {}
 
         user_dict = DistributorLogin(**json_data)
-        login_token = get_login_token()
-        print(f"login_token: {login_token}")
+        token = get_login_token()
+        print(f"login_token: {token}")
 
-        user_login = login_access_xtrim_provider(user_dict, login_token)
+        user_login = login_access_xtrim_provider(user_dict, token)
         user_access = user_login["user"]
-        user_data_access = json.dumps(user_access)
-        print(f"user login: {user_data_access}")
+        user = user_access["displayName"]
+        print(f"user login: {user}")
 
-        response = RedirectResponse(url="https://ecommerce-web.intelnexo.com/vendor/compra-en-linea/cobertura/16", status_code=308)
-        response.set_cookie(
-            key="user",
-            value=user_data_access, 
-            max_age=3600,
-            httponly=True,
-            secure=True, 
-            samesite='none'
-        )
-        response.set_cookie(
-            key="token",
-            value=f"Bearer {login_token}",
-            max_age=3600 * 12,
-            httponly=True,
-        )
 
-        return response
-
+        return RedirectResponse(url="https://localhost:4200/compra-en-linea/login?_Response={'token':'{}', 'user':'{}'}".format(token, user))
     except Exception as e:
         raise HTTPException(status_code=400, detail={
             "data": str(e)
         })
 
+
+def add_distributor_login(distributorLogin: DistributorModel):
+    try:
+        result = db.execute(Distributor.insert()
+            .values(user = distributorLogin.user,
+                    userId = (distributorLogin.userId),
+                    distributor = (distributorLogin.distributor),
+                    token = (distributorLogin.token),
+                    created_at = (datetime.now())))
+        return "success"
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={
+            "code": "-1",
+            "data": str(e)
+        })
+
+
+def search_valid_token(dist: str):
+    current_datetime = func.now()
+    try:
+        print(f"Searching token for: {dist}")
+        query = Distributor.select().where(and_(Distributor.c.distributor == dist, Distributor.c.created_at <= current_datetime))
+        first_result = db.execute(query).first()
+
+        if first_result:
+            id_, user, userId, distributor, token, created_at = first_result
+            json_data = {
+                "id": id_,
+                "user": user,
+                "userId": userId,
+                "distributor": distributor,
+                "token": token,
+                "created_at": created_at.strftime("%Y-%m-%d %H:%M:%S")  # Convertir el objeto datetime a una cadena en el formato deseado
+            }
+
+            result = json.dumps(json_data)
+            return result
+        else:
+            print("No se encontraron resultados.")
+    except Exception as e:
+        print(f"Error al ejecutar la consulta: {e}")
+    
+    
 def get_login_token():
     try:
         url = os.getenv("URL_LOGIN_TOKEN")
