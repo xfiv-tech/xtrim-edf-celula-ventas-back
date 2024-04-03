@@ -59,7 +59,7 @@ def create_qr_to_login(distributorLogin:DistributorLogin):
 
 
 
-@xtrim_provider.get("/redirect/", tags=["Distributors"],response_class=RedirectResponse)
+@xtrim_provider.get("/expose/", tags=["Distributors"],response_class=RedirectResponse)
 def decrypt_url_and_login(encode: str)-> RedirectResponse:
     try:
         decrypt = decrypt_object(encode)
@@ -72,15 +72,19 @@ def decrypt_url_and_login(encode: str)-> RedirectResponse:
 
         user_dict = DistributorLogin(**json_data)
         token = get_login_token()
-        print(f"login_token: {token}")
 
         user_login = login_access_xtrim_provider(user_dict, token)
         user_access = user_login["user"]
         user = user_access["displayName"]
-        print(f"user login: {user}")
 
+        response_data = {
+        "token": token,
+        "user": user
+        }
+        encoded_response = json.dumps(response_data)
 
-        return RedirectResponse(url="https://localhost:4200/compra-en-linea/login?_Response={'token':'{}', 'user':'{}'}".format(token, user))
+        url_to_redirect = f"http://localhost:4200/compra-en-linea/login?_Response={encoded_response}"
+        return RedirectResponse(url=url_to_redirect)
     except Exception as e:
         raise HTTPException(status_code=400, detail={
             "data": str(e)
