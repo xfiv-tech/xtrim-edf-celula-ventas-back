@@ -118,7 +118,8 @@ async def get_registro(request: Request):
         print("decodeToken", decodeToken)
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
-        dataRedis = await GetterRedis("vendedor")
+        cod_ = decodeToken.get('exp')
+        dataRedis = await GetterRedis(f"{cod_ if cod_ else ''}_vendedor")
         if dataRedis:
             return {
                 "code": "0",
@@ -530,7 +531,7 @@ async def get_registro(request: Request):
                     "sistema_operativo": i.sistema_operativo
                 })
 
-        await SetterRedis("vendedor", dataInfo)
+        await SetterRedis(f"{cod_ if cod_ else ''}_vendedor", dataInfo)
         return {
             "code": "0",
             "data": dataInfo
@@ -1444,7 +1445,7 @@ async def post_registro(request: RegistrarVendedorModel):
             "gerente_zonal": await ZonalIdGerente(data_[0].id_gerente_zonal),
             "sistema_operativo": data_[0].sistema_operativo
         }
-        await AddRedis("vendedor", serializable)
+        await AddRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
         #Enviar registro a xtrim por rabbitMQ
         body_new = {
             "enable": request.id_estado != 2,
@@ -1632,7 +1633,7 @@ async def put_registro(request: RegistrarVendedorModel):
             "gerente_zonal": await ZonalIdGerente(data[0].id_gerente_zonal),
             "sistema_operativo": data[0].sistema_operativo
         }
-        await UpdateRedis("vendedor", serializable)
+        await UpdateRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
         body_new = {
             "edited": {"enable": request.id_estado != 2,
                        "attributes": {

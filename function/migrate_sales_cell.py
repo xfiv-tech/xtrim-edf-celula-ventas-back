@@ -14,7 +14,7 @@ import uuid
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 load_dotenv()
-url = 'https://cw.xtrim.com.ec/rest/cw-user-manager-api/v1.0/post/create_user'
+url = 'https://cw-dev.xtrim.com.ec/rest/cw-user-manager-api/v1.0/post/create_user'
 user = os.getenv("user")
 password = os.getenv("password")
 host = os.getenv("host")
@@ -151,10 +151,32 @@ def migrate_sales_cell():
     for col in columna:
         hoja[col[1]] = col[0]
     cod_vendedor_sta_elena = [
-        98360677, 68918517, 100884623, 103203443, 103678515, 103678444, 104449016, 104453396, 104453493, 104453505,
-        104453534, 98360498, 98810461, 102310934, 102674039, 104206759, 104206808, 103678476, 103678427, 103678468,
-        103678480, 103678558, 102310953, 4640537
+        'kemartinez@xtrim.com.ec', 'rvictor@xtrim.com.ec',
+        'lgaibor15@gmail.com', 'jenniferolvera1986@gmail.com', 'guaiguanick@gmail.com', 'bryan-jmv77@hotmail.com',
+        'henrysolorzano2011@gmail.com',
+        'adrianarojasespinoza198814@gmail.com', 'axel97mr@gmail.com', 'josuanunez2003@gmail.com',
+        'eliza.1311mora@gmail.com', 'marvinvillalva120@gmail.com',
+        'rosmeryfer1995@gmail.com', 'ksanchezgaraicoa@gmail.com', 'mindiolazaevelyn77@gmail.com',
+        'marioquispepena@gmail.com',
+        'darioandaluz@yahoo.com', 'patopato29ago1980@gmail.com', 'karlaleoncasis@gmail.com',
+        'rennyecheverria2018@gmail.com', 'barraganyuly5@gmail.com',
+        'sebastiantipantasig@gmail.com', 'gloria_chiriguaya@outlook.es', 'emmagarcia57@hotmail.com',
+        'lv3976400@gmail.com', 'moragabu4@gmail.com',
+        'moraleidy345@gmail.com', 'plazartejaime@gmail.com', 'bryvite99@gmail.com'
     ]
+    mail_jefe_ventas = [
+        'tleon@xtrim.com.ec','jobcostasav@hotmail.com',
+        'wmontenegro@xtrim.com.ec','dannymauriciochango@gmail.com'
+    ]
+    mail_gerente_ciudad = [
+    ]
+    mail_gerente_regional = [
+        'jrobles@xtrim.com.ec',
+    ]
+    print(f"Hay {len(cod_vendedor_sta_elena)} correo de vendedores")
+    print(f"Hay {len(mail_jefe_ventas)} correo de jefe ventas")
+    print(f"Hay {len(mail_gerente_ciudad)} correo de gerente ciudad")
+    print(f"Hay {len(mail_gerente_regional)} correo de gerente regional")
     query = select(RegistrarVendedor.c.id_registrar_vendedor,
                    RegistrarVendedor.c.codigo_vendedor,
                    RegistrarVendedor.c.nombre_vendedor,
@@ -170,7 +192,7 @@ def migrate_sales_cell():
                    RegistrarVendedor.c.fecha_ingreso,
                    RegistrarVendedor.c.fecha_salida,
                    RegistrarVendedor.c.sector_residencia,
-                   RegistrarVendedor.c.id_jefe_venta).filter(RegistrarVendedor.c.codigo_vendedor.in_(cod_vendedor_sta_elena)).order_by(RegistrarVendedor.c.id_registrar_vendedor)
+                   RegistrarVendedor.c.id_jefe_venta).filter(RegistrarVendedor.c.email.in_(cod_vendedor_sta_elena)).order_by(RegistrarVendedor.c.id_registrar_vendedor)
 
     init = time.time()
     data = db.execute(query).fetchall()
@@ -198,11 +220,11 @@ def migrate_sales_cell():
             fechaS = row[13]
         fechaI = row[12]
         sector = row[14]
-        telefono = '0999999999'#row[4]
+        telefono = row[4]
         seller_code = row[1]
         cedula = row[3]
         adicional = temp[0][0]
-        email = str(count) + 'fake@prueba.com' # row[5]
+        email = row[5]
         lastname = ''
         name = row[2]
         rol = 'vendedor'
@@ -211,16 +233,178 @@ def migrate_sales_cell():
            f'"cedula": "{cedula}" , "ciudad": "{ciudad}" , "telefono": "{telefono}" , "channel": "{channel}", "operador": "{operador}", "modalidad": "{modalidad}", ' \
            f'"usuario_equipax": "{usuE}", "fecha_ingreso": "{fechaI}", "fecha_salida": "{fechaS}", "sector_residencia": "{sector}"}}, "email": "{email}", "last_name": "{lastname}", "name": "{name}", "rol": "{rol}", "user_name": "{username}" }}, "externalTransactionId": "{uuid.uuid4()}" }}'
         try:
-            resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
-            print(resp.content)
-            if resp.status_code == 200:
-                print(resp.json())
-                hoja.append([seller_code, body, str(resp.json()),False])
-            else:
-                hoja.append([seller_code, body, str(resp.json()), True])
+            # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+            # print(resp.content)
+            # if resp.status_code == 200:
+            #     print(resp.json())
+            #     hoja.append([username, body, str(resp.json()),False])
+            # else:
+            #     hoja.append([username, body, str(resp.json()), True])
+            hoja.append([username, body, 'Ok',False])
         except Exception as e:
             msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
             hoja.append([seller_code, body, "No se obtuvo alguna respuesta", msg_err])
+
+    query = select(RegistroJefeVentas.c.id_jefe_venta,
+                   RegistroJefeVentas.c.nombre_jefe,
+                   RegistroJefeVentas.c.id_ciudad,
+                   RegistroJefeVentas.c.cedula,
+                   RegistroJefeVentas.c.telefono,
+                   RegistroJefeVentas.c.email,
+                   RegistroJefeVentas.c.id_estado,
+                   RegistroJefeVentas.c.id_channel,
+                   RegistroJefeVentas.c.id_gerente_ciudad).filter(RegistroJefeVentas.c.email.in_(mail_jefe_ventas)).order_by(RegistroJefeVentas.c.id_jefe_venta)
+    data = db.execute(query).fetchall()
+    count = 0
+    for row in data:
+        count += 1
+        temp = db.execute(
+            select(RegistrarGerenteCiudad.c.cedula).where(
+                RegistrarGerenteCiudad.c.id_gerente_ciudad == row[-1])).fetchall()
+        temp2 = db.execute(select(Ciudad.c.ciudad).where(Ciudad.c.id_ciudad == row[2])).fetchall()
+        temp3 = db.execute(select(Channel.c.channel).where(Channel.c.id_channel == row[7])).fetchall()
+        if len(temp2) > 0:
+            ciudad = temp2[0][0]
+        else:
+            ciudad = ''
+        if len(temp3) > 0:
+            channel = temp3[0][0]
+        else:
+            channel = ''
+        cedula = row[3]
+        estado = row[6] != 2
+        telefono = row[4]
+        adicional = temp[0][0]
+        email = row[5]
+        lastname = ''
+        name = row[1]
+        rol = 'jefe_de_ventas'
+        username = row[5]
+        body = f'{{ "channel": "CHANNEL", "data": {{  "enable": {str(estado).lower()}, "attributes":' \
+               f' {{"city_manager": "{adicional}", "cedula": "{cedula}" , "telefono": "{telefono}"  , "ciudad": "{ciudad}" , "channel": "{channel}"}}, ' \
+               f'"email": "{email}", "last_name": "{lastname}", "name": "{name}", "rol": "{rol}", "user_name": "{username}" }}, ' \
+               f'"externalTransactionId": "{uuid.uuid4()}" }}'
+        print(body)
+        try:
+            # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+            # print(resp.content)
+            # if resp.status_code == 200:
+            #     print(resp.json())
+            #     hoja.append([username, body, str(resp.json()),False])
+            # else:
+            #     hoja.append([username, body, str(resp.json()), True])
+            hoja.append([username, body, 'Ok', False])
+        except Exception as e:
+            msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
+            hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
+
+    query = select(RegistrarGerenteCiudad.c.id_gerente_ciudad,
+                   RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
+                   RegistrarGerenteCiudad.c.id_ciudad,
+                   RegistrarGerenteCiudad.c.cedula,
+                   RegistrarGerenteCiudad.c.telefono,
+                   RegistrarGerenteCiudad.c.email,
+                   RegistrarGerenteCiudad.c.id_estado,
+                   RegistrarGerenteCiudad.c.id_channel).filter(RegistrarGerenteCiudad.c.email.in_(mail_gerente_ciudad)).order_by(RegistrarGerenteCiudad.c.id_gerente_ciudad)
+    data = db.execute(query).fetchall()
+    c = {}
+    count = 0
+    for row in data:
+        count += 1
+        if row[2] in c:
+            c[row[2]].append(row[3])
+        else:
+            c[row[2]] = [row[3]]
+        temp2 = db.execute(select(Ciudad.c.ciudad).where(Ciudad.c.id_ciudad == row[2])).fetchall()
+        temp3 = db.execute(select(Channel.c.channel).where(Channel.c.id_channel == row[7])).fetchall()
+        adicional = ''
+        if len(temp2) > 0:
+            ciudad = temp2[0][0]
+        else:
+            ciudad = ''
+        if len(temp3) > 0:
+            channel = temp3[0][0]
+        else:
+            channel = ''
+        cedula = row[3]
+        estado = row[6] != 2
+        email = row[5]
+        telefono = row[4]
+
+        lastname = ''
+        name = row[1]
+        rol = 'gerente_de_ciudad'
+        username = row[3]
+        body = f'{{ "channel": "CHANNEL", "data": {{ "enable": {str(estado).lower()},"attributes":' \
+               f' {{"regional_manager": "{adicional}", "cedula": "{cedula}" , "telefono": "{telefono}" , "ciudad": "{ciudad}" , "channel": "{channel}"}}, ' \
+               f'"email": "{email}", "last_name": "{lastname}", "name": "{name}", "rol": "{rol}", "user_name": "{username}" }}, ' \
+               f'"externalTransactionId": "{ uuid.uuid4() }"}}'
+        print(body)
+        try:
+            if username != None:
+                # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+                # print(resp.content)
+                # if resp.status_code == 200:
+                #     print(resp.json())
+                #     hoja.append([username, body, str(resp.json()),False])
+                # else:
+                #     hoja.append([username, body, str(resp.json()), True])
+                hoja.append([username, body, 'Ok', False])
+        except Exception as e:
+            msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
+            hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
+    query = select(RegistrarGerenteRegional.c.id_gerente_regional,
+                   RegistrarGerenteRegional.c.nombre_gerente,
+                   RegistrarGerenteRegional.c.id_ciudad,
+                   RegistrarGerenteRegional.c.cedula,
+                   RegistrarGerenteRegional.c.telefono,
+                   RegistrarGerenteRegional.c.email,
+                   RegistrarGerenteRegional.c.id_estado,
+                   RegistrarGerenteRegional.c.id_channel).filter(RegistrarGerenteRegional.c.email.in_(mail_gerente_regional)).order_by(RegistrarGerenteRegional.c.id_gerente_regional)
+    data = db.execute(query).fetchall()
+    count = 0
+    for row in data:
+        count += 1
+        temp2 = db.execute(select(Ciudad.c.ciudad).where(Ciudad.c.id_ciudad == row[2])).fetchall()
+        temp3 = db.execute(select(Channel.c.channel).where(Channel.c.id_channel == row[7])).fetchall()
+        adicional = ''
+        if len(temp2) > 0:
+            ciudad = temp2[0][0]
+        else:
+            ciudad = ''
+        if len(temp3) > 0:
+            channel = temp3[0][0]
+        else:
+            channel = ''
+        cedula = row[3]
+        estado = row[6] != 2
+        email = row[5]
+        telefono = row[4]
+        lastname = ''
+        name = row[1]
+        rol = 'gerente_regional'
+        username = row[3]
+        body = f'{{ "channel": "CHANNEL", "data": {{ "enable": {str(estado).lower()}, "attributes":' \
+               f' {{"regional_manager": "{adicional}", "cedula": "{cedula}" , "telefono": "{telefono}"  , "ciudad": "{ciudad}" , "channel": "{channel}"}}, ' \
+               f'"email": "{email}", "last_name": "{lastname}", "name": "{name}", "rol": "{rol}", "user_name": "{username}" }}, ' \
+               f'"externalTransactionId": "{uuid.uuid4()}" }}'
+        print(body)
+        try:
+            if username != None:
+                # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+                # print(resp.content)
+                # if resp.status_code == 200:
+                #     print(resp.json())
+                #     hoja.append([username, body, str(resp.json()),False])
+                # else:
+                #     hoja.append([username, body, str(resp.json()), True])
+                hoja.append([username, body, 'Ok', False])
+        except Exception as e:
+            msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
+            hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
+
+    fin = time.time()
+    print('time ejecucion ', (fin - init))
     date_crr = datetime.now()
     #Obtener la ruta del directorio actual del script
     nombre_directorio = 'logs_migracion'
