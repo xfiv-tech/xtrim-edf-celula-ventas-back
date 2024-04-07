@@ -14,12 +14,12 @@ import uuid
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 load_dotenv()
-url = 'https://cw-dev.xtrim.com.ec/rest/cw-user-manager-api/v1.0/post/create_user'
+url = 'https://cw.xtrim.com.ec/rest/cw-user-manager-api/v1.0/post/create_user'
 user = os.getenv("user")
 password = os.getenv("password")
 host = os.getenv("host")
 database = os.getenv("database")
-token = os.getenv('TOKEN_MIGRACION')
+token = os.getenv('TOKEN_MIGRACION_PROD')
 
 headers = {
     'Content-Type': 'application/json',
@@ -150,33 +150,23 @@ def migrate_sales_cell():
     ]
     for col in columna:
         hoja[col[1]] = col[0]
-    cod_vendedor_sta_elena = [
-        'kemartinez@xtrim.com.ec', 'rvictor@xtrim.com.ec',
-        'lgaibor15@gmail.com', 'jenniferolvera1986@gmail.com', 'guaiguanick@gmail.com', 'bryan-jmv77@hotmail.com',
-        'henrysolorzano2011@gmail.com',
-        'adrianarojasespinoza198814@gmail.com', 'axel97mr@gmail.com', 'josuanunez2003@gmail.com',
-        'eliza.1311mora@gmail.com', 'marvinvillalva120@gmail.com',
-        'rosmeryfer1995@gmail.com', 'ksanchezgaraicoa@gmail.com', 'mindiolazaevelyn77@gmail.com',
-        'marioquispepena@gmail.com',
-        'darioandaluz@yahoo.com', 'patopato29ago1980@gmail.com', 'karlaleoncasis@gmail.com',
-        'rennyecheverria2018@gmail.com', 'barraganyuly5@gmail.com',
-        'sebastiantipantasig@gmail.com', 'gloria_chiriguaya@outlook.es', 'emmagarcia57@hotmail.com',
-        'lv3976400@gmail.com', 'moragabu4@gmail.com',
-        'moraleidy345@gmail.com', 'plazartejaime@gmail.com', 'bryvite99@gmail.com'
+    cod_vendedores = [
+        103427391,102654513,102654466,101259274,100538028,102909426,103775570,103826377,100970883,103168890,104489812,
+        102101113,101917042,105290051,105142329,98868411,100150425,100296303,100516981,102551810,102566682,102992839,
+        103689274,103690556,104492409,104624796,104892422,104791679,104791657,105286653
     ]
     mail_jefe_ventas = [
-        'tleon@xtrim.com.ec','jobcostasav@hotmail.com',
-        'wmontenegro@xtrim.com.ec','dannymauriciochango@gmail.com'
+        33, #Teresa leon id_jefe_venta
+        48 #Wilmer montenegro id_jefe_venta
     ]
     mail_gerente_ciudad = [
     ]
     mail_gerente_regional = [
-        'jrobles@xtrim.com.ec',
     ]
-    print(f"Hay {len(cod_vendedor_sta_elena)} correo de vendedores")
-    print(f"Hay {len(mail_jefe_ventas)} correo de jefe ventas")
-    print(f"Hay {len(mail_gerente_ciudad)} correo de gerente ciudad")
-    print(f"Hay {len(mail_gerente_regional)} correo de gerente regional")
+    print(f"Hay {len(cod_vendedores)} vendedores")
+    print(f"Hay {len(mail_jefe_ventas)} jefe ventas")
+    print(f"Hay {len(mail_gerente_ciudad)} gerente ciudad")
+    print(f"Hay {len(mail_gerente_regional)} gerente regional")
     query = select(RegistrarVendedor.c.id_registrar_vendedor,
                    RegistrarVendedor.c.codigo_vendedor,
                    RegistrarVendedor.c.nombre_vendedor,
@@ -192,12 +182,13 @@ def migrate_sales_cell():
                    RegistrarVendedor.c.fecha_ingreso,
                    RegistrarVendedor.c.fecha_salida,
                    RegistrarVendedor.c.sector_residencia,
-                   RegistrarVendedor.c.id_jefe_venta).filter(RegistrarVendedor.c.email.in_(cod_vendedor_sta_elena)).order_by(RegistrarVendedor.c.id_registrar_vendedor)
+                   RegistrarVendedor.c.id_jefe_venta).where(RegistrarVendedor.c.codigo_vendedor.in_(cod_vendedores)).order_by(RegistrarVendedor.c.id_registrar_vendedor)
 
     init = time.time()
     data = db.execute(query).fetchall()
     v = {}
     count = 0
+    print(f"Total vendor encontrados {len(data)}")
     for row in data:
         print(row)
         count += 1
@@ -233,17 +224,17 @@ def migrate_sales_cell():
            f'"cedula": "{cedula}" , "ciudad": "{ciudad}" , "telefono": "{telefono}" , "channel": "{channel}", "operador": "{operador}", "modalidad": "{modalidad}", ' \
            f'"usuario_equipax": "{usuE}", "fecha_ingreso": "{fechaI}", "fecha_salida": "{fechaS}", "sector_residencia": "{sector}"}}, "email": "{email}", "last_name": "{lastname}", "name": "{name}", "rol": "{rol}", "user_name": "{username}" }}, "externalTransactionId": "{uuid.uuid4()}" }}'
         try:
-            # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
-            # print(resp.content)
-            # if resp.status_code == 200:
-            #     print(resp.json())
-            #     hoja.append([username, body, str(resp.json()),False])
-            # else:
-            #     hoja.append([username, body, str(resp.json()), True])
-            hoja.append([username, body, 'Ok',False])
+            resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+            print(resp.content)
+            if resp.status_code == 200:
+                print(resp.json())
+                hoja.append([username, body, str(resp.json()),False])
+            else:
+                hoja.append([username, body, str(resp.json()), True])
+            # hoja.append([username, body, 'Ok',False])
         except Exception as e:
             msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
-            hoja.append([seller_code, body, "No se obtuvo alguna respuesta", msg_err])
+            hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
 
     query = select(RegistroJefeVentas.c.id_jefe_venta,
                    RegistroJefeVentas.c.nombre_jefe,
@@ -253,9 +244,10 @@ def migrate_sales_cell():
                    RegistroJefeVentas.c.email,
                    RegistroJefeVentas.c.id_estado,
                    RegistroJefeVentas.c.id_channel,
-                   RegistroJefeVentas.c.id_gerente_ciudad).filter(RegistroJefeVentas.c.email.in_(mail_jefe_ventas)).order_by(RegistroJefeVentas.c.id_jefe_venta)
+                   RegistroJefeVentas.c.id_gerente_ciudad).filter(RegistroJefeVentas.c.id_jefe_venta.in_(mail_jefe_ventas)).order_by(RegistroJefeVentas.c.id_jefe_venta)
     data = db.execute(query).fetchall()
     count = 0
+    print(f"Total jefe encontrados {len(data)}")
     for row in data:
         count += 1
         temp = db.execute(
@@ -274,26 +266,27 @@ def migrate_sales_cell():
         cedula = row[3]
         estado = row[6] != 2
         telefono = row[4]
+        external_trasn = uuid.uuid4()
         adicional = temp[0][0]
-        email = row[5]
+        email = row[5] if row[5] else f'email_fake_{external_trasn}_@gmail.com'
         lastname = ''
         name = row[1]
-        rol = 'jefe_de_ventas'
-        username = row[5]
+        rol = 'jefe de ventas'
+        username = f'jefe_de_ventas_{count}'
         body = f'{{ "channel": "CHANNEL", "data": {{  "enable": {str(estado).lower()}, "attributes":' \
                f' {{"city_manager": "{adicional}", "cedula": "{cedula}" , "telefono": "{telefono}"  , "ciudad": "{ciudad}" , "channel": "{channel}"}}, ' \
                f'"email": "{email}", "last_name": "{lastname}", "name": "{name}", "rol": "{rol}", "user_name": "{username}" }}, ' \
-               f'"externalTransactionId": "{uuid.uuid4()}" }}'
+               f'"externalTransactionId": "{external_trasn}" }}'
         print(body)
         try:
-            # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
-            # print(resp.content)
-            # if resp.status_code == 200:
-            #     print(resp.json())
-            #     hoja.append([username, body, str(resp.json()),False])
-            # else:
-            #     hoja.append([username, body, str(resp.json()), True])
-            hoja.append([username, body, 'Ok', False])
+            resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+            print(resp.content)
+            if resp.status_code == 200:
+                print(resp.json())
+                hoja.append([username, body, str(resp.json()),False])
+            else:
+                hoja.append([username, body, str(resp.json()), True])
+            # hoja.append([username, body, 'Ok', False])
         except Exception as e:
             msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
             hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
@@ -309,6 +302,7 @@ def migrate_sales_cell():
     data = db.execute(query).fetchall()
     c = {}
     count = 0
+    print(f"Total g-ciudad encontrados {len(data)}")
     for row in data:
         count += 1
         if row[2] in c:
@@ -342,14 +336,14 @@ def migrate_sales_cell():
         print(body)
         try:
             if username != None:
-                # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
-                # print(resp.content)
-                # if resp.status_code == 200:
-                #     print(resp.json())
-                #     hoja.append([username, body, str(resp.json()),False])
-                # else:
-                #     hoja.append([username, body, str(resp.json()), True])
-                hoja.append([username, body, 'Ok', False])
+                resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+                print(resp.content)
+                if resp.status_code == 200:
+                    print(resp.json())
+                    hoja.append([username, body, str(resp.json()),False])
+                else:
+                    hoja.append([username, body, str(resp.json()), True])
+                # hoja.append([username, body, 'Ok', False])
         except Exception as e:
             msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
             hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
@@ -363,6 +357,7 @@ def migrate_sales_cell():
                    RegistrarGerenteRegional.c.id_channel).filter(RegistrarGerenteRegional.c.email.in_(mail_gerente_regional)).order_by(RegistrarGerenteRegional.c.id_gerente_regional)
     data = db.execute(query).fetchall()
     count = 0
+    print(f"Total g-regional encontrados {len(data)}")
     for row in data:
         count += 1
         temp2 = db.execute(select(Ciudad.c.ciudad).where(Ciudad.c.id_ciudad == row[2])).fetchall()
@@ -391,14 +386,14 @@ def migrate_sales_cell():
         print(body)
         try:
             if username != None:
-                # resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
-                # print(resp.content)
-                # if resp.status_code == 200:
-                #     print(resp.json())
-                #     hoja.append([username, body, str(resp.json()),False])
-                # else:
-                #     hoja.append([username, body, str(resp.json()), True])
-                hoja.append([username, body, 'Ok', False])
+                resp = requests.post(url, json=json.loads(body), headers=headers, verify=False)
+                print(resp.content)
+                if resp.status_code == 200:
+                    print(resp.json())
+                    hoja.append([username, body, str(resp.json()),False])
+                else:
+                    hoja.append([username, body, str(resp.json()), True])
+                # hoja.append([username, body, 'Ok', False])
         except Exception as e:
             msg_err = f"Error: {e} ({sys.exc_info()[-1].tb_lineno})"
             hoja.append([username, body, "No se obtuvo alguna respuesta", msg_err])
