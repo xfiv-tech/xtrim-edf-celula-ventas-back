@@ -12,8 +12,8 @@ class EmitRabbitMQNewUser(threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         routing_key = 'celula.user.new'
+        connection = openConection()
         try:
-            connection = openConection()
             channel = connection.channel()
             channel.basic_publish(exchange='celula', routing_key=routing_key, body=self.body,
                                   properties=pika.BasicProperties(
@@ -34,8 +34,8 @@ class EmitRabbitMQEditUser(threading.Thread):
 
     def run(self):
         routing_key = 'celula.user.edit'
+        connection = openConection()
         try:
-            connection = openConection()
             channel = connection.channel()
             channel.basic_publish(exchange='celula', routing_key=routing_key, body=self.body,
                                   properties=pika.BasicProperties(

@@ -59,7 +59,7 @@ from model.ModelSchema.channelModel import (RegistrarAdministradorModel,
                                             RegistrarGerenteRegionalModel,
                                             RegistrarJefeModel,
                                             RegistrarVendedorModel)
-from rabbitMQConexion.emmitRabbitMQ import  EmitRabbitMQNewUser, EmitRabbitMQEditUser
+# from rabbitMQConexion.emmitRabbitMQ import EmitRabbitMQNewUser, EmitRabbitMQEditUser
 from redisConexion.RedisQuerys import (AddRedis, DeleteRedis, GetterRedis,
                                        SetterRedis, UpdateRedis)
 
@@ -1447,24 +1447,25 @@ async def post_registro(request: RegistrarVendedorModel):
         }
         await AddRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
         #Enviar registro a xtrim por rabbitMQ
-        body_new = {
-            "enable": request.id_estado != 2,
-            "attributes": {
-                "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
-                "cedula": f"{request.cedula}", "ciudad": f"{data_[0].ciudad}",
-                "telefono": f"{data_[0].telefono}",
-                "channel": f"{data_[0].channel}", "operador": f"{data_[0].operador}",
-                "modalidad": f"{data_[0].modalidad}",
-                "usuario_equipax": f"{data_[0].usuario_equifax}", "fecha_ingreso": f"{data_[0].fecha_ingreso}",
-                "fecha_salida": f"{data_[0].fecha_salida}",
-                "sector_residencia": f"{data_[0].sector_residencia}"
-            },
-            "email": f"{data_[0].email}", "last_name": "", "name": f"{data_[0].nombre_vendedor}",
-            "rol": "vendedor",
-            "user_name": f"{request.codigo_vendedor}"
-        }
-        a = EmitRabbitMQNewUser(body_new)
-        a.start()
+        #SE COMENTA POR ERRORES EN PROD
+        # body_new = {
+        #     "enable": request.id_estado != 2,
+        #     "attributes": {
+        #         "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
+        #         "cedula": f"{request.cedula}", "ciudad": f"{data_[0].ciudad}",
+        #         "telefono": f"{data_[0].telefono}",
+        #         "channel": f"{data_[0].channel}", "operador": f"{data_[0].operador}",
+        #         "modalidad": f"{data_[0].modalidad}",
+        #         "usuario_equipax": f"{data_[0].usuario_equifax}", "fecha_ingreso": f"{data_[0].fecha_ingreso}",
+        #         "fecha_salida": f"{data_[0].fecha_salida}",
+        #         "sector_residencia": f"{data_[0].sector_residencia}"
+        #     },
+        #     "email": f"{data_[0].email}", "last_name": "", "name": f"{data_[0].nombre_vendedor}",
+        #     "rol": "vendedor",
+        #     "user_name": f"{request.codigo_vendedor}"
+        # }
+        # a = EmitRabbitMQNewUser(body_new)
+        # a.start()
         return {
             "code": "0",
             "id_insert": data
@@ -1634,26 +1635,27 @@ async def put_registro(request: RegistrarVendedorModel):
             "sistema_operativo": data[0].sistema_operativo
         }
         await UpdateRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
-        body_new = {
-            "edited": {"enable": request.id_estado != 2,
-                       "attributes": {
-                           "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
-                           "cedula": f"{request.cedula}", "ciudad": f"{data[0].ciudad}",
-                           "telefono": f"{data[0].telefono}",
-                           "channel": f"{data[0].channel}", "operador": f"{data[0].operador}",
-                           "modalidad": f"{data[0].modalidad}",
-                           "usuario_equipax": f"{data[0].usuario_equifax}", "fecha_ingreso": f"{data[0].fecha_ingreso}",
-                           "fecha_salida": f"{data[0].fecha_salida}",
-                           "sector_residencia": f"{data[0].sector_residencia}"
-                       },
-                       "email": f"{data[0].email}", "last_name": "", "name": f"{data[0].nombre_vendedor}",
-                       "rol": "vendedor",
-                       "user_name": f"{request.codigo_vendedor}"
-                       },
-            "cedula": f"{request.cedula}",
-        }
-        a = EmitRabbitMQEditUser(body_new)
-        a.start()
+        # SE COMENTA POR ERRORES EN PROD
+        # body_new = {
+        #     "edited": {"enable": request.id_estado != 2,
+        #                "attributes": {
+        #                    "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
+        #                    "cedula": f"{request.cedula}", "ciudad": f"{data[0].ciudad}",
+        #                    "telefono": f"{data[0].telefono}",
+        #                    "channel": f"{data[0].channel}", "operador": f"{data[0].operador}",
+        #                    "modalidad": f"{data[0].modalidad}",
+        #                    "usuario_equipax": f"{data[0].usuario_equifax}", "fecha_ingreso": f"{data[0].fecha_ingreso}",
+        #                    "fecha_salida": f"{data[0].fecha_salida}",
+        #                    "sector_residencia": f"{data[0].sector_residencia}"
+        #                },
+        #                "email": f"{data[0].email}", "last_name": "", "name": f"{data[0].nombre_vendedor}",
+        #                "rol": "vendedor",
+        #                "user_name": f"{request.codigo_vendedor}"
+        #                },
+        #     "cedula": f"{request.cedula}",
+        # }
+        # a = EmitRabbitMQEditUser(body_new)
+        # a.start()
         return {
             "code": "0",
             "data": data
