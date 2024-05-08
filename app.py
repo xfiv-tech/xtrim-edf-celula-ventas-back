@@ -48,7 +48,7 @@ app.add_middleware(
 # Create an instance of the scheduled task scheduler `SchedulerAdmin`
 scheduler = SchedulerAdmin.scheduler
 
-@scheduler.scheduled_job('interval', seconds=14400)
+@scheduler.scheduled_job('cron', hour=1)
 def interval_task_test():
     print('interval task is run...')
     tarea_programada()
