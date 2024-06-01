@@ -19,6 +19,10 @@ from model.channel import (Channel, Ciudad, Estados, Genero, Modalidad,
                            asignacion_ciudades_admin_proyectos)
 from redisConexion.RedisQuerys import SetterRedis
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 load_dotenv()
 
 HOST = os.getenv("HOST_FTP")
@@ -153,6 +157,30 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+def send_email(subject, message, to_email):
+    # Configuración del servidor SMTP de Office365
+    smtp_server = "smtp.office365.com"
+    smtp_port = 587
+    smtp_username = "notificaciones@intelnexo.com"
+    smtp_password = "Intelnexo*2024"
+
+    # Configurar el mensaje
+    msg = MIMEMultipart()
+    msg['From'] = smtp_username
+    msg['To'] = ", ".join(to_email)
+    msg['Subject'] = subject
+    msg.attach(MIMEText(message, 'plain'))
+
+    # Iniciar sesión en el servidor SMTP
+    server = smtplib.SMTP(smtp_server, smtp_port)
+    server.starttls()
+    server.login(smtp_username, smtp_password)
+
+    # Enviar el correo electrónico
+    server.send_message(msg)
+    server.quit()
+
+
 def tarea_programada():
 
     logging.info("Starting scheduled task...")
@@ -210,7 +238,7 @@ def tarea_programada():
         logging.info("Query built successfully.")
         res = db.execute(query).fetchall()
         logging.info(
-            f"Query executed successfully, fetched {len(res)} records.")
+            "Query executed successfully, fetched %s records.", len(res))
 
         dataInfo = []
         for i in res:
@@ -299,19 +327,31 @@ def tarea_programada():
         wb.save(usuario)
 
         # return True
-        ftp = ftp_connect(HOST, USER, PASS)
-        ftplist = ftp_list(ftp, "QlikView")
-        ftplistCelula = ftp_list(ftp, "Celula_Ventas")
-        print("ftplist", ftplist)
-        print("ftplistCelula", ftplistCelula)
 
-        print(f"STOR /QlikView/Celula_Ventas/{usuario}")
-        ftp.storbinary(
-            f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
-        print(ftp.nlst())
-        ftp_close(ftp)
-        return True
+       # Conexión al servidor FTP try except
+        try:
+            ftp = ftp_connect(HOST, USER, PASS)
+            ftplist = ftp_list(ftp, "QlikView")
+            ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+            print("ftplist", ftplist)
+            print("ftplistCelula", ftplistCelula)
 
+            print(f"STOR /QlikView/Celula_Ventas/{usuario}")
+            ftp.storbinary(
+                f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
+            print(ftp.nlst())
+            ftp_close(ftp)
+
+            # Enviar correo electrónico si la operación FTP fue exitosa
+            send_email("Excel enviado", "El archivo Excel se ha enviado correctamente.", [
+                "jeanpiere.virgilio@gmail.com", "gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com"])
+
+        except Exception as e:
+            print(f"Error al enviar el archivo Excel: {e}")
+
+        # Enviar correo electrónico si ocurrió un error en la operación FTP
+            send_email("Error al enviar Excel", f"Ha ocurrido un error al enviar el archivo Excel: {e}", [
+                "jeanpiere.virgilio@gmail.com", "gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com"])
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise
