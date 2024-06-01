@@ -1,11 +1,10 @@
 import os
-
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi_scheduler import SchedulerAdmin
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 
-import redisConexion.conexionRedis
 from routes.admin import administradores
 from routes.asignacion import asignacion
 from routes.channel import channel
@@ -25,7 +24,7 @@ from task.reporte import tarea_Inicial, tarea_programada
 load_dotenv()
 
 Token = os.getenv("Xtrim_token")
-DEV = os.getenv("DEV")  
+DEV = os.getenv("DEV")
 
 app = FastAPI(
     title="XTRIM API",
@@ -34,7 +33,7 @@ app = FastAPI(
     root_path="/back_celula_prod" if DEV == "PRO" else "/",
     root_path_in_servers=True,
     authorizations={
-        
+
     }
 )
 app.add_middleware(
@@ -45,13 +44,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create an instance of the scheduled task scheduler `SchedulerAdmin`
-scheduler = SchedulerAdmin.scheduler
+scheduler = AsyncIOScheduler()
 
-@scheduler.scheduled_job('cron', hour=1)
-def interval_task_test():
-    print('interval task is run...')
-    tarea_programada()
+
+@app.on_event("startup")
+async def startup():
+    print("Starting up...")
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(tarea_programada, CronTrigger(
+        hour=1))
+    scheduler.start()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    print("Shutting down...")
+    scheduler.shutdown()
+    print("Shutdown complete")
 
 app.include_router(usuarios)
 app.include_router(administradores)
@@ -67,16 +76,3 @@ app.include_router(codigo)
 app.include_router(isla)
 app.include_router(zonal)
 app.include_router(planform)
-
-@app.on_event("startup")
-async def startup():
-    if DEV == "PRO":
-        scheduler.start()
-    # await tarea_Inicial()
-    print("startup")
-    
-    
-@app.on_event("shutdown")
-async def shutdown():
-    scheduler.shutdown()
-    print("shutdown")
