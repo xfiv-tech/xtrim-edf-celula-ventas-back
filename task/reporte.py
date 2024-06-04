@@ -343,14 +343,14 @@ def tarea_programada():
             ftp_close(ftp)
 
             # Enviar correo electrónico si la operación FTP fue exitosa
-            send_email("Excel enviado", "El archivo Excel se ha enviado correctamente.", [
+            send_email("Célula Ventas Entregado con Éxito", "El archivo Excel de la célula de ventas ha sido entregado con éxito.", [
                 "jeanpiere.virgilio@gmail.com", "gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com"])
 
         except Exception as e:
             print(f"Error al enviar el archivo Excel: {e}")
 
-        # Enviar correo electrónico si ocurrió un error en la operación FTP
-            send_email("Error al enviar Excel", f"Ha ocurrido un error al enviar el archivo Excel: {e}", [
+            # Enviar correo electrónico si ocurrió un error en la operación FTP
+            send_email("Célula Ventas Error al Entregar Archivo", f"El archivo Excel de la célula de ventas NO ha sido entregado con éxito. Por favor informar este error: {e}", [
                 "jeanpiere.virgilio@gmail.com", "gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com"])
     except Exception as e:
         logging.error(f"An error occurred: {e}")
