@@ -29,6 +29,8 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
+email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jmendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
+
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
     try:
@@ -297,7 +299,7 @@ def tarea_programada():
         ws = wb.active
         ws.append([
             "CIUDAD", "ESTADO", "COD. VENDEDOR", "VENDEDOR", "LIDER DE PELOTON", "ADMINISTRADOR PROYECTO",
-            "JEFE DE VENTAS", "GERENTE CIUDAD", "GERENTE REGIONAL", "CANAL DE VENTA", "OPERADOR", "SISTEMA OPERATIVO", "GENERO", "MODALIDAD",
+            "JEFE DE VENTA", "JEFE COMERCIAL", "GERENTE COMERCIAL", "CANAL DE VENTA", "OPERADOR", "SISTEMA OPERATIVO", "GENERO", "MODALIDAD",
             "FECHA INGRESO", "FECHA SALIDA", "SECTOR RESIDENCIA", "EMAIL", "DIAS INACTIVO", "CELULAR",
             "META VOLUMEN INTERNET", "META DOLARES INTRNET", "META VOLUMEN TELEFONIA", "META DOLARES TELEFONIA",
             "META VOLUMEN TELEVISION", "META DOLARES TELEVISION", "USUARIO EQUIFAX", "CEDULA", "CAMPAÑA", "ISLA", "GERENTE ZONAL"
@@ -343,15 +345,18 @@ def tarea_programada():
             ftp_close(ftp)
 
             # Enviar correo electrónico si la operación FTP fue exitosa
-            send_email("Célula Ventas Entregado con Éxito", "El archivo Excel de la célula de ventas ha sido entregado con éxito.", [
-                "jeanpiere.virgilio@gmail.com", "gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com"])
+            send_email("Archivo depositado en FTP con éxito. - Célula Ventas",
+                        "El archivo Excel de la célula de ventas ha sido entregado con éxito.", 
+                        email
+                )
 
         except Exception as e:
             print(f"Error al enviar el archivo Excel: {e}")
 
             # Enviar correo electrónico si ocurrió un error en la operación FTP
-            send_email("Célula Ventas Error al Entregar Archivo", f"El archivo Excel de la célula de ventas NO ha sido entregado con éxito. Por favor informar este error: {e}", [
-                "jeanpiere.virgilio@gmail.com", "gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com"])
+            send_email("Error al depositar archivo en FTP - Célula Ventas", 
+                       f"El archivo Excel de la célula de ventas NO ha sido entregado con éxito. Por favor informar este error: {e}", 
+                       email)
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise
