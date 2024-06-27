@@ -330,33 +330,53 @@ def tarea_programada():
        # Conexión al servidor FTP try except
         try:
             ftp = ftp_connect(HOST, USER, PASS)
-            print("Conexión FTP exitosa.")
-            ftplist = ftp_list(ftp, "QlikView")
-            ftplistCelula = ftp_list(ftp, "Celula_Ventas")
-            print("ftplist", ftplist)
-            print("ftplistCelula", ftplistCelula)
-
-            print(f"STOR /QlikView/Celula_Ventas/{usuario}")
-            ftp.storbinary(
-                f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
-            print(ftp.nlst())
-            print("Archivo depositado en FTP con éxito.")
-            ftp_close(ftp)
-            print("Conexión FTP cerrada.")
-
-            # Enviar correo electrónico si la operación FTP fue exitosa
-            send_email("Archivo depositado en FTP con éxito. - Célula Ventas",
-                        "El archivo Excel de la célula de ventas ha sido entregado con éxito.", 
-                        email
-                )
-
+            if ftp:
+                print("Conexión FTP exitosa.")
+                
+                # Listar archivos en el directorio "QlikView"
+                ftplist = ftp_list(ftp, "QlikView")
+                print("ftplist", ftplist)
+                
+                # Cambiar al directorio "QlikView" antes de listar "Celula_Ventas"
+                ftp.cwd("QlikView")
+                
+                # Listar archivos en el directorio "Celula_Ventas"
+                ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+                print("ftplistCelula", ftplistCelula)
+                
+                # Crear el directorio "Celula_Ventas" si no existe
+                if not ftplistCelula:
+                    try:
+                        ftp.mkd("Celula_Ventas")
+                        print("Directorio 'Celula_Ventas' creado.")
+                    except Exception as e:
+                        print(f"Error al crear el directorio 'Celula_Ventas': {e}")
+                
+                # Subir el archivo
+                with open(usuario, "rb") as file:
+                    ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", file)
+                
+                # Listar archivos en el directorio "Celula_Ventas" después de la subida
+                updated_ftplistCelula = ftp_list(ftp, "Celula_Ventas")
+                print("Archivos en /Celula_Ventas después de la subida:", updated_ftplistCelula)
+                
+                # Cerrar la conexión
+                ftp_close(ftp)
+                print("Conexión FTP cerrada.")
+                
+                # Enviar correo electrónico si la operación FTP fue exitosa
+                send_email("Archivo depositado en FTP con éxito. - Célula Ventas",
+                          "El archivo Excel de la célula de ventas ha sido entregado con éxito.", 
+                          email)
+            else:
+                print("No se pudo conectar al servidor FTP.")
         except Exception as e:
             print(f"Error al enviar el archivo Excel: {e}")
-
+            
             # Enviar correo electrónico si ocurrió un error en la operación FTP
             send_email("Error al depositar archivo en FTP - Célula Ventas", 
-                       f"El archivo Excel de la célula de ventas NO ha sido entregado con éxito. Por favor informar este error: {e}", 
-                       email)
+                      f"El archivo Excel de la célula de ventas NO ha sido entregado con éxito. Por favor informar este error: {e}", 
+                      email)
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise

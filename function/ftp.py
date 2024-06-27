@@ -4,7 +4,7 @@ def ftp_connect(host, user, passwd):
     try:
         ftp = ftplib.FTP(host)
         ftp.login(user, passwd)
-        print("Conecion Ftp: ",ftp.getwelcome())
+        print("Conexión FTP:", ftp.getwelcome())
         return ftp
     except Exception as e:
         print(e)
