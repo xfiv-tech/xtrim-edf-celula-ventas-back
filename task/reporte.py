@@ -29,7 +29,9 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
+# email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
+
+email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
@@ -320,12 +322,7 @@ def tarea_programada():
         # usuario = f"Celula_Ventas_{fecha}.xlsx"
         today = datetime.date.today()
         last_day_of_month = calendar.monthrange(today.year, today.month)[1]
-        if today.day == last_day_of_month:
-            print("El día actual es el último día del mes")
-            usuario = "Celula_Ventas_" + fecha + ".xlsx"
-        else:
-            print("El día actual no es el último día del mes")
-            usuario = "Celula_Ventas.xlsx"
+        usuario = f"Celula_Ventas_{today.year}-{today.month}-{last_day_of_month}.xlsx"
         wb.save(usuario)
 
         # return True
@@ -333,6 +330,7 @@ def tarea_programada():
        # Conexión al servidor FTP try except
         try:
             ftp = ftp_connect(HOST, USER, PASS)
+            print("Conexión FTP exitosa.")
             ftplist = ftp_list(ftp, "QlikView")
             ftplistCelula = ftp_list(ftp, "Celula_Ventas")
             print("ftplist", ftplist)
@@ -342,7 +340,9 @@ def tarea_programada():
             ftp.storbinary(
                 f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
             print(ftp.nlst())
+            print("Archivo depositado en FTP con éxito.")
             ftp_close(ftp)
+            print("Conexión FTP cerrada.")
 
             # Enviar correo electrónico si la operación FTP fue exitosa
             send_email("Archivo depositado en FTP con éxito. - Célula Ventas",
