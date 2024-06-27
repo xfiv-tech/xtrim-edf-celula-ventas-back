@@ -322,7 +322,12 @@ def tarea_programada():
         # usuario = f"Celula_Ventas_{fecha}.xlsx"
         today = datetime.date.today()
         last_day_of_month = calendar.monthrange(today.year, today.month)[1]
-        usuario = f"Celula_Ventas_{today.year}-{today.month}-{last_day_of_month}.xlsx"
+        if today.day == last_day_of_month:
+            print("El día actual es el último día del mes")
+            usuario = "Celula_Ventas_" + fecha + ".xlsx"
+        else:
+            print("El día actual no es el último día del mes")
+            usuario = "Celula_Ventas.xlsx"
         wb.save(usuario)
 
         # return True
@@ -377,6 +382,7 @@ def tarea_programada():
             send_email("Error al depositar archivo en FTP - Célula Ventas", 
                       f"El archivo Excel de la célula de ventas NO ha sido entregado con éxito. Por favor informar este error: {e}", 
                       email)
+      
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise
