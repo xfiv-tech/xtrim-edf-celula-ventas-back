@@ -29,9 +29,9 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-# email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
+email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
 
-email = ["gjaramillo@intelnexo.com"]
+# email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
@@ -334,7 +334,10 @@ def tarea_programada():
 
        # Conexión al servidor FTP try except
         try:
+
             ftp = ftp_connect(HOST, USER, PASS)
+
+
             if ftp:
                 print("Conexión FTP exitosa.")
                 
@@ -360,6 +363,8 @@ def tarea_programada():
                 # Subir el archivo
                 with open(usuario, "rb") as file:
                     ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", file)
+                
+                ftp.storbinary(f"STOR /QlikView/Celula_Ventas/{usuario}", open(usuario, "rb"))
                 
                 # Listar archivos en el directorio "Celula_Ventas" después de la subida
                 updated_ftplistCelula = ftp_list(ftp, "Celula_Ventas")
