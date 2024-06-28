@@ -52,7 +52,7 @@ async def startup():
     print("Starting up...")
     scheduler = AsyncIOScheduler()
     scheduler.add_job(tarea_programada, CronTrigger(
-        hour=18, minute=22), id="tarea_programada")
+        hour=1), id="tarea_programada")
     scheduler.start()
 
 
