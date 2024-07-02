@@ -11,9 +11,6 @@ docker login -u "intelnexoec" -p "dckr_pat_vZ2SDNgJqs-2F_odTXgn16DIgn8"
 export SHORT_COMMIT=$(git log -1 --pretty="%H" | cut -b -8)
 export DOCKER_IMAGE_VERSION="dev_${SHORT_COMMIT}"
 
-pip freeze > requirements.txt
-
-
 docker build -t intelnexoec/xtrim-api-edificio:${DOCKER_IMAGE_VERSION} -f Dockerfile .
 docker tag intelnexoec/xtrim-api-edificio:${DOCKER_IMAGE_VERSION} intelnexoec/xtrim-api-edificio:latest
 docker push intelnexoec/xtrim-api-edificio:${DOCKER_IMAGE_VERSION}
