@@ -31,9 +31,9 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-# email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
+email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
 
-email = ["gjaramillo@intelnexo.com"]
+# email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
