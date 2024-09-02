@@ -31,7 +31,10 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-email = ["gjaramillo@intelnexo.com", "njijon@xtrim.com.ec", "kjimenez@xtrim.com.ec", "azambrano@intelnexo.com", "jemendoza@xtrim.com.ec", "vmolina@xtrim.com.ec", "dmoran@xtrim.com.ec"]
+email = ["vmolina@xtrim.com.ec", "jemendoza@xtrim.com.ec", "rcarcelen@xtrim.com.ec", "dmoran@xtrim.com.ec", "lfromero@xtrim.com.ec", "jcondo@xtrim.com.ec"]
+
+email_cc = ["nlarrea@xtrim.com.ec", "njijon@xtrim.com.ec", "hola@intelnexo.com", "gjaramillo@intelnexo.com"]
+
 
 # email = ["gjaramillo@intelnexo.com"]
 
@@ -163,7 +166,7 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 
-def send_email(subject, message, to_email, attachment_path=None):
+def send_email(subject, message, to_email, to_email_cc, attachment_path=None):
     # Configuración del servidor SMTP de Office365
     smtp_server = "smtp.office365.com"
     smtp_port = 587
@@ -174,6 +177,7 @@ def send_email(subject, message, to_email, attachment_path=None):
     msg = MIMEMultipart()
     msg['From'] = smtp_username
     msg['To'] = ", ".join(to_email)
+    msg['Cc'] = ", ".join(to_email_cc)
     msg['Subject'] = subject
     msg.attach(MIMEText(message, 'plain'))
 
@@ -345,7 +349,7 @@ def tarea_programada():
         wb.save(usuario)
 
         # enviar el archivo Excel al email
-        send_email("Archivo de la célula de ventas", "Se adjunta el archivo Excel de la célula de ventas.", email, usuario)
+        send_email("Archivo de la célula de ventas", "Se adjunta el archivo Excel de la célula de ventas.", email, email_cc, usuario)
 
         # return True
 
