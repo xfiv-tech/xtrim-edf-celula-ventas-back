@@ -41,13 +41,25 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-# email = ["vmolina@xtrim.com.ec", "jemendoza@xtrim.com.ec", "rcarcelen@xtrim.com.ec", "dmoran@xtrim.com.ec", "lfromero@xtrim.com.ec", "jcondo@xtrim.com.ec"]
+email = [
+    "vmolina@xtrim.com.ec",
+    "jemendoza@xtrim.com.ec",
+    "rcarcelen@xtrim.com.ec",
+    "dmoran@xtrim.com.ec",
+    "lfromero@xtrim.com.ec",
+    "jcondo@xtrim.com.ec",
+]
 
-# email_cc = ["nlarrea@xtrim.com.ec", "njijon@xtrim.com.ec", "hola@intelnexo.com", "gjaramillo@intelnexo.com"]
-email_cc = ["gjaramillo@intelnexo.com"]
+email_cc = [
+    "nlarrea@xtrim.com.ec",
+    "njijon@xtrim.com.ec",
+    "hola@intelnexo.com",
+    "gjaramillo@intelnexo.com",
+]
+# email_cc = ["gjaramillo@intelnexo.com"]
 
 
-email = ["gjaramillo@intelnexo.com"]
+# email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
@@ -541,48 +553,46 @@ async def tarea_Inicial():
         .join(Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad)
         .select()
         .with_only_columns(
-            [
-                Channel.c.channel,
-                Ciudad.c.ciudad,
-                Ciudad.c.region,
-                Estados.c.estado,
-                Operador.c.operador,
-                Genero.c.genero,
-                Modalidad.c.modalidad,
-                RegistrarVendedor.c.id_sistema_operativo,
-                SistemaOperativo.c.sistema_operativo,
-                RegistrarVendedor.c.id_modalidad,
-                RegistrarVendedor.c.id_lider_peloton,
-                RegistrarVendedor.c.id_estado,
-                RegistrarVendedor.c.id_genero,
-                RegistrarVendedor.c.id_ciudad,
-                RegistrarVendedor.c.id_registrar_vendedor,
-                RegistrarVendedor.c.id_channel,
-                RegistrarVendedor.c.id_gerente_regional,
-                RegistrarVendedor.c.id_gerente_ciudad,
-                RegistrarVendedor.c.id_jefe_venta,
-                RegistrarVendedor.c.cedula,
-                RegistrarVendedor.c.telefono,
-                RegistrarVendedor.c.id_operador,
-                RegistrarVendedor.c.codigo_vendedor,
-                RegistrarVendedor.c.usuario_equifax,
-                RegistrarVendedor.c.nombre_vendedor,
-                RegistrarVendedor.c.fecha_ingreso,
-                RegistrarVendedor.c.fecha_salida,
-                RegistrarVendedor.c.sector_residencia,
-                RegistrarVendedor.c.lider_check,
-                RegistrarVendedor.c.meta_volumen_internet,
-                RegistrarVendedor.c.meta_dolares_internet,
-                RegistrarVendedor.c.meta_volumen_telefonia,
-                RegistrarVendedor.c.meta_dolares_telefonia,
-                RegistrarVendedor.c.meta_volumen_television,
-                RegistrarVendedor.c.meta_dolares_television,
-                RegistrarVendedor.c.email,
-                RegistrarVendedor.c.dias_inactivo,
-                RegistrarVendedor.c.isla,
-                RegistrarVendedor.c.id_gerente_zonal,
-                RegistrarVendedor.c.campana,
-            ]
+            Channel.c.channel,
+            Ciudad.c.ciudad,
+            Ciudad.c.region,
+            Estados.c.estado,
+            Operador.c.operador,
+            Genero.c.genero,
+            Modalidad.c.modalidad,
+            RegistrarVendedor.c.id_sistema_operativo,
+            SistemaOperativo.c.sistema_operativo,
+            RegistrarVendedor.c.id_modalidad,
+            RegistrarVendedor.c.id_lider_peloton,
+            RegistrarVendedor.c.id_estado,
+            RegistrarVendedor.c.id_genero,
+            RegistrarVendedor.c.id_ciudad,
+            RegistrarVendedor.c.id_registrar_vendedor,
+            RegistrarVendedor.c.id_channel,
+            RegistrarVendedor.c.id_gerente_regional,
+            RegistrarVendedor.c.id_gerente_ciudad,
+            RegistrarVendedor.c.id_jefe_venta,
+            RegistrarVendedor.c.cedula,
+            RegistrarVendedor.c.telefono,
+            RegistrarVendedor.c.id_operador,
+            RegistrarVendedor.c.codigo_vendedor,
+            RegistrarVendedor.c.usuario_equifax,
+            RegistrarVendedor.c.nombre_vendedor,
+            RegistrarVendedor.c.fecha_ingreso,
+            RegistrarVendedor.c.fecha_salida,
+            RegistrarVendedor.c.sector_residencia,
+            RegistrarVendedor.c.lider_check,
+            RegistrarVendedor.c.meta_volumen_internet,
+            RegistrarVendedor.c.meta_dolares_internet,
+            RegistrarVendedor.c.meta_volumen_telefonia,
+            RegistrarVendedor.c.meta_dolares_telefonia,
+            RegistrarVendedor.c.meta_volumen_television,
+            RegistrarVendedor.c.meta_dolares_television,
+            RegistrarVendedor.c.email,
+            RegistrarVendedor.c.dias_inactivo,
+            RegistrarVendedor.c.isla,
+            RegistrarVendedor.c.id_gerente_zonal,
+            RegistrarVendedor.c.campana,
         )
     )
     res = db.execute(query).fetchall()

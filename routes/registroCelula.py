@@ -136,7 +136,7 @@ async def get_registro(request: Request):
                 Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
                 SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
                 Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-                Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+                Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns(
                     Channel.c.channel,
                     Ciudad.c.ciudad,
                     Ciudad.c.region,
@@ -177,7 +177,7 @@ async def get_registro(request: Request):
                     RegistrarVendedor.c.isla,
                     RegistrarVendedor.c.id_gerente_zonal,
                     RegistrarVendedor.c.dias_inactivo
-                ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
+                ).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             res = db.execute(query).fetchall()
             for i in res:
                 data.append(i)
@@ -237,9 +237,9 @@ async def get_registro(request: Request):
                 })
 
             elif i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
-                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns(
                     RegistrarGerenteRegional.c.nombre_gerente,
-                ])
+                )
                 data_gerente_regional = db.execute(
                     query_gerente_regional).fetchone()
                 dataInfo.append({
@@ -294,18 +294,18 @@ async def get_registro(request: Request):
                 })
 
             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
-                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+                # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns(
                 #     RegistrarGerente.c.nombre_gerente,
-                # ])
+                # )
                 # data_gerente = db.execute(query_gerente).fetchone()
-                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns(
                     RegistrarGerenteRegional.c.nombre_gerente,
-                ])
+                )
                 data_gerente_regional = db.execute(
                     query_gerente_regional).fetchone()
-                query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
+                query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns(
                     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
-                ])
+                )
                 data_gerente_ciudad = db.execute(
                     query_gerente_ciudad).fetchone()
                 dataInfo.append({
@@ -363,24 +363,24 @@ async def get_registro(request: Request):
                 print("entro aca", i.id_gerente_regional,
                       i.id_gerente_ciudad, i.id_jefe_venta)
 
-                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+                query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns(
                     RegistrarGerenteRegional.c.nombre_gerente,
-                ])
+                )
                 data_gerente_regional = db.execute(
                     query_gerente_regional).fetchone()
 
                 print("data_gerente_regional",
                       data_gerente_regional.nombre_gerente)
-                query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
+                query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns(
                     RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
-                ])
+                )
 
                 data_gerente_ciudad = db.execute(
                     query_gerente_ciudad).fetchone()
 
-                query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
+                query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns(
                     RegistroJefeVentas.c.nombre_jefe,
-                ])
+                )
                 data_jefe_venta = db.execute(query_jefe_venta).fetchone()
 
                 dataInfo.append({
@@ -435,9 +435,9 @@ async def get_registro(request: Request):
                 })
             elif i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta != None:
 
-                query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
+                query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns(
                     RegistroJefeVentas.c.nombre_jefe,
-                ])
+                )
                 data_jefe_venta = db.execute(query_jefe_venta).fetchone()
                 dataInfo.append({
                     "id_registrar_vendedor": i.id_registrar_vendedor,
@@ -576,7 +576,7 @@ async def get_registro(request: Request):
 #                 Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
 #                 SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
 #                 Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-#                 Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+#                 Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns(
 #                     Channel.c.channel,
 #                     Ciudad.c.ciudad,
 #                     Ciudad.c.region,
@@ -617,7 +617,7 @@ async def get_registro(request: Request):
 #                     RegistrarVendedor.c.isla,
 #                     RegistrarVendedor.c.id_gerente_zonal,
 #                     RegistrarVendedor.c.dias_inactivo
-#                 ]).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
+#                 ).where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
 #             res = db.execute(query).fetchall()
 #             for i in res:
 #                 data.append(i)
@@ -676,9 +676,9 @@ async def get_registro(request: Request):
 #                 })
 
 #             elif i.id_gerente_regional != None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
-#                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+#                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns(
 #                     RegistrarGerenteRegional.c.nombre_gerente,
-#                 ])
+#                 )
 #                 data_gerente_regional = db.execute(
 #                     query_gerente_regional).fetchone()
 #                 dataInfo.append({
@@ -732,9 +732,9 @@ async def get_registro(request: Request):
 #                 })
 
 #             elif i.id_gerente_regional != None and i.id_gerente_ciudad != None and i.id_jefe_venta == None:
-#                 # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns([
+#                 # query_gerente = RegistrarGerente.select().where(RegistrarGerente.c.id_gerente == i.id_gerente).with_only_columns(
 #                 #     RegistrarGerente.c.nombre_gerente,
-#                 # ])
+#                 # )
 #                 # data_gerente = db.execute(query_gerente).fetchone()
 #                 query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
 #                     RegistrarGerenteRegional.c.nombre_gerente,
@@ -1000,7 +1000,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
             Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
             SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
             Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns(
                 Channel.c.channel,
                 Ciudad.c.ciudad,
                 Ciudad.c.region,
@@ -1035,7 +1035,7 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
                 RegistrarVendedor.c.email,
                 RegistrarVendedor.c.isla,
                 RegistrarVendedor.c.dias_inactivo
-            ]).where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
+            ).where(RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor)
         data = db.execute(query).fetchall()
 
         if data == None:
@@ -1046,20 +1046,20 @@ async def get_registroID(id_registrar_vendedor: int, request: Request):
 
         dataInfo = {}
         for i in data:
-            query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns([
+            query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == i.id_gerente_regional).with_only_columns(
                 RegistrarGerenteRegional.c.nombre_gerente,
-            ])
+            )
             data_gerente_regional = db.execute(
                 query_gerente_regional).fetchone()
 
-            query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns([
+            query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == i.id_gerente_ciudad).with_only_columns(
                 RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
-            ])
+            )
             data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
 
-            query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns([
+            query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == i.id_jefe_venta).with_only_columns(
                 RegistroJefeVentas.c.nombre_jefe,
-            ])
+            )
             data_jefe_venta = db.execute(query_jefe_venta).fetchone()
 
             if i.id_gerente_regional == None and i.id_gerente_ciudad == None and i.id_jefe_venta == None:
@@ -1336,23 +1336,23 @@ async def post_registro(request: RegistrarVendedorModel):
         )
         data = db.execute(query).lastrowid
 
-        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns([
+        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns(
             RegistrarGerenteRegional.c.nombre_gerente,
-        ])
+        )
         data_gerente_regional = db.execute(
             query_gerente_regional).fetchone()
 
         # print("data_gerente_regional", data_gerente_regional.nombre_gerente)
-        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns([
+        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns(
             RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
-        ])
+        )
 
         data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
 
-        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
+        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns(
             RegistroJefeVentas.c.nombre_jefe,
             RegistroJefeVentas.c.cedula,
-        ])
+        )
         data_jefe_venta = db.execute(query_jefe_venta).fetchone()
 
         # consultar el ultimo id insertado para guardarlo en redis con todas sus relaciones
@@ -1362,7 +1362,7 @@ async def post_registro(request: RegistrarVendedorModel):
             Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
             SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
             Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns(
                 Channel.c.channel,
                 Ciudad.c.ciudad,
                 Ciudad.c.region,
@@ -1403,7 +1403,7 @@ async def post_registro(request: RegistrarVendedorModel):
                 RegistrarVendedor.c.isla,
                 RegistrarVendedor.c.id_gerente_zonal,
                 RegistrarVendedor.c.dias_inactivo
-            ]).where(RegistrarVendedor.c.id_registrar_vendedor == data)
+            ).where(RegistrarVendedor.c.id_registrar_vendedor == data)
         data_ = db.execute(query).fetchall()
         # serializar el objeto para guardarlo en redis
         serializable = {
@@ -1526,23 +1526,23 @@ async def put_registro(request: RegistrarVendedorModel):
 
         print("data", data)
 
-        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns([
+        query_gerente_regional = RegistrarGerenteRegional.select().where(RegistrarGerenteRegional.c.id_gerente_regional == request.id_gerente_regional).with_only_columns(
             RegistrarGerenteRegional.c.nombre_gerente,
-        ])
+        )
         data_gerente_regional = db.execute(
             query_gerente_regional).fetchone()
 
         print("data_gerente_regional", data_gerente_regional.nombre_gerente)
-        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns([
+        query_gerente_ciudad = RegistrarGerenteCiudad.select().where(RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad).with_only_columns(
             RegistrarGerenteCiudad.c.nombre_gerente_ciudad,
-        ])
+        )
 
         data_gerente_ciudad = db.execute(query_gerente_ciudad).fetchone()
 
-        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns([
+        query_jefe_venta = RegistroJefeVentas.select().where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta).with_only_columns(
             RegistroJefeVentas.c.nombre_jefe,
             RegistroJefeVentas.c.cedula,
-        ])
+        )
         data_jefe_venta = db.execute(query_jefe_venta).fetchone()
         # consultar el ultimo id insertado para guardarlo en redis con todas sus relaciones
         query = RegistrarVendedor.join(Ciudad, RegistrarVendedor.c.id_ciudad == Ciudad.c.id_ciudad).join(
@@ -1551,7 +1551,7 @@ async def put_registro(request: RegistrarVendedorModel):
             Operador, RegistrarVendedor.c.id_operador == Operador.c.id_operador).join(
             SistemaOperativo, RegistrarVendedor.c.id_sistema_operativo == SistemaOperativo.c.id_sistema_operativo).join(
             Genero, RegistrarVendedor.c.id_genero == Genero.c.id_genero).join(
-            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns([
+            Modalidad, RegistrarVendedor.c.id_modalidad == Modalidad.c.id_modalidad).select().with_only_columns(
                 Channel.c.channel,
                 Ciudad.c.ciudad,
                 Ciudad.c.region,
@@ -1592,7 +1592,7 @@ async def put_registro(request: RegistrarVendedorModel):
                 RegistrarVendedor.c.isla,
                 RegistrarVendedor.c.id_gerente_zonal,
                 RegistrarVendedor.c.dias_inactivo
-            ]).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
+            ).where(RegistrarVendedor.c.id_registrar_vendedor == request.id_registrar_vendedor)
         data = db.execute(query).fetchall()
         # serializar el objeto para guardarlo en redis
         serializable = {
@@ -1697,7 +1697,7 @@ async def delete_registro(id_registrar_vendedor: int):
 async def get_distribuidor():
     try:
         query = RegistrarDistribuidor.join(
-            Estados, Estados.c.id_estado == RegistrarDistribuidor.c.id_estado).select().with_only_columns([
+            Estados, Estados.c.id_estado == RegistrarDistribuidor.c.id_estado).select().with_only_columns(
                 RegistrarDistribuidor.c.id_registrar_distribuidor,
                 Estados.c.estado,
                 Estados.c.id_estado,
@@ -1707,7 +1707,7 @@ async def get_distribuidor():
                 RegistrarDistribuidor.c.email,
                 RegistrarDistribuidor.c.fecha_ingreso,
                 RegistrarDistribuidor.c.fecha_salida
-            ])
+            )
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -1803,7 +1803,7 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
 @registro.get("/listar_jefe_venta", tags=["Jefe de Venta"])
 async def get_jefe_venta():
     try:
-        query = RegistroJefeVentas.select().with_only_columns([
+        query = RegistroJefeVentas.select().with_only_columns(
             RegistroJefeVentas.c.id_jefe_venta,
             RegistroJefeVentas.c.id_estado,
             RegistroJefeVentas.c.id_gerente_ciudad,
@@ -1812,7 +1812,7 @@ async def get_jefe_venta():
             RegistroJefeVentas.c.email,
             RegistroJefeVentas.c.telefono,
             RegistroJefeVentas.c.cedula,
-        ])
+        )
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -1934,7 +1934,7 @@ async def delete_jefe_venta(id_jefe_venta: int):
 async def get_administrador():
     try:
         query = RegistroAdministrador.join(
-            Estados, Estados.c.id_estado == RegistroAdministrador.c.id_estado).select().with_only_columns([
+            Estados, Estados.c.id_estado == RegistroAdministrador.c.id_estado).select().with_only_columns(
                 RegistroAdministrador.c.id_administrador,
                 Estados.c.estado,
                 Estados.c.id_estado,
@@ -1942,7 +1942,7 @@ async def get_administrador():
                 RegistroAdministrador.c.email,
                 RegistroAdministrador.c.perfil,
                 RegistroAdministrador.c.nombre_administrador
-            ])
+            )
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -2042,7 +2042,7 @@ async def delete_administrador(id_administrador: int):
 async def get_gerente_regional():
     try:
         query = RegistrarGerenteRegional.join(
-            Estados, Estados.c.id_estado == RegistrarGerenteRegional.c.id_estado).select().with_only_columns([
+            Estados, Estados.c.id_estado == RegistrarGerenteRegional.c.id_estado).select().with_only_columns(
                 RegistrarGerenteRegional.c.id_gerente_regional,
                 Estados.c.estado,
                 Estados.c.id_estado,
@@ -2051,7 +2051,7 @@ async def get_gerente_regional():
                 RegistrarGerenteRegional.c.email,
                 RegistrarGerenteRegional.c.telefono,
                 RegistrarGerenteRegional.c.cedula
-            ])
+            )
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
@@ -2144,7 +2144,7 @@ async def delete_gerente_regional(id_gerente_regional: int):
 async def get_gerente_ciudad():
     try:
         query = RegistrarGerenteCiudad.join(
-            Estados, Estados.c.id_estado == RegistrarGerenteCiudad.c.id_estado).select().with_only_columns([
+            Estados, Estados.c.id_estado == RegistrarGerenteCiudad.c.id_estado).select().with_only_columns(
                 RegistrarGerenteCiudad.c.id_gerente_ciudad,
                 Estados.c.estado,
                 Estados.c.id_estado,
@@ -2153,7 +2153,7 @@ async def get_gerente_ciudad():
                 RegistrarGerenteCiudad.c.email,
                 RegistrarGerenteCiudad.c.telefono,
                 RegistrarGerenteCiudad.c.cedula,
-            ])
+            )
         data = db.execute(query).fetchall()
         infodata = []
         for i in data:
@@ -2246,12 +2246,12 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
 @registro.get("/listar_administrador_proyectos", tags=["Administrador de Proyectos"])
 async def get_administrador_proyectos():
     try:
-        query = RegistrarAdminProyectos.join(Estados, Estados.c.id_estado == RegistrarAdminProyectos.c.id_estado).select().with_only_columns([
+        query = RegistrarAdminProyectos.join(Estados, Estados.c.id_estado == RegistrarAdminProyectos.c.id_estado).select().with_only_columns(
             RegistrarAdminProyectos.c.id_admin_proyectos,
             Estados.c.estado,
             Estados.c.id_estado,
             RegistrarAdminProyectos.c.nombre_admin_proyectos
-        ])
+        )
         data = db.execute(query).fetchall()
         infoData = []
         for i in data:
