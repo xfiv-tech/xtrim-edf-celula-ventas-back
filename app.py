@@ -32,9 +32,7 @@ app = FastAPI(
     version="1.0.0",
     root_path="/back_celula_prod" if DEV == "PRO" else "/",
     root_path_in_servers=True,
-    authorizations={
-
-    }
+    authorizations={},
 )
 app.add_middleware(
     CORSMiddleware,
@@ -51,8 +49,9 @@ scheduler = AsyncIOScheduler()
 async def startup():
     print("Starting up...")
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(tarea_programada, CronTrigger(
-        hour=23), id='tarea_programada')
+    scheduler.add_job(
+        tarea_programada, CronTrigger(hour=16, minute=15), id="tarea_programada"
+    )
     scheduler.start()
 
 
@@ -61,6 +60,7 @@ async def shutdown():
     print("Shutting down...")
     scheduler.shutdown()
     print("Shutdown complete")
+
 
 app.include_router(usuarios)
 app.include_router(administradores)
