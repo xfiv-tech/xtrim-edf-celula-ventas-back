@@ -139,12 +139,13 @@ async def update_ciudad(ciudad: CiudadModel):
         )
         return {
             "code": "0",
-            "data": db.execute(
-                Ciudad.select().where(Ciudad.c.id_ciudad == ciudad.id)
-            ).first(),
+            "data": "Ciudad actualizada correctamente",
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
+        return {
+            "code": "-1",
+            "data": "Error: " + str(e),
+        }
 
 
 # @channel.delete("/ciudad", tags=["ciudad"])
