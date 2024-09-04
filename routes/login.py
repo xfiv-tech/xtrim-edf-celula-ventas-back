@@ -84,7 +84,17 @@ async def ValidacionLoginCelula(datos: Login):
             exc = Submenus.select().where(Submenus.c.id_menus == i.id_menus)
             sub = db.execute(exc).fetchall()
 
-            # Convert submenus to a serializable format
+            print("Contenido de sub:", sub)
+
+            submenus_data = []
+            for s in sub:
+                submenus_data.append(
+                    {
+                        "id_submenu": s.id_submenu,  # Asegúrate de que `s.id_submenu` existe
+                        "submenu": s.submenu,
+                        "path": s.path,
+                    }
+                )
 
             info_menu.append(
                 {
@@ -92,7 +102,7 @@ async def ValidacionLoginCelula(datos: Login):
                     "menu": i.menu,
                     "path": i.path,
                     "icon": i.icon,
-                    "submenu": sub,
+                    "submenu": submenus_data,
                 }
             )
 
