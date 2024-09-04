@@ -19,7 +19,7 @@ async def get_administradores():
     try:
         result = db.execute(Administradores.select()).fetchall()
         data = [dict(row._mapping) for row in result]
-        return {"code": "0", "data": data}
+        return data
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
