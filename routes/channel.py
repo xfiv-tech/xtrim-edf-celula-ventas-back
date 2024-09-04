@@ -31,7 +31,6 @@ async def get_channel():
     try:
         result = db.execute(Channel.select()).fetchall()
         data = [dict(row._mapping) for row in result]
-        print("data channel", data)
         return {
             "code": "0",
             "data": data,
@@ -112,7 +111,6 @@ async def get_ciudad():
     try:
         result = db.execute(Ciudad.select()).fetchall()
         data = [dict(row._mapping) for row in result]
-        print("data ciudad", data)
         return {
             "code": "0",
             "data": data,
@@ -172,8 +170,7 @@ async def update_ciudad(ciudad: CiudadModel):
 async def get_operador():
     try:
         result = db.execute(Operador.select()).fetchall()
-        data = [dict(row) for row in result]
-        print("data operador", data)
+        data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
             "data": data,
@@ -222,8 +219,7 @@ async def create_operador(operador: OperadorModel):
 async def get_sistemaoperativo():
     try:
         result = db.execute(SistemaOperativo.select()).fetchall()
-        data = [dict(row) for row in result]
-        print("data sistemaoperativo", data)
+        data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
             "data": data,
@@ -283,7 +279,6 @@ async def get_estado():
     try:
         result = db.execute(Estados.select()).fetchall()
         data = [dict(row._mapping) for row in result]
-        print("data estado", data)
         return {
             "code": "0",
             "data": data,
@@ -339,8 +334,7 @@ async def create_estado(estado: EstadosModel):
 async def get_genero():
     try:
         result = db.execute(Genero.select()).fetchall()
-        data = [dict(row) for row in result]
-        print("data genero", data)
+        data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
             "data": data,
@@ -395,8 +389,7 @@ async def create_genero(genero: GeneroModel):
 async def get_modalidad():
     try:
         result = db.execute(Modalidad.select()).fetchall()
-        data = [dict(row) for row in result]
-        print("data modalidad", data)
+        data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
             "data": data,
@@ -450,8 +443,7 @@ async def create_modalidad(modalidad: ModalidadModel):
 async def get_perfil():
     try:
         result = db.execute(Perfiles.select()).fetchall()
-        data = [dict(row) for row in result]
-        print("data perfil", data)
+        data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
             "data": data,
