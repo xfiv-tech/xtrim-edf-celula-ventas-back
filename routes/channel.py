@@ -29,8 +29,9 @@ channel = APIRouter(route_class=ValidacionToken)
 @channel.get("/channel", tags=["channel"])
 async def get_channel():
     try:
-        query = Channel.select()
-        data = db.execute(query).fetchall()
+        result = db.execute(Channel.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data channel", data)
         return {
             "code": "0",
             "data": data,
@@ -92,8 +93,9 @@ async def fecha_actual():
 @channel.get("/channel/{id}", tags=["channel"])
 async def get_channel(id: int):
     try:
-        query = Channel.select().where(Channel.c.id_channel == id)
-        data = db.execute(query).first()
+        result = db.execute(Channel.select().where(Channel.c.id_channel == id)).first()
+        data = dict(result) if result else {}
+        print("data channelById", data)
         return {
             "code": "0",
             "data": data,
@@ -165,7 +167,9 @@ async def update_ciudad(ciudad: CiudadModel):
 @channel.get("/operador", tags=["operador"])
 async def get_operador():
     try:
-        data = db.execute(Operador.select()).fetchall()
+        result = db.execute(Operador.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data operador", data)
         return {
             "code": "0",
             "data": data,
@@ -213,7 +217,9 @@ async def create_operador(operador: OperadorModel):
 @channel.get("/sistemaoperativo", tags=["sistemaoperativo"])
 async def get_sistemaoperativo():
     try:
-        data = db.execute(SistemaOperativo.select()).fetchall()
+        result = db.execute(SistemaOperativo.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data sistemaoperativo", data)
         return {
             "code": "0",
             "data": data,
@@ -271,7 +277,9 @@ async def create_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
 @channel.get("/estado", tags=["estado"])
 async def get_estado():
     try:
-        data = db.execute(Estados.select()).fetchall()
+        result = db.execute(Estados.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data estado", data)
         return {
             "code": "0",
             "data": data,
@@ -325,7 +333,9 @@ async def create_estado(estado: EstadosModel):
 @channel.get("/genero", tags=["genero"])
 async def get_genero():
     try:
-        data = db.execute(Genero.select()).fetchall()
+        result = db.execute(Genero.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data genero", data)
         return {
             "code": "0",
             "data": data,
@@ -379,7 +389,9 @@ async def create_genero(genero: GeneroModel):
 @channel.get("/modalidad", tags=["modalidad"])
 async def get_modalidad():
     try:
-        data = db.execute(Modalidad.select()).fetchall()
+        result = db.execute(Modalidad.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data modalidad", data)
         return {
             "code": "0",
             "data": data,
@@ -432,7 +444,9 @@ async def create_modalidad(modalidad: ModalidadModel):
 @channel.get("/perfil", tags=["Perfils"])
 async def get_perfil():
     try:
-        data = db.execute(Perfiles.select()).fetchall()
+        result = db.execute(Perfiles.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data perfil", data)
         return {
             "code": "0",
             "data": data,
