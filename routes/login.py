@@ -85,10 +85,6 @@ async def ValidacionLoginCelula(datos: Login):
             sub = db.execute(exc).fetchall()
 
             # Convert submenus to a serializable format
-            submenus_data = [
-                {"id_submenu": s.id_submenu, "submenu": s.submenu, "path": s.path}
-                for s in sub
-            ]
 
             info_menu.append(
                 {
@@ -96,7 +92,7 @@ async def ValidacionLoginCelula(datos: Login):
                     "menu": i.menu,
                     "path": i.path,
                     "icon": i.icon,
-                    "submenu": submenus_data,  # Use the serialized submenus
+                    "submenu": sub,
                 }
             )
 
