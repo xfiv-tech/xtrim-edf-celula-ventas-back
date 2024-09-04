@@ -134,26 +134,14 @@ async def update_ciudad(ciudad: CiudadModel):
     try:
         db.execute(
             Ciudad.update()
-            .values(ciudad=ciudad.ciudad, region=ciudad.region)
             .where(Ciudad.c.id_ciudad == ciudad.id)
+            .values(ciudad=ciudad.ciudad, region=ciudad.region)
         )
-
-        updated_result = db.execute(
-            Ciudad.select().where(Ciudad.c.id_ciudad == ciudad.id)
-        ).first()
-
-        print(f"Updated result: {updated_result}")
-        print(f"Type of updated result: {type(updated_result)}")
-
-        if isinstance(updated_result, dict):
-            data = updated_result
-        elif isinstance(updated_result, tuple):
-            column_names = [col.name for col in Ciudad.columns]
-            data = dict(zip(column_names, updated_result))
-
         return {
             "code": "0",
-            "data": data,
+            "data": db.execute(
+                Ciudad.select().where(Ciudad.c.id_ciudad == ciudad.id)
+            ).first(),
         }
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
