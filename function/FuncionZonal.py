@@ -73,7 +73,7 @@ async def UpdateZonal(data: Zonal):
         return {"status": 200, "message": "UpdateZonal correctamente"}
     except Exception as e:
         print(e)
-        return {"status": 400, "message": "Error la UpdateZonal"}
+        return {"status": 400, "message": str(e)}
 
 
 async def DeleteZonal(id: int):

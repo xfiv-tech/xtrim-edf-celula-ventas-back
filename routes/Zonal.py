@@ -59,7 +59,7 @@ async def UpdateRegistroZonal(data: Zonal):
     try:
         return await UpdateZonal(data)
     except Exception as e:
-        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
+        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
 
 @zonal.delete(
