@@ -137,16 +137,19 @@ async def update_ciudad(ciudad: CiudadModel):
             .values(ciudad=ciudad.ciudad, region=ciudad.region)
             .where(Ciudad.c.id_ciudad == ciudad.id)
         )
+
         updated_result = db.execute(
             Ciudad.select().where(Ciudad.c.id_ciudad == ciudad.id)
         ).first()
+
         print(f"Updated result: {updated_result}")
         print(f"Type of updated result: {type(updated_result)}")
 
         if isinstance(updated_result, dict):
             data = updated_result
         elif isinstance(updated_result, tuple):
-            data = dict(zip(Ciudad.c.keys(), updated_result))
+            column_names = [col.name for col in Ciudad.columns]
+            data = dict(zip(column_names, updated_result))
 
         return {
             "code": "0",
