@@ -30,13 +30,14 @@ channel = APIRouter(route_class=ValidacionToken)
 async def get_channel():
     try:
         result = db.execute(Channel.select()).fetchall()
-        data = [dict(row) for row in result]
+        data = [dict(row._mapping) for row in result]
         print("data channel", data)
         return {
             "code": "0",
             "data": data,
         }
     except Exception as e:
+        print(f"Error occurred: {e}")
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
 
@@ -101,6 +102,7 @@ async def get_channel(id: int):
             "data": data,
         }
     except Exception as e:
+        print(f"Error occurred: {e}")
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
 
@@ -109,13 +111,14 @@ async def get_channel(id: int):
 async def get_ciudad():
     try:
         result = db.execute(Ciudad.select()).fetchall()
-        data = [dict(row) for row in result]
+        data = [dict(row._mapping) for row in result]
         print("data ciudad", data)
         return {
             "code": "0",
             "data": data,
         }
     except Exception as e:
+        print(f"Error occurred: {e}")
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
 
@@ -279,13 +282,14 @@ async def create_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
 async def get_estado():
     try:
         result = db.execute(Estados.select()).fetchall()
-        data = [dict(row) for row in result]
+        data = [dict(row._mapping) for row in result]
         print("data estado", data)
         return {
             "code": "0",
             "data": data,
         }
     except Exception as e:
+        print(f"Error occurred: {e}")
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
 
