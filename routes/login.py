@@ -90,9 +90,10 @@ async def ValidacionLoginCelula(datos: Login):
             for s in sub:
                 submenus_data.append(
                     {
-                        "id_submenu": s.id_submenu,  # Asegúrate de que `s.id_submenu` existe
-                        "submenu": s.submenu,
-                        "path": s.path,
+                        "id_submenu": s[0],
+                        "submenu": s[2],
+                        "path": s[3],
+                        "icon": s[4],
                     }
                 )
 
