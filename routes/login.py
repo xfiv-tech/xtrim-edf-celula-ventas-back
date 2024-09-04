@@ -84,8 +84,6 @@ async def ValidacionLoginCelula(datos: Login):
             exc = Submenus.select().where(Submenus.c.id_menus == i.id_menus)
             sub = db.execute(exc).fetchall()
 
-            print("Contenido de sub:", sub)
-
             submenus_data = []
             for s in sub:
                 submenus_data.append(
