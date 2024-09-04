@@ -57,16 +57,9 @@ async def ListaZonalId(id: int):
 @zonal.put("/actualizar_zonal", tags=["Zonal"])
 async def UpdateRegistroZonal(data: Zonal):
     try:
-        result = await UpdateZonal(data)
-        return result
+        return await UpdateZonal(data)
     except Exception as e:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "code": "-1",
-                "data": str(e),
-            },
-        )
+        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
 
 
 @zonal.delete(

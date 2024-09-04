@@ -59,6 +59,7 @@ async def ZonalId(id: int):
 
 async def UpdateZonal(data: Zonal):
     try:
+        print("UpdateZonal")
         db.execute(
             RegistrarGerenteZonal.update()
             .where(RegistrarGerenteZonal.c.id_gerente_zonal == data.id_gerente_zonal)
@@ -69,15 +70,10 @@ async def UpdateZonal(data: Zonal):
                 cedula=data.cedula,
             )
         )
-        return {
-            "code": "0",
-            "data": "Ciudad actualizada correctamente",
-        }
+        return {"status": 200, "message": "UpdateZonal correctamente"}
     except Exception as e:
-        return {
-            "code": "-1",
-            "data": str(e),
-        }
+        print(e)
+        return {"status": 400, "message": "Error la UpdateZonal"}
 
 
 async def DeleteZonal(id: int):
