@@ -28,10 +28,10 @@ channel = APIRouter(route_class=ValidacionToken)
 
 @channel.get("/channel", tags=["channel"])
 async def get_channel():
-    result = db.execute(Channel.select()).fetchall()
-    data = [dict(row) for row in result]
-    print("data channel", data)
     try:
+        result = db.execute(Channel.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data channel", data)
         return {
             "code": "0",
             "data": data,
@@ -92,10 +92,10 @@ async def fecha_actual():
 
 @channel.get("/channel/{id}", tags=["channel"])
 async def get_channel(id: int):
-    result = db.execute(Channel.select().where(Channel.c.id_channel == id)).first()
-    data = dict(result) if result else {}
-    print("data channelById", data)
     try:
+        result = db.execute(Channel.select().where(Channel.c.id_channel == id)).first()
+        data = dict(result) if result else {}
+        print("data channelById", data)
         return {
             "code": "0",
             "data": data,
@@ -107,10 +107,10 @@ async def get_channel(id: int):
 # Ciudad
 @channel.get("/ciudad", tags=["ciudad"])
 async def get_ciudad():
-    result = db.execute(Ciudad.select()).fetchall()
-    data = [dict(row) for row in result]
-    print("data ciudad", data)
     try:
+        result = db.execute(Ciudad.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data ciudad", data)
         return {
             "code": "0",
             "data": data,
@@ -277,10 +277,10 @@ async def create_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
 # Estados
 @channel.get("/estado", tags=["estado"])
 async def get_estado():
-    result = db.execute(Estados.select()).fetchall()
-    data = [dict(row) for row in result]
-    print("data estado", data)
     try:
+        result = db.execute(Estados.select()).fetchall()
+        data = [dict(row) for row in result]
+        print("data estado", data)
         return {
             "code": "0",
             "data": data,
