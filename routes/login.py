@@ -102,7 +102,7 @@ async def ValidacionLoginCelula(datos: Login):
                     "menu": i.menu,
                     "path": i.path,
                     "icon": i.icon,
-                    "submenu": submenus_data,
+                    "submenu": sub,
                 }
             )
 
