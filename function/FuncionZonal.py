@@ -76,7 +76,7 @@ async def UpdateZonal(data: Zonal):
     except Exception as e:
         return {
             "code": "-1",
-            "data": "Error: " + str(e),
+            "data": str(e),
         }
 
 
