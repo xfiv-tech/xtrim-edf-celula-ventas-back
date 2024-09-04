@@ -40,7 +40,8 @@ async def get_edificios():
                 Edicifios.c.data_update,
             )
         )
-        data = db.execute(query).fetchall()
+        result = db.execute(query).fetchall()
+        data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
             "data": data,
