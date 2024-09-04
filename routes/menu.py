@@ -19,8 +19,7 @@ async def get_menu():
                 Submenus.select().where(Submenus.c.id_menus == menu.id_menus)
             ).fetchall()
 
-            # Convertimos los submenus en una lista de diccionarios
-            submenu_list = [dict(submenu.items()) for submenu in submenus]
+            submenu_list = [dict(submenu._mapping) for submenu in submenus]
 
             infoData.append(
                 {
@@ -29,7 +28,7 @@ async def get_menu():
                     "menu": menu.menu,
                     "path": menu.path,
                     "icon": menu.icon,
-                    "submenus": submenu_list,  # Submenús ya convertidos
+                    "submenus": submenu_list,
                 }
             )
 
