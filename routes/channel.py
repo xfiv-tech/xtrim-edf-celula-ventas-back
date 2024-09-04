@@ -110,6 +110,7 @@ async def get_ciudad():
     try:
         result = db.execute(Ciudad.select()).fetchall()
         data = [dict(row) for row in result]
+        print("data ciudad", data)
         return {
             "code": "0",
             "data": data,
