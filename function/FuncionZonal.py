@@ -45,11 +45,12 @@ async def ListarZonalAll():
 async def ZonalId(id: int):
     try:
         print("ZonalId")
-        query = db.execute(
+        result = db.execute(
             RegistrarGerenteZonal.select().where(
                 RegistrarGerenteZonal.c.id_gerente_zonal == id
             )
         ).fetchall()
+        query = [dict(row._mapping) for row in result]
         return query
     except Exception as e:
         print(e)

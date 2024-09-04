@@ -16,6 +16,7 @@ async def RegistrarIsla(data: Isla):
     try:
         print("RegistrarIsla")
         db.execute(isla.insert().values(id_ciudad=data.id_ciudad, isla=data.isla))
+
         return {"status": 200, "message": "Isla registrada correctamente"}
     except Exception as e:
         print(e)
@@ -36,7 +37,8 @@ async def ListarIslaAll():
 async def IslaId(id: int):
     try:
         print("Isla")
-        query = db.execute(isla.select().where(isla.c.id == id)).fetchall()
+        result = db.execute(isla.select().where(isla.c.id == id)).fetchall()
+        query = [dict(row._mapping) for row in result]
         return query
     except Exception as e:
         print(e)
