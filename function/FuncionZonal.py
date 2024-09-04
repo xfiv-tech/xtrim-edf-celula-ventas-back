@@ -1,5 +1,3 @@
-
-
 from typing import Optional
 
 from pydantic import BaseModel
@@ -16,83 +14,76 @@ class Zonal(BaseModel):
     cedula: str
 
 
-async def RegistrarZonal(data:Zonal):
+async def RegistrarZonal(data: Zonal):
     try:
         print("RegistrarZonal")
-        db.execute(RegistrarGerenteZonal.insert().values(
-            nombre = data.nombre,
-            email = data.email,
-            telefono = data.telefono,
-            cedula = data.cedula
-        ))
-        return {
-            "status": 200,
-            "message": "Zonal registrada correctamente"
-        }
+        db.execute(
+            RegistrarGerenteZonal.insert().values(
+                nombre=data.nombre,
+                email=data.email,
+                telefono=data.telefono,
+                cedula=data.cedula,
+            )
+        )
+        return {"status": 200, "message": "Zonal registrada correctamente"}
     except Exception as e:
         print(e)
-        return {
-            "status":400,
-            "message": "Error al registrar la Zonal"
-        }
-    
-    
+        return {"status": 400, "message": "Error al registrar la Zonal"}
+
+
 async def ListarZonalAll():
     try:
         print("ListarZonalAll")
-        query = db.execute(RegistrarGerenteZonal.select()).fetchall()
-        return {
-            "status": 200,
-            "data": query
-        }
+        result = db.execute(RegistrarGerenteZonal.select()).fetchall()
+        query = [dict(row._mapping) for row in result]
+        return {"status": 200, "data": query}
     except Exception as e:
         print(e)
-        return {
-            "status":400,
-            "message": "Error al listar las Zonal"
-        }
-    
-async def ZonalId(id:int):
+        return {"status": 400, "message": "Error al listar las Zonal"}
+
+
+async def ZonalId(id: int):
     try:
         print("ZonalId")
-        query = db.execute(RegistrarGerenteZonal.select().where(RegistrarGerenteZonal.c.id_gerente_zonal == id)).fetchall()
+        query = db.execute(
+            RegistrarGerenteZonal.select().where(
+                RegistrarGerenteZonal.c.id_gerente_zonal == id
+            )
+        ).fetchall()
         return query
     except Exception as e:
         print(e)
         return None
 
-    
-async def UpdateZonal(data:Zonal):
+
+async def UpdateZonal(data: Zonal):
     try:
         print("UpdateZonal")
-        db.execute(RegistrarGerenteZonal.update().where(RegistrarGerenteZonal.c.id_gerente_zonal == data.id_gerente_zonal).values(
-            nombre = data.nombre,
-            email = data.email,
-            telefono = data.telefono,
-            cedula = data.cedula,
-        ))
-        return {
-            "status": 200,
-            "message": "UpdateZonal correctamente"
-        }
+        db.execute(
+            RegistrarGerenteZonal.update()
+            .where(RegistrarGerenteZonal.c.id_gerente_zonal == data.id_gerente_zonal)
+            .values(
+                nombre=data.nombre,
+                email=data.email,
+                telefono=data.telefono,
+                cedula=data.cedula,
+            )
+        )
+        return {"status": 200, "message": "UpdateZonal correctamente"}
     except Exception as e:
         print(e)
-        return {
-            "status":400,
-            "message": "Error la UpdateZonal"
-        }
-        
-async def DeleteZonal(id:int):
+        return {"status": 400, "message": "Error la UpdateZonal"}
+
+
+async def DeleteZonal(id: int):
     try:
         print("DeleteZonal")
-        db.execute(RegistrarGerenteZonal.delete().where(RegistrarGerenteZonal.c.id_gerente_zonal == id))
-        return {
-            "status": 200,
-            "message": "DeleteZonal correctamente"
-        }
+        db.execute(
+            RegistrarGerenteZonal.delete().where(
+                RegistrarGerenteZonal.c.id_gerente_zonal == id
+            )
+        )
+        return {"status": 200, "message": "DeleteZonal correctamente"}
     except Exception as e:
         print(e)
-        return {
-            "status":400,
-            "message": "Error al DeleteZonal"
-        }
+        return {"status": 400, "message": "Error al DeleteZonal"}
