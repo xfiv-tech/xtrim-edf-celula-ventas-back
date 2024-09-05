@@ -168,7 +168,8 @@ def ListarCiudadesAPCiudad(id_admin_proyectos: int):
 def SelectAdminProyectCiudad(id_ciudad: int):
     try:
         nombre_admin_proyect = RegistrarAdminProyectos.select()
-        admin_proyect = db.execute(nombre_admin_proyect).fetchall()
+        result = db.execute(nombre_admin_proyect).fetchall()
+        admin_proyect = [dict(row._mapping) for row in result]
         infoData = []
         for i in admin_proyect:
             response = ListarCiudadesAPCiudad(i["id_admin_proyectos"])
@@ -418,7 +419,6 @@ def tarea_programada():
 
         for i in dataInfo:
             k = ReporteExcel(**i)
-            print("k", k)
             ws.append(
                 [
                     k.ciudad,

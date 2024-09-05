@@ -16,6 +16,7 @@ async def SelectAdminProyectCiudad(id_ciudad: int):
     try:
         nombre_admin_proyect = RegistrarAdminProyectos.select()
         admin_proyect = db.execute(nombre_admin_proyect).fetchall()
+
         infoData = []
         for i in admin_proyect:
             response = await ListarCiudadesAPCiudad(i["id_admin_proyectos"])
