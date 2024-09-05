@@ -63,8 +63,8 @@ email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
-
     try:
+        print("SelectLiderPeloton", id_lider_peloton, id_channel)
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
 
@@ -76,7 +76,8 @@ def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
             nombre_lider = RegistrarDistribuidor.select().where(
                 RegistrarDistribuidor.c.id_registrar_distribuidor == id_lider_peloton
             )
-            query = db.execute(nombre_lider).fetchall()
+            result = db.execute(nombre_lider).fetchall()
+            query = [dict(row._mapping) for row in result]
             for i in query:
                 return i["nombre_distribuidor"]
 
@@ -87,7 +88,6 @@ def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
         for i in query:
             return i["nombre_vendedor"]
     except Exception as e:
-        print("SelectLiderPeloton", e.args)
         return "NO APLICA"
 
 
@@ -98,11 +98,11 @@ def SelectJefeVenta(id_jefe_venta: int):
         nombre_jefe = RegistroJefeVentas.select().where(
             RegistroJefeVentas.c.id_jefe_venta == id_jefe_venta
         )
-        query = db.execute(nombre_jefe).fetchall()
+        result = db.execute(nombre_jefe).fetchall()
+        query = [dict(row._mapping) for row in result]
         for i in query:
             return i["nombre_jefe"]
     except Exception as e:
-        print(e)
         return "SIN JEFE VENTA"
 
 
@@ -113,11 +113,11 @@ def SelectGerenteCiudad(id_gerente_ciudad: int):
         nombre_gerente = RegistrarGerenteCiudad.select().where(
             RegistrarGerenteCiudad.c.id_gerente_ciudad == id_gerente_ciudad
         )
-        query = db.execute(nombre_gerente).fetchall()
+        result = db.execute(nombre_gerente).fetchall()
+        query = [dict(row._mapping) for row in result]
         for i in query:
             return i["nombre_gerente_ciudad"]
     except Exception as e:
-        print(e)
         return "SIN GERENTE CIUDAD"
 
 
@@ -128,11 +128,11 @@ def SelectGerenteRegional(id_gerente_regional: int):
         nombre_gerente = RegistrarGerenteRegional.select().where(
             RegistrarGerenteRegional.c.id_gerente_regional == id_gerente_regional
         )
-        query = db.execute(nombre_gerente).fetchall()
+        result = db.execute(nombre_gerente).fetchall()
+        query = [dict(row._mapping) for row in result]
         for i in query:
             return i["nombre_gerente"]
     except Exception as e:
-        print(e)
         return "SIN GERENTE REGIONAL"
 
 
@@ -185,7 +185,6 @@ def SelectAdminProyectCiudad(id_ciudad: int):
 
         return infoData[0]["nombre_admin_proyectos"]
     except Exception as e:
-        print(e)
         return None
 
 
@@ -193,16 +192,18 @@ def ZonalIdGerente(id: int):
     try:
         if id == None or id == 0:
             return "SIN GERENTE ZONAL"
-        query = db.execute(
+
+        result = db.execute(
             RegistrarGerenteZonal.select().where(
                 RegistrarGerenteZonal.c.id_gerente_zonal == id
             )
         ).fetchall()
+        query = [dict(row._mapping) for row in result]
+
         if len(query) > 0:
             return query[0]["nombre"]
         return "SIN GERENTE ZONAL"
     except Exception as e:
-        print(e)
         return "SIN GERENTE ZONAL"
 
 
@@ -315,14 +316,11 @@ def tarea_programada():
         )
 
         logging.info("Query built successfully.")
-        result = db.execute(query).fetchall()
-        res = [dict(row._mapping) for row in result]
-        print("res", res)
+        res = db.execute(query).fetchall()
         logging.info("Query executed successfully, fetched %s records.", len(res))
 
         dataInfo = []
         for i in res:
-            print("i", i)
             dataInfo.append(
                 {
                     "id_registrar_vendedor": i.id_registrar_vendedor,
@@ -420,6 +418,7 @@ def tarea_programada():
 
         for i in dataInfo:
             k = ReporteExcel(**i)
+            print("k", k)
             ws.append(
                 [
                     k.ciudad,
@@ -462,10 +461,8 @@ def tarea_programada():
         today = datetime.date.today()
         last_day_of_month = calendar.monthrange(today.year, today.month)[1]
         if today.day == last_day_of_month:
-            print("El día actual es el último día del mes")
             usuario = "Celula_Ventas_" + fecha + ".xlsx"
         else:
-            print("El día actual no es el último día del mes")
             usuario = "Celula_Ventas.xlsx"
         wb.save(usuario)
 

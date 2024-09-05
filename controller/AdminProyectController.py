@@ -38,6 +38,7 @@ async def SelectAdminProyectCiudad(id_ciudad: int):
 
 async def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
     try:
+        print("SelectLiderPeloton", id_lider_peloton, id_channel)
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
 
