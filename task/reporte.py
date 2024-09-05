@@ -63,8 +63,7 @@ email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
-    print("id_lider_peloton", id_lider_peloton)
-    print("id_channel", id_channel)
+
     try:
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
