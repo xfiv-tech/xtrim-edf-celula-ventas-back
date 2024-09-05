@@ -63,6 +63,8 @@ email_cc = [
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
+    print("id_lider_peloton", id_lider_peloton)
+    print("id_channel", id_channel)
     try:
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
@@ -314,7 +316,9 @@ def tarea_programada():
         )
 
         logging.info("Query built successfully.")
-        res = db.execute(query).fetchall()
+        result = db.execute(query).fetchall()
+        res = [dict(row._mapping) for row in result]
+        print("res", res)
         logging.info("Query executed successfully, fetched %s records.", len(res))
 
         dataInfo = []
