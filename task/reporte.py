@@ -322,6 +322,7 @@ def tarea_programada():
 
         dataInfo = []
         for i in res:
+            print("i", i)
             dataInfo.append(
                 {
                     "id_registrar_vendedor": i.id_registrar_vendedor,
