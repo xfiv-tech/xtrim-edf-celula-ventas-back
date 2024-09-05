@@ -148,18 +148,13 @@ async def update_ciudad(ciudad: CiudadModel):
         }
 
 
-# @channel.delete("/ciudad", tags=["ciudad"])
-# async def delete_cuidad(ciudad: CiudadModel):
-#     try:
-#         db.execute(Ciudad.delete().where(Ciudad.c.id_ciudad == ciudad.id))
-#         return {
-#             "code": "0"
-#         }
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail={
-#             "code": "-1",
-#             "data": str(e)
-#         })
+@channel.delete("/ciudad", tags=["ciudad"])
+async def delete_cuidad(ciudad: CiudadModel):
+    try:
+        db.execute(Ciudad.delete().where(Ciudad.c.id_ciudad == ciudad.id))
+        return {"code": "0"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
 
 
 # Operador
