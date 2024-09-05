@@ -15,7 +15,8 @@ from model.channel import (
 async def SelectAdminProyectCiudad(id_ciudad: int):
     try:
         nombre_admin_proyect = RegistrarAdminProyectos.select()
-        admin_proyect = db.execute(nombre_admin_proyect).fetchall()
+        result = db.execute(nombre_admin_proyect).fetchall()
+        admin_proyect = [dict(row._mapping) for row in result]
 
         infoData = []
         for i in admin_proyect:
@@ -39,7 +40,6 @@ async def SelectAdminProyectCiudad(id_ciudad: int):
 
 async def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
     try:
-        print("SelectLiderPeloton", id_lider_peloton, id_channel)
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
 
@@ -51,7 +51,8 @@ async def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
             nombre_lider = RegistrarDistribuidor.select().where(
                 RegistrarDistribuidor.c.id_registrar_distribuidor == id_lider_peloton
             )
-            query = db.execute(nombre_lider).fetchall()
+            result = db.execute(nombre_lider).fetchall()
+            query = [dict(row._mapping) for row in result]
             for i in query:
                 return i["nombre_distribuidor"]
 
@@ -73,7 +74,8 @@ async def SelectJefeVenta(id_jefe_venta: int):
         nombre_jefe = RegistroJefeVentas.select().where(
             RegistroJefeVentas.c.id_jefe_venta == id_jefe_venta
         )
-        query = db.execute(nombre_jefe).fetchall()
+        result = db.execute(nombre_jefe).fetchall()
+        query = [dict(row._mapping) for row in result]
         for i in query:
             return i["nombre_jefe"]
     except Exception as e:
@@ -88,7 +90,8 @@ async def SelectGerenteCiudad(id_gerente_ciudad: int):
         nombre_gerente = RegistrarGerenteCiudad.select().where(
             RegistrarGerenteCiudad.c.id_gerente_ciudad == id_gerente_ciudad
         )
-        query = db.execute(nombre_gerente).fetchall()
+        result = db.execute(nombre_gerente).fetchall()
+        query = [dict(row._mapping) for row in result]
         for i in query:
             return i["nombre_gerente_ciudad"]
     except Exception as e:
@@ -103,7 +106,8 @@ async def SelectGerenteRegional(id_gerente_regional: int):
         nombre_gerente = RegistrarGerenteRegional.select().where(
             RegistrarGerenteRegional.c.id_gerente_regional == id_gerente_regional
         )
-        query = db.execute(nombre_gerente).fetchall()
+        result = db.execute(nombre_gerente).fetchall()
+        query = [dict(row._mapping) for row in result]
         for i in query:
             return i["nombre_gerente"]
     except Exception as e:
@@ -116,11 +120,12 @@ async def ZonalIdGerente(id: int):
         # print("ZonalIdGerente: ", id)
         if id == None or id == 0:
             return "SIN GERENTE ZONAL"
-        query = db.execute(
+        result = db.execute(
             RegistrarGerenteZonal.select().where(
                 RegistrarGerenteZonal.c.id_gerente_zonal == id
             )
         ).fetchall()
+        query = [dict(row._mapping) for row in result]
         print(query)
         if len(query) > 0:
             return query[0]["nombre"]
@@ -133,7 +138,8 @@ async def ZonalIdGerente(id: int):
 async def ZonalGerente():
     try:
         info = []
-        query = db.execute(RegistrarGerenteZonal.select()).fetchall()
+        result = db.execute(RegistrarGerenteZonal.select()).fetchall()
+        query = [dict(row._mapping) for row in result]
         if len(query) > 0:
             for i in query:
                 info.append(
