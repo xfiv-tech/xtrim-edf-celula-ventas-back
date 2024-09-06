@@ -64,64 +64,65 @@ async def ValidacionLogin(datos: Login):
 
 @login.post("/login_celula", tags=["login"])
 async def ValidacionLoginCelula(datos: Login):
+    transaction = None
     try:
-        async with db.begin() as transaction:
-            query = RegistroAdministrador.select().where(
-                RegistroAdministrador.c.email == datos.email
-            )
-            user = await db.execute(query).first()
+        query = RegistroAdministrador.select().where(
+            RegistroAdministrador.c.email == datos.email
+        )
+        user = db.execute(query).first()
 
-            if user is None:
-                return {"code": "-1", "data": [], "message": "Usuario no existe"}
+        if user is None:
+            return {"code": "-1", "data": [], "message": "Usuario no existe"}
 
-            decr_data = checkPassword(datos.password, user.password)
-            if not decr_data:
-                return {"code": "-1", "data": [], "message": "Contraseña incorrecta"}
+        decr_data = checkPassword(datos.password, user.password)
+        if not decr_data:
+            return {"code": "-1", "data": [], "message": "Contraseña incorrecta"}
 
-            menu_query = Menus.select().where(Menus.c.id_roles == user.id_roles)
-            menu = await db.execute(menu_query).fetchall()
+        menu_query = Menus.select().where(Menus.c.id_roles == user.id_roles)
+        menu = db.execute(menu_query).fetchall()
 
-            info_menu = []
-            for i in menu:
-                exc = Submenus.select().where(Submenus.c.id_menus == i.id_menus)
-                sub = await db.execute(exc).fetchall()
+        info_menu = []
+        for i in menu:
+            exc = Submenus.select().where(Submenus.c.id_menus == i.id_menus)
+            sub = db.execute(exc).fetchall()
 
-                submenus_data = []
-                for s in sub:
-                    submenus_data.append(
-                        {
-                            "id_submenu": s[0],
-                            "submenu": s[2],
-                            "path": s[3],
-                            "icon": s[4],
-                        }
-                    )
-
-                info_menu.append(
+            submenus_data = []
+            for s in sub:
+                submenus_data.append(
                     {
-                        "id_menus": i.id_menus,
-                        "menu": i.menu,
-                        "path": i.path,
-                        "icon": i.icon,
-                        "submenu": submenus_data,
+                        "id_submenu": s[0],
+                        "submenu": s[2],
+                        "path": s[3],
+                        "icon": s[4],
                     }
                 )
 
-            true_user = {
-                "id": user.id_administrador,
-                "id_rol": user.id_roles,
-                "email": user.email,
-                "usuario": user.nombre_administrador,
-                "perfil": user.perfil,
-            }
+            info_menu.append(
+                {
+                    "id_menus": i.id_menus,
+                    "menu": i.menu,
+                    "path": i.path,
+                    "icon": i.icon,
+                    "submenu": submenus_data,
+                }
+            )
 
-            return {
-                "code": "0",
-                "token": write_token(true_user),
-                "menu": info_menu,
-                "message": "Login correcto",
-            }
+        true_user = {
+            "id": user.id_administrador,
+            "id_rol": user.id_roles,
+            "email": user.email,
+            "usuario": user.nombre_administrador,
+            "perfil": user.perfil,
+        }
+
+        return {
+            "code": "0",
+            "token": write_token(true_user),
+            "menu": info_menu,
+            "message": "Login correcto",
+        }
 
     except SQLAlchemyError as e:
-        await transaction.rollback()
+        if transaction is not None:
+            await transaction.rollback()
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
