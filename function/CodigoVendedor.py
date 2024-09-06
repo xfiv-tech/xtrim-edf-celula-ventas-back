@@ -17,56 +17,49 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # corregir (MaxRetryError("HTTPSConnectionPool(host='apix.grupotvcable.com', port=443): Max retries exceeded with url: /rest/token-api/v1.0/generate (Caused by SSLError(SSLError(1, '[SSL: UNSAFE_LEGACY_RENEGOTIATION_DISABLED] unsafe legacy renegotiation disabled (_ssl.c:1007)')))"),)
 
 
+import time
+
+
 async def LoginCodigo():
-    try:
-        ctx = create_urllib3_context()
-        ctx.load_default_certs()
-        ctx.options |= 0x4  # ssl.OP_LEGACY_SERVER_CONNECT
-        with urllib3.PoolManager(ssl_context=ctx) as http:
-            url = "https://apix.grupotvcable.com/rest/token-api/v1.0/generate"
-            data = {
-                "channel": "Web",
-                "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
-                "realm": "realm-ecommerce-autoservicio",
-                "type": "Basic",
-            }
-            encoded_data = json.dumps(data).encode("utf-8")
-            r = http.request(
-                "POST",
-                url,
-                body=encoded_data,
-                headers={"Content-Type": "application/json"},
-            )
-            if r.status == 200:
-                # convertir la respuesta en  Diccionario
-                diccionario = json.loads(r.data.decode("utf-8"))
-                print("Login", diccionario)
-                print("Login", type(diccionario))
-                print("\n")
-                print("Login", diccionario["data"]["token"])
+    for attempt in range(3):
+        try:
+            ctx = create_urllib3_context()
+            ctx.load_default_certs()
+            ctx.options |= 0x4
+            with urllib3.PoolManager(ssl_context=ctx) as http:
+                url = "https://apix.grupotvcable.com/rest/token-api/v1.0/generate"
+                data = {
+                    "channel": "Web",
+                    "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
+                    "realm": "realm-ecommerce-autoservicio",
+                    "type": "Basic",
+                }
+                encoded_data = json.dumps(data).encode("utf-8")
+                r = http.request(
+                    "POST",
+                    url,
+                    body=encoded_data,
+                    headers={"Content-Type": "application/json"},
+                    timeout=10.0,
+                )
 
-                response = r.data.decode("utf-8")
-                print("Login", r.data.decode("utf-8"))
-                print("Login", type(response))
-                print("\n")
-                print("Login", response)
-                return diccionario["data"]["token"]
-            else:
-                return False
+                if r.status == 200:
+                    diccionario = json.loads(r.data.decode("utf-8"))
+                    return diccionario["data"]["token"]
+                else:
+                    print(f"Error en la solicitud, estado HTTP: {r.status}")
+                    return None
 
-        # payload = json.dumps({
-        #     "channel": "Web",
-        #     "key": "YXBpbV9hdXRvc2VydmljaW86MTU4MzliNDYtZTJiNy00ZWNkLThmZWEtZDM1ZDlhNWJlNGI3",
-        #     "realm": "realm-ecommerce-autoservicio",
-        #     "type": "Basic"
-        # })
-        # login = requests.post("https://apix.grupotvcable.com/rest/token-api/v1.0/generate", data=payload, headers={'Content-Type': 'application/json'})
-        # print("Login",login.json())
-        # response = login.json()
-        # return response["data"]["token"]
+        except urllib3.exceptions.MaxRetryError as e:
+            print(f"Reintento {attempt+1} fallido: {e}")
+            time.sleep(2)
 
-    except Exception as e:
-        print("Error: 53", e.args)
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
+
+    print("Error: No se pudo obtener el token después de varios intentos.")
+    return None
 
 
 async def ConsultarVendedor(codigo):
