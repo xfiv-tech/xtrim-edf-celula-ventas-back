@@ -10,35 +10,27 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 # Segunda etapa para la imagen final
 FROM python:3.10-slim-bookworm
 
-WORKDIR /xtrim
+ENV PYTHONUNBUFFERED True
 
-COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+
+RUN pip install --upgrade pip
+
+ENV APP_HOME /xtrim
+WORKDIR $APP_HOME
+
+
 COPY . /xtrim/
 
-CMD ["python", "-m", "uvicorn", "index:app", "--host", "0.0.0.0", "--port", "3003"]
+ENV TZ 'America/Guayaquil' 
 
-# ENV PYTHONUNBUFFERED True
+RUN cd /usr/share/zoneinfo && \ 
+    cp -f /usr/share/zoneinfo/$TZ /etc/localtime && \ 
+    echo $TZ > /etc/timezone
 
+RUN ls -la
 
-# RUN pip install --upgrade pip
+LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>" \
+      version="1.0" \
+      description="Xtrim API Celulas de ventas"
 
-# ENV APP_HOME /xtrim
-# WORKDIR $APP_HOME
-
-
-# COPY . /xtrim/
-
-# ENV TZ 'America/Guayaquil' 
-
-# RUN cd /usr/share/zoneinfo && \ 
-#     cp -f /usr/share/zoneinfo/$TZ /etc/localtime && \ 
-#     echo $TZ > /etc/timezone
-
-# RUN ls -la
-
-# LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>" \
-#       version="1.0" \
-#       description="Xtrim API Celulas de ventas"
-
-# CMD python -m uvicorn index:app --host 0.0.0.0 --port 3003
-
+CMD python -m uvicorn index:app --host 0.0.0.0 --port 3003
