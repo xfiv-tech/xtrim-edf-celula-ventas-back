@@ -1,23 +1,31 @@
-# Primera etapa para construir las dependencias
-FROM python:3.10-slim-bookworm as builder
-
-WORKDIR /xtrim
-
-COPY requirements.txt /xtrim/requirements.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
-
-
-# Segunda etapa para la imagen final
-FROM python:3.10-slim-bookworm
+FROM python:3.10-slim
 
 ENV PYTHONUNBUFFERED True
 
 
 RUN pip install --upgrade pip
 
+# instalar la version openssl 2.0.0
+# RUN apt-get update && apt-get install -y openssl
+
+# instalar la version libssl-dev 2.0.0
+
+# RUN apt-get update && apt-get install -y libssl-dev
+
 ENV APP_HOME /xtrim
 WORKDIR $APP_HOME
 
+# RUN apt-get update && apt-get install -y libpq-dev build-essential
+
+COPY ./requirements.txt /xtrim/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt
+
+# && 
+# \
+#     pip install --no-cache-dir --upgrade uvicorn[standard] && \
+#     pip install --no-cache-dir --upgrade websockets && \
+#     pip install --upgrade pip 
 
 COPY . /xtrim/
 
