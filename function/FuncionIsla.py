@@ -14,7 +14,7 @@ class Isla(BaseModel):
 
 async def RegistrarIsla(data: Isla):
     try:
-        print("RegistrarIsla")
+        # print("RegistrarIsla")
         db.execute(isla.insert().values(id_ciudad=data.id_ciudad, isla=data.isla))
 
         return {"status": 200, "message": "Isla registrada correctamente"}
@@ -25,7 +25,7 @@ async def RegistrarIsla(data: Isla):
 
 async def ListarIslaAll():
     try:
-        print("ListarIslaAll")
+        # print("ListarIslaAll")
         result = db.execute(isla.select()).fetchall()
         query = [dict(row._mapping) for row in result]
         return {"status": 200, "data": query}
@@ -47,7 +47,7 @@ async def IslaId(id: int):
 
 async def UpdateIsla(data: Isla):
     try:
-        print("UpdateIsla")
+        # print("UpdateIsla")
         db.execute(
             isla.update()
             .where(isla.c.id == data.id)
@@ -61,7 +61,7 @@ async def UpdateIsla(data: Isla):
 
 async def DeleteIsla(id: int):
     try:
-        print("DeleteIsla")
+        # print("DeleteIsla")
         db.execute(isla.delete().where(isla.c.id == id))
         return {"status": 200, "message": "Isla eliminada correctamente"}
     except Exception as e:

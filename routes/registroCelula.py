@@ -457,7 +457,7 @@ async def get_registro(request: Request):
                 )
                 data_gerente_regional = db.execute(query_gerente_regional).fetchone()
 
-                print("data_gerente_regional", data_gerente_regional.nombre_gerente)
+                # print("data_gerente_regional", data_gerente_regional.nombre_gerente)
                 query_gerente_ciudad = (
                     RegistrarGerenteCiudad.select()
                     .where(
@@ -2051,7 +2051,7 @@ async def get_jefe_venta():
             estado = db.execute(
                 Estados.select().where(Estados.c.id_estado == i.id_estado)
             ).first()
-            print(i.id_gerente_ciudad)
+            # print(i.id_gerente_ciudad)
             if i.id_gerente_ciudad == None:
                 infoData.append(
                     {

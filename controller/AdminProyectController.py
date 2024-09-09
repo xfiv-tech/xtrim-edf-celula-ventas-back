@@ -125,7 +125,6 @@ async def ZonalIdGerente(id: int):
             )
         ).fetchall()
         query = [dict(row._mapping) for row in result]
-        print(query)
         if len(query) > 0:
             return query[0]["nombre"]
         return "SIN GERENTE ZONAL"

@@ -41,30 +41,29 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-email = [
-    "vmolina@xtrim.com.ec",
-    "jemendoza@xtrim.com.ec",
-    "rcarcelen@xtrim.com.ec",
-    "dmoran@xtrim.com.ec",
-    "lfromero@xtrim.com.ec",
-    "jcondo@xtrim.com.ec",
-]
+# email = [
+#     "vmolina@xtrim.com.ec",
+#     "jemendoza@xtrim.com.ec",
+#     "rcarcelen@xtrim.com.ec",
+#     "dmoran@xtrim.com.ec",
+#     "lfromero@xtrim.com.ec",
+#     "jcondo@xtrim.com.ec",
+# ]
 
-email_cc = [
-    "nlarrea@xtrim.com.ec",
-    "njijon@xtrim.com.ec",
-    "hola@intelnexo.com",
-    "gjaramillo@intelnexo.com",
-]
-# email_cc = ["gjaramillo@intelnexo.com"]
+# email_cc = [
+#     "nlarrea@xtrim.com.ec",
+#     "njijon@xtrim.com.ec",
+#     "hola@intelnexo.com",
+#     "gjaramillo@intelnexo.com",
+# ]
+email_cc = ["gjaramillo@intelnexo.com"]
 
 
-# email = ["gjaramillo@intelnexo.com"]
+email = ["gjaramillo@intelnexo.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
     try:
-        print("SelectLiderPeloton", id_lider_peloton, id_channel)
         if id_lider_peloton == None or id_lider_peloton == 0:
             return "NO APLICA"
 

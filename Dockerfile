@@ -1,44 +1,44 @@
-FROM python:3.10-slim
+# Primera etapa para construir las dependencias
+FROM python:3.10-slim-bookworm as builder
 
-ENV PYTHONUNBUFFERED True
+WORKDIR /xtrim
+
+COPY requirements.txt /xtrim/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 
-RUN pip install --upgrade pip
+# Segunda etapa para la imagen final
+FROM python:3.10-slim-bookworm
 
-# instalar la version openssl 2.0.0
-# RUN apt-get update && apt-get install -y openssl
+WORKDIR /xtrim
 
-# instalar la version libssl-dev 2.0.0
-
-# RUN apt-get update && apt-get install -y libssl-dev
-
-ENV APP_HOME /xtrim
-WORKDIR $APP_HOME
-
-# RUN apt-get update && apt-get install -y libpq-dev build-essential
-
-COPY ./requirements.txt /xtrim/requirements.txt
-
-RUN pip install --no-cache-dir --upgrade -r /xtrim/requirements.txt
-
-# && 
-# \
-#     pip install --no-cache-dir --upgrade uvicorn[standard] && \
-#     pip install --no-cache-dir --upgrade websockets && \
-#     pip install --upgrade pip 
-
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY . /xtrim/
 
-ENV TZ 'America/Guayaquil' 
+CMD ["python", "-m", "uvicorn", "index:app", "--host", "0.0.0.0", "--port", "3003"]
 
-RUN cd /usr/share/zoneinfo && \ 
-    cp -f /usr/share/zoneinfo/$TZ /etc/localtime && \ 
-    echo $TZ > /etc/timezone
+# ENV PYTHONUNBUFFERED True
 
-RUN ls -la
 
-LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>" \
-      version="1.0" \
-      description="Xtrim API Celulas de ventas"
+# RUN pip install --upgrade pip
 
-CMD python -m uvicorn index:app --host 0.0.0.0 --port 3003
+# ENV APP_HOME /xtrim
+# WORKDIR $APP_HOME
+
+
+# COPY . /xtrim/
+
+# ENV TZ 'America/Guayaquil' 
+
+# RUN cd /usr/share/zoneinfo && \ 
+#     cp -f /usr/share/zoneinfo/$TZ /etc/localtime && \ 
+#     echo $TZ > /etc/timezone
+
+# RUN ls -la
+
+# LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>" \
+#       version="1.0" \
+#       description="Xtrim API Celulas de ventas"
+
+# CMD python -m uvicorn index:app --host 0.0.0.0 --port 3003
+

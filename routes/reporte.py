@@ -56,10 +56,7 @@ def get_tdd_excel_workbook():
         "data_update",
     )
     for row in data:
-        print(row.id)
-        print(row.id)
-        print(row.id)
-        print(row.id)
+        # print(row.id)
         ws.append(
             row.id,
             row.idAdministrador,

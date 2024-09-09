@@ -16,7 +16,7 @@ class Zonal(BaseModel):
 
 async def RegistrarZonal(data: Zonal):
     try:
-        print("RegistrarZonal")
+        # print("RegistrarZonal")s
         db.execute(
             RegistrarGerenteZonal.insert().values(
                 nombre=data.nombre,
@@ -33,7 +33,7 @@ async def RegistrarZonal(data: Zonal):
 
 async def ListarZonalAll():
     try:
-        print("ListarZonalAll")
+        # print("ListarZonalAll")
         result = db.execute(RegistrarGerenteZonal.select()).fetchall()
         query = [dict(row._mapping) for row in result]
         return {"status": 200, "data": query}
@@ -44,7 +44,7 @@ async def ListarZonalAll():
 
 async def ZonalId(id: int):
     try:
-        print("ZonalId")
+        # print("ZonalId")
         result = db.execute(
             RegistrarGerenteZonal.select().where(
                 RegistrarGerenteZonal.c.id_gerente_zonal == id
@@ -59,7 +59,7 @@ async def ZonalId(id: int):
 
 async def UpdateZonal(data: Zonal):
     try:
-        print("UpdateZonal")
+        # print("UpdateZonal")
         db.execute(
             RegistrarGerenteZonal.update()
             .where(RegistrarGerenteZonal.c.id_gerente_zonal == data.id_gerente_zonal)
@@ -78,7 +78,7 @@ async def UpdateZonal(data: Zonal):
 
 async def DeleteZonal(id: int):
     try:
-        print("DeleteZonal")
+        # print("DeleteZonal")
         db.execute(
             RegistrarGerenteZonal.delete().where(
                 RegistrarGerenteZonal.c.id_gerente_zonal == id

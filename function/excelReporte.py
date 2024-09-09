@@ -273,7 +273,7 @@ async def get_tdd_excel_workbook(ciudad: list, usuario: str):
         )
         for i in data:
             k = ReporteExcel(**i)
-            print(k)
+            # print(k)
             ws.append(
                 [
                     k.ciudad,

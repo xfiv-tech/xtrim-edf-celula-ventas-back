@@ -38,7 +38,6 @@ async def AsignarCiudadesGRegional(data: ArrayAsigancionCiudadGreginal):
     
 async def ListarCiudadesGRegional(id_gerente_regional: int):
     try:
-        print(id_gerente_regional)
         query = asignacion_ciudades_gerente_regional.select().where(
             asignacion_ciudades_gerente_regional.c.id_gerente_regional == id_gerente_regional
         )
@@ -352,7 +351,7 @@ async def DeleteCiudadesAPCiudad(id_admin_proyectos: int):
     
 async def AsignarCanalesAPCiudad(data: ArrayAsigancionCanalAdmin):
     try:
-        print(data.data[0].id_admin_proyectos)
+        # print(data.data[0].id_admin_proyectos)
         db.execute(asignacion_canal_admin_proyectos.delete().where(
             asignacion_canal_admin_proyectos.c.id_admin_proyectos == data.data[0].id_admin_proyectos
         ))
