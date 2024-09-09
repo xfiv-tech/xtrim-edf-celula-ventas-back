@@ -438,12 +438,12 @@ async def get_registro(request: Request):
                 and i.id_gerente_ciudad != None
                 and i.id_jefe_venta != None
             ):
-                print(
-                    "entro aca",
-                    i.id_gerente_regional,
-                    i.id_gerente_ciudad,
-                    i.id_jefe_venta,
-                )
+                # print(
+                #     "entro aca",
+                #     i.id_gerente_regional,
+                #     i.id_gerente_ciudad,
+                #     i.id_jefe_venta,
+                # )
 
                 query_gerente_regional = (
                     RegistrarGerenteRegional.select()

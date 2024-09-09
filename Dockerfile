@@ -37,7 +37,7 @@ RUN cd /usr/share/zoneinfo && \
 
 RUN ls -la
 
-LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>" \
+LABEL maintainer="Geampiere Virgilio Jaramillo Maldonado <geampiere.jaramillo@gmail.com>" \
       version="1.0" \
       description="Xtrim API Celulas de ventas"
 
