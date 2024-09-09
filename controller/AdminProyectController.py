@@ -63,7 +63,6 @@ async def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
         for i in query:
             return i["nombre_vendedor"]
     except Exception as e:
-        print("SelectLiderPeloton", e.args)
         return "NO APLICA"
 
 
