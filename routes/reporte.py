@@ -40,22 +40,20 @@ def get_tdd_excel_workbook():
     data = db.execute(query).fetchall()
     # print(data)
     ws.append(
-        [
-            "id",
-            "idAdministrador",
-            "nombreAdministrador",
-            "email",
-            "id_edificio",
-            "sector",
-            "ciudad",
-            "coordenadas",
-            "ctaReferencia",
-            "nombreEdificio",
-            "referencia",
-            "adjunto",
-            "data_creatd",
-            "data_update",
-        ]
+        "id",
+        "idAdministrador",
+        "nombreAdministrador",
+        "email",
+        "id_edificio",
+        "sector",
+        "ciudad",
+        "coordenadas",
+        "ctaReferencia",
+        "nombreEdificio",
+        "referencia",
+        "adjunto",
+        "data_creatd",
+        "data_update",
     )
     for row in data:
         print(row.id)
@@ -63,22 +61,20 @@ def get_tdd_excel_workbook():
         print(row.id)
         print(row.id)
         ws.append(
-            [
-                row.id,
-                row.idAdministrador,
-                row.nombreAdministrador,
-                row.email,
-                row.id_edificio,
-                row.sector,
-                row.ciudad,
-                row.coordenadas,
-                row.ctaReferencia,
-                row.nombreEdificio,
-                row.referencia,
-                row.adjunto,
-                row.data_creatd,
-                row.data_update,
-            ]
+            row.id,
+            row.idAdministrador,
+            row.nombreAdministrador,
+            row.email,
+            row.id_edificio,
+            row.sector,
+            row.ciudad,
+            row.coordenadas,
+            row.ctaReferencia,
+            row.nombreEdificio,
+            row.referencia,
+            row.adjunto,
+            row.data_creatd,
+            row.data_update,
         )
 
     return wb
