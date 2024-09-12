@@ -94,7 +94,7 @@ class ReporteExcel(BaseModel):
     sistema_operativo: str
 
 
-@planform.post("/planform_integrate")
+@planform.post("/platform_integrate")
 async def planform_integrate(data: Planform):
     try:
         if data.cargo == "vendedor":
