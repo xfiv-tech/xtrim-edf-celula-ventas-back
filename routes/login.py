@@ -9,7 +9,7 @@ from schemas.login import Login
 from cryptography.fernet import Fernet
 from function.encrytPassword import checkPassword
 from sqlalchemy.exc import SQLAlchemyError
-
+from sqlalchemy import text
 
 key = Fernet.generate_key()
 f = Fernet(key)
@@ -66,16 +66,20 @@ async def ValidacionLogin(datos: Login):
 async def ValidacionLoginCelula(datos: Login):
     transaction = None
     try:
+        transaction = await db.begin()
+
         query = RegistroAdministrador.select().where(
             RegistroAdministrador.c.email == datos.email
         )
         user = db.execute(query).first()
 
         if user is None:
+            await transaction.rollback()
             return {"code": "-1", "data": [], "message": "Usuario no existe"}
 
         decr_data = checkPassword(datos.password, user.password)
         if not decr_data:
+            await transaction.rollback()
             return {"code": "-1", "data": [], "message": "Contraseña incorrecta"}
 
         menu_query = Menus.select().where(Menus.c.id_roles == user.id_roles)
@@ -115,6 +119,8 @@ async def ValidacionLoginCelula(datos: Login):
             "perfil": user.perfil,
         }
 
+        await transaction.commit()
+
         return {
             "code": "0",
             "token": write_token(true_user),
@@ -126,3 +132,8 @@ async def ValidacionLoginCelula(datos: Login):
         if transaction is not None:
             await transaction.rollback()
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
+
+    except Exception as e:
+        if transaction is not None:
+            await transaction.rollback()
+        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
