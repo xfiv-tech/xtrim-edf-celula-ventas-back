@@ -146,9 +146,9 @@ async def get_registro(request: Request):
         CanalCiudad = await ExtraerCiuCanl(decodeToken["id"], decodeToken["perfil"])
         ciudad = CanalCiudad["ciudad"]
         cod_ = decodeToken.get("exp")
-        dataRedis = await GetterRedis(f"{cod_ if cod_ else ''}_vendedor")
-        if dataRedis:
-            return {"code": "0", "data": dataRedis}
+        # dataRedis = await GetterRedis(f"{cod_ if cod_ else ''}_vendedor")
+        # if dataRedis:
+        #     return {"code": "0", "data": dataRedis}
         # print("Ciudades", ciudad)
         data = []
         for i in ciudad:
@@ -217,6 +217,7 @@ async def get_registro(request: Request):
                 .where(RegistrarVendedor.c.id_ciudad == i["id_ciudad"])
             )
             res = db.execute(query).fetchall()
+
             for i in res:
                 data.append(i)
 
@@ -653,7 +654,7 @@ async def get_registro(request: Request):
                     }
                 )
 
-        await SetterRedis(f"{cod_ if cod_ else ''}_vendedor", dataInfo)
+        # await SetterRedis(f"{cod_ if cod_ else ''}_vendedor", dataInfo)
         return {"code": "0", "data": dataInfo}
     except Exception as e:
         print("error", e)
@@ -1586,6 +1587,8 @@ async def post_registro(request: RegistrarVendedorModel):
             .where(RegistrarVendedor.c.id_registrar_vendedor == data)
         )
         data_ = db.execute(query).fetchall()
+        db.commit()
+
         # serializar el objeto para guardarlo en redis
         serializable = {
             "id_registrar_vendedor": data_[0].id_registrar_vendedor,
@@ -1636,7 +1639,7 @@ async def post_registro(request: RegistrarVendedorModel):
             "gerente_zonal": await ZonalIdGerente(data_[0].id_gerente_zonal),
             "sistema_operativo": data_[0].sistema_operativo,
         }
-        await AddRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
+        # await AddRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
         # Enviar registro a xtrim por rabbitMQ
         # SE COMENTA POR ERRORES EN PROD
         # body_new = {
@@ -1823,6 +1826,7 @@ async def put_registro(request: RegistrarVendedorModel):
             )
         )
         data = db.execute(query).fetchall()
+        db.commit()
 
         # serializar el objeto para guardarlo en redis
         serializable = {
@@ -1890,7 +1894,8 @@ async def delete_registro(id_registrar_vendedor: int):
             RegistrarVendedor.c.id_registrar_vendedor == id_registrar_vendedor
         )
         data = db.execute(query)
-        await DeleteRedis("vendedor", id_registrar_vendedor)
+        db.commit()
+        # await DeleteRedis("vendedor", id_registrar_vendedor)
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
