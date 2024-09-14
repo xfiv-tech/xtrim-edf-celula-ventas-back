@@ -1711,7 +1711,15 @@ async def put_registro(request: RegistrarVendedorModel):
                 == request.id_registrar_vendedor
             )
         )
-        data = db.execute(query)
+        data = db.execute(
+            query
+        )  # Esto se usa para actualizar el registro en la base de datos
+        db.commit()
+
+        if data.rowcount == 0:
+            raise HTTPException(
+                status_code=404, detail="Registro no encontrado o no actualizado"
+            )
 
         print("data", data)
 
@@ -1867,28 +1875,8 @@ async def put_registro(request: RegistrarVendedorModel):
             "sistema_operativo": data[0].sistema_operativo,
         }
 
-        await UpdateRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
-        # SE COMENTA POR ERRORES EN PROD
-        # body_new = {
-        #     "edited": {"enable": request.id_estado != 2,
-        #                "attributes": {
-        #                    "seller_code": f"{request.codigo_vendedor}", "boss_sales_manager": f"{data_jefe_venta[1]}",
-        #                    "cedula": f"{request.cedula}", "ciudad": f"{data[0].ciudad}",
-        #                    "telefono": f"{data[0].telefono}",
-        #                    "channel": f"{data[0].channel}", "operador": f"{data[0].operador}",
-        #                    "modalidad": f"{data[0].modalidad}",
-        #                    "usuario_equipax": f"{data[0].usuario_equifax}", "fecha_ingreso": f"{data[0].fecha_ingreso}",
-        #                    "fecha_salida": f"{data[0].fecha_salida}",
-        #                    "sector_residencia": f"{data[0].sector_residencia}"
-        #                },
-        #                "email": f"{data[0].email}", "last_name": "", "name": f"{data[0].nombre_vendedor}",
-        #                "rol": "vendedor",
-        #                "user_name": f"{request.codigo_vendedor}"
-        #                },
-        #     "cedula": f"{request.cedula}",
-        # }
-        # a = EmitRabbitMQEditUser(body_new)
-        # a.start()
+        # await UpdateRedis(f"{data_jefe_venta[1]}_vendedor", serializable)
+
         return {"code": "0", "data": "Actualizado correctamente"}
     except Exception as e:
         print(f"Error general: {str(e)}")
