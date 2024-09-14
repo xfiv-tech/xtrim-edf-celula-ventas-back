@@ -64,24 +64,22 @@ async def ValidacionLogin(datos: Login):
 
 @login.post("/login_celula", tags=["login"])
 async def ValidacionLoginCelula(datos: Login):
-    transaction = None
     try:
-        transaction = await db.begin()
-
+        # Realiza la consulta para verificar el usuario
         query = RegistroAdministrador.select().where(
             RegistroAdministrador.c.email == datos.email
         )
         user = db.execute(query).first()
 
         if user is None:
-            await transaction.rollback()
             return {"code": "-1", "data": [], "message": "Usuario no existe"}
 
+        # Verifica la contraseña
         decr_data = checkPassword(datos.password, user.password)
         if not decr_data:
-            await transaction.rollback()
             return {"code": "-1", "data": [], "message": "Contraseña incorrecta"}
 
+        # Obtiene el menú
         menu_query = Menus.select().where(Menus.c.id_roles == user.id_roles)
         menu = db.execute(menu_query).fetchall()
 
@@ -119,8 +117,7 @@ async def ValidacionLoginCelula(datos: Login):
             "perfil": user.perfil,
         }
 
-        await transaction.commit()
-
+        # Retorna los datos si todo salió bien
         return {
             "code": "0",
             "token": write_token(true_user),
@@ -129,11 +126,7 @@ async def ValidacionLoginCelula(datos: Login):
         }
 
     except SQLAlchemyError as e:
-        if transaction is not None:
-            await transaction.rollback()
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
 
     except Exception as e:
-        if transaction is not None:
-            await transaction.rollback()
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
