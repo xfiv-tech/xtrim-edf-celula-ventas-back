@@ -54,6 +54,7 @@ async def post_menu(menu: MenuBase):
                     icon=submenu.icon,
                 )
             )
+        db.commit()
         return {"code": "0", "data": "Menu creado"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -69,6 +70,7 @@ async def put_menu(menu: MenuBase):
                 id_roles=menu.id_roles, menu=menu.menu, path=menu.path, icon=menu.icon
             )
         )
+        db.commit()
         return {"code": "0", "data": "Menu actualizado"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -79,6 +81,7 @@ async def delete_menu(id: int):
     try:
         db.execute(Menus.delete().where(Menus.c.id_menus == id))
         db.execute(Submenus.delete().where(Submenus.c.id_menus == id))
+        db.commit()
         return {"code": "0", "data": "Menu eliminado y submenus"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -95,6 +98,7 @@ async def post_submenu(submenu: SubmenuBase):
                 icon=submenu.icon,
             )
         )
+        db.commit()
         return {"code": "0", "data": "Submenu creado"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -108,6 +112,7 @@ async def put_submenu(submenu: SubmenuBase):
             .where(Submenus.c.id == submenu.id)
             .values(id_menus=submenu.id_menus, path=submenu.path, icon=submenu.icon)
         )
+        db.commit()
         return {"code": "0", "data": "Submenu actualizado"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -117,6 +122,7 @@ async def put_submenu(submenu: SubmenuBase):
 async def delete_submenu(id: int):
     try:
         db.execute(Submenus.delete().where(Submenus.c.id == id))
+        db.commit()
         return {"code": "0", "data": "Submenu eliminado"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})

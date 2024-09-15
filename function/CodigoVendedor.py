@@ -69,6 +69,7 @@ async def ConsultarVendedor(codigo):
                 RegistrarVendedor.c.codigo_vendedor == codigo
             )
         ).fetchone()
+        db.commit()
         if query is None:
             print("externalTransactionId", str(uuid.uuid1()))
             response = await LoginCodigo()

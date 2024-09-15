@@ -25,6 +25,7 @@ async def RegistrarZonal(data: Zonal):
                 cedula=data.cedula,
             )
         )
+        db.commit()
         return {"status": 200, "message": "Zonal registrada correctamente"}
     except Exception as e:
         print(e)
@@ -70,6 +71,7 @@ async def UpdateZonal(data: Zonal):
                 cedula=data.cedula,
             )
         )
+        db.commit()
         return {"status": 200, "message": "UpdateZonal correctamente"}
     except Exception as e:
         print(e)
@@ -84,6 +86,7 @@ async def DeleteZonal(id: int):
                 RegistrarGerenteZonal.c.id_gerente_zonal == id
             )
         )
+        db.commit()
         return {"status": 200, "message": "DeleteZonal correctamente"}
     except Exception as e:
         print(e)

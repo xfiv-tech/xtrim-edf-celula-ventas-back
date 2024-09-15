@@ -1963,6 +1963,7 @@ async def post_distribuidor(request: RegistrarDistribuidorModel):
             fecha_salida=request.fecha_salida,
         )
         data = db.execute(query).lastrowid
+        db.commit()
         return {"code": "0", "id_insert": data}
     except Exception as e:
         return {"error": str(e)}
@@ -1989,6 +1990,7 @@ async def put_distribuidor(request: RegistrarDistribuidorModel):
             )
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2019,6 +2021,7 @@ async def delete_distribuidor(id_registrar_distribuidor: int):
             == id_registrar_distribuidor
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2110,6 +2113,7 @@ async def post_jefe_venta(request: RegistrarJefeModel):
             cedula=request.cedula,
         )
         data = db.execute(query).lastrowid
+        db.commit()
         return {"code": "0", "id_insert": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2135,6 +2139,7 @@ async def put_jefe_venta(request: RegistrarJefeModel):
             .where(RegistroJefeVentas.c.id_jefe_venta == request.id_jefe_venta)
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2159,6 +2164,7 @@ async def delete_jefe_venta(id_jefe_venta: int):
             RegistroJefeVentas.c.id_jefe_venta == id_jefe_venta
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2222,6 +2228,7 @@ async def post_administrador(request: RegistrarAdministradorModel):
             nombre_administrador=request.nombre_administrador,
         )
         data = db.execute(query).lastrowid
+        db.commit()
         return {"code": "0", "id_insert": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2244,6 +2251,7 @@ async def put_administrador(request: RegistrarAdministradorModelNew):
                     RegistroAdministrador.c.id_administrador == request.id_administrador
                 )
             )
+            db.commit()
             return {"code": "0", "data": data}
         else:
             data = db.execute(
@@ -2259,6 +2267,7 @@ async def put_administrador(request: RegistrarAdministradorModelNew):
                     RegistroAdministrador.c.id_administrador == request.id_administrador
                 )
             )
+            db.commit()
             return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2282,6 +2291,7 @@ async def delete_administrador(id_administrador: int):
             RegistroAdministrador.c.id_administrador == id_administrador
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2348,6 +2358,7 @@ async def post_gerente_regional(request: RegistrarGerenteRegionalModel):
             cedula=request.cedula,
         )
         data = db.execute(query).lastrowid
+        db.commit()
         return {"code": "0", "id_insert": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2373,6 +2384,7 @@ async def put_gerente_regional(request: RegistrarGerenteRegionalModel):
                 == request.id_gerente_regional
             )
         )
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         return {"error": str(e)}
@@ -2400,6 +2412,7 @@ async def delete_gerente_regional(id_gerente_regional: int):
             RegistrarGerenteRegional.c.id_gerente_regional == id_gerente_regional
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2466,6 +2479,7 @@ async def post_gerente_ciudad(request: RegistrarGerenteCiudadModel):
             cedula=request.cedula,
         )
         data = db.execute(query).lastrowid
+        db.commit()
         return {"code": "0", "id_insert": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2490,6 +2504,7 @@ async def put_gerente_ciudad(request: RegistrarGerenteCiudadModel):
                 RegistrarGerenteCiudad.c.id_gerente_ciudad == request.id_gerente_ciudad
             )
         )
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         return {"error": str(e)}
@@ -2517,6 +2532,7 @@ async def delete_gerente_ciudad(id_gerente_ciudad: int):
             RegistrarGerenteCiudad.c.id_gerente_ciudad == id_gerente_ciudad
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2571,6 +2587,7 @@ async def post_administrador_proyectos(request: RegistrarAdminProyectosModel):
             nombre_admin_proyectos=request.nombre_admin_proyectos,
         )
         data = db.execute(query).lastrowid
+        db.commit()
         return {"code": "0", "id_insert": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2594,6 +2611,7 @@ async def put_administrador_proyectos(request: RegistrarAdminProyectosModel):
                 == request.id_admin_proyectos
             )
         )
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2624,6 +2642,7 @@ async def delete_administrador_proyectos(id_admin_proyectos: int):
             RegistrarAdminProyectos.c.id_admin_proyectos == id_admin_proyectos
         )
         data = db.execute(query)
+        db.commit()
         return {"code": "0", "data": data}
     except Exception as e:
         return {"error": str(e)}
@@ -2721,6 +2740,7 @@ async def cargar_excel_vendedores(request: Request):
                 dias_inactivo=i.dias_inactivo,
             )
             db.execute(query)
+        db.commit()
 
         return {"code": "0", "data": nueva_lista}
 
@@ -2787,6 +2807,7 @@ async def cargar_excel_vendedores_presupuesto(request: Request):
             insert = db.execute(query).rowcount
             print(insert)
 
+        db.commit()
         return {"code": "0", "data": nueva_lista}
 
     except Exception as e:

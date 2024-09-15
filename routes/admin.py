@@ -18,6 +18,7 @@ administradores = APIRouter(route_class=ValidacionToken)
 async def get_administradores():
     try:
         result = db.execute(Administradores.select()).fetchall()
+        db.commit()
         data = [dict(row._mapping) for row in result]
         return data
     except Exception as e:
@@ -30,6 +31,7 @@ async def get_administrador(adminID: AdministradorList):
         data = db.execute(
             Administradores.select().where(Administradores.c.id == adminID.id)
         ).first()
+        db.commit()
         return {
             "code": "0",
             "data": data,
@@ -52,6 +54,7 @@ async def create_administrador(administrador: Administrador):
     try:
         db.execute(Administradores.insert().values(new_administrador))
         data = db.execute(Administradores.select()).fetchall()
+        db.commit()
         return {
             "code": "0",
             "data": data,
@@ -77,6 +80,7 @@ async def update_administrador(administrador: Administrador):
             .where(Administradores.c.id == administrador.id)
         )
         data = db.execute(Administradores.select()).fetchall()
+        db.commit()
         return {
             "code": "0",
             "data": data,
@@ -90,6 +94,7 @@ async def update_administrador(administrador: Administrador):
 async def delete_administrador(adminID: AdministradorList):
     try:
         db.execute(Administradores.delete().where(Administradores.c.id == adminID.id))
+        db.commit()
         return {
             "code": "0",
             "data": [],
@@ -137,6 +142,7 @@ async def get_administrador_cedula(admCedula: AdminCedula):
             "data_creatd": data.data_creatd,
             "data_update": data.data_update,
         }
+        db.commit()
 
         return {
             "code": "0",

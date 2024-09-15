@@ -41,6 +41,7 @@ async def get_edificios():
             )
         )
         result = db.execute(query).fetchall()
+        db.commit()
         data = [dict(row._mapping) for row in result]
         return {
             "code": "0",
@@ -111,6 +112,7 @@ async def create_edificio(edificio: Edificio):
     }
     try:
         db.execute(Edicifios.insert().values(new_edificio))
+        db.commit()
         data = db.execute(Edicifios.select()).fetchall()
         return {"code": "0", "data": data, "message": "Edificio creado correctamente"}
     except Exception as e:
@@ -142,6 +144,7 @@ async def update_edificio(edificio: Edificio):
             .where(Edicifios.c.idAdministrador == edificio.id)
         )
         data = db.execute(Edicifios.select()).fetchall()
+        db.commit()
         return {
             "code": "0",
             "data": data,
@@ -155,6 +158,7 @@ async def update_edificio(edificio: Edificio):
 async def delete_edificio(edificioID: EdificioList):
     try:
         db.execute(Edicifios.delete().where(Edicifios.c.id == edificioID.id))
+        db.commit()
         return {"code": "0", "data": [], "message": "Edificio eliminado correctamente"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})

@@ -16,7 +16,7 @@ async def RegistrarIsla(data: Isla):
     try:
         # print("RegistrarIsla")
         db.execute(isla.insert().values(id_ciudad=data.id_ciudad, isla=data.isla))
-
+        db.commit()
         return {"status": 200, "message": "Isla registrada correctamente"}
     except Exception as e:
         print(e)
@@ -53,6 +53,7 @@ async def UpdateIsla(data: Isla):
             .where(isla.c.id == data.id)
             .values(id_ciudad=data.id_ciudad, isla=data.isla)
         )
+        db.commit()
         return {"status": 200, "message": "Isla actualizada correctamente"}
     except Exception as e:
         print(e)
@@ -63,6 +64,7 @@ async def DeleteIsla(id: int):
     try:
         # print("DeleteIsla")
         db.execute(isla.delete().where(isla.c.id == id))
+        db.commit()
         return {"status": 200, "message": "Isla eliminada correctamente"}
     except Exception as e:
         print(e)

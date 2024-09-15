@@ -44,6 +44,7 @@ async def get_channel():
 async def CrearChannel(channel: ChanellModel):
     try:
         db.execute(Channel.insert().values(channel=channel.channel))
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -57,6 +58,7 @@ async def create_edificio(channel: ChanellModel):
             .values(channel=channel.channel)
             .where(Channel.c.id_channel == channel.id)
         )
+        db.commit()
         return {
             "code": "0",
             "data": db.execute(
@@ -124,6 +126,7 @@ async def get_ciudad():
 async def crear_ciudad(ciudad: CiudadModel):
     try:
         db.execute(Ciudad.insert().values(ciudad=ciudad.ciudad, region=ciudad.region))
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -137,6 +140,7 @@ async def update_ciudad(ciudad: CiudadModel):
             .where(Ciudad.c.id_ciudad == ciudad.id)
             .values(ciudad=ciudad.ciudad, region=ciudad.region)
         )
+        db.commit()
         return {
             "code": "0",
             "data": "Ciudad actualizada correctamente",
@@ -177,6 +181,7 @@ async def get_operador():
 async def CrearOperador(operador: OperadorModel):
     try:
         db.execute(Operador.insert().values(operador=operador.operador))
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -190,6 +195,7 @@ async def create_operador(operador: OperadorModel):
             .values(operador=operador.operador)
             .where(Operador.c.id_operador == operador.id)
         )
+        db.commit()
         return {
             "code": "0",
             "data": db.execute(
@@ -230,6 +236,7 @@ async def CrearSistemaOperativo(sistemaoperativo: SistemaOperativoModel):
                 sistema_operativo=sistemaoperativo.sistema_operativo
             )
         )
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -243,6 +250,7 @@ async def create_sistemaoperativo(sistemaoperativo: SistemaOperativoModel):
             .values(sistema_operativo=sistemaoperativo.sistema_operativo)
             .where(SistemaOperativo.c.id_sistema_operativo == sistemaoperativo.id)
         )
+        db.commit()
         return {
             "code": "0",
             "data": db.execute(
@@ -286,6 +294,7 @@ async def get_estado():
 async def CrearEstado(estado: EstadosModel):
     try:
         db.execute(Estados.insert().values(estado=estado.estado))
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -299,6 +308,7 @@ async def create_estado(estado: EstadosModel):
             .values(estado=estado.estado)
             .where(Estados.c.id_estado == estado.id)
         )
+        db.commit()
         return {
             "code": "0",
             "data": db.execute(
@@ -341,6 +351,7 @@ async def get_genero():
 async def CrearGenero(genero: GeneroModel):
     try:
         db.execute(Genero.insert().values(genero=genero.genero))
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -354,6 +365,7 @@ async def create_genero(genero: GeneroModel):
             .values(genero=genero.genero)
             .where(Genero.c.id_genero == genero.id)
         )
+        db.commit()
         return {
             "code": "0",
             "data": db.execute(
@@ -396,6 +408,7 @@ async def get_modalidad():
 async def CrearModalidad(modalidad: ModalidadModel):
     try:
         db.execute(Modalidad.insert().values(modalidad=modalidad.modalidad))
+        db.commit()
         return {"code": "0"}
     except Exception as e:
         raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
@@ -409,6 +422,7 @@ async def create_modalidad(modalidad: ModalidadModel):
             .values(modalidad=modalidad.modalidad)
             .where(Modalidad.c.id_modalidad == modalidad.id)
         )
+        db.commit()
         return {
             "code": "0",
             "data": db.execute(
