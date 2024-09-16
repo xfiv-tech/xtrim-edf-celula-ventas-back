@@ -1,0 +1,16 @@
+name: SonarCloud
+on:
+  push:
+    branches:
+      - celula_venta  # Cambia 'main' a la rama que deseas escanear
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v1.4
+        with:
+          args: >
+            -Dsonar.projectKey=xfiv-tech_xtrim-edf-celula-ventas-front
+            -Dsonar.organization=xfiv-tech
