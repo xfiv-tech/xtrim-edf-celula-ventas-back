@@ -6,11 +6,18 @@ from function.CodigoVendedor import ConsultarVendedor, LoginCodigo
 
 codigo = APIRouter()
 
+
 class CodigoModel(BaseModel):
     codigo: str
 
-@codigo.post("/codigo", tags=["Codigo"])
-async def BuscarCoder(data:CodigoModel):
+
+@codigo.post(
+    "/codigo",
+    tags=["Xtrim"],
+    description="Buscar codigo de vendedor",
+    summary="Buscar codigo de vendedor",
+)
+async def BuscarCoder(data: CodigoModel):
     try:
         print(data.codigo)
         response = await ConsultarVendedor(data.codigo)
@@ -18,4 +25,3 @@ async def BuscarCoder(data:CodigoModel):
     except Exception as e:
         print(e)
         return {"message": "error"}
-    

@@ -60,6 +60,8 @@ async def shutdown():
     print("Shutdown complete")
 
 
+app.include_router(planform)
+app.include_router(codigo)
 app.include_router(usuarios)
 app.include_router(administradores)
 app.include_router(edificios)
@@ -70,7 +72,5 @@ app.include_router(login)
 app.include_router(registro)
 app.include_router(channel)
 app.include_router(asignacion)
-app.include_router(codigo)
 app.include_router(isla)
 app.include_router(zonal)
-app.include_router(planform)
