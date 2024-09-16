@@ -12,5 +12,5 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v1.4
         with:
           args: >
-            -Dsonar.projectKey=xfiv-tech_xtrim-edf-celula-ventas-front
+            -Dsonar.projectKey=xfiv-tech_xtrim-edf-celula-ventas-back
             -Dsonar.organization=xfiv-tech
