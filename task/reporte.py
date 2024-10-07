@@ -473,7 +473,6 @@ def tarea_programada():
             email_cc,
             usuario,
         )
-        db.commit()
 
         # return True
 
