@@ -6,7 +6,7 @@ git commit -m "$(date +%Y-%m-%d_%H:%M:%S) Se refacturizo para que se acepte id_g
 
 git push origin celula_venta --force
 
-docker login -u "intelnexoec" -p "dckr_pat_vZ2SDNgJqs-2F_odTXgn16DIgn8"
+docker login -u "intelnexoec" -p "dckr_pat_uSMon0cOOI_TXSP6hqgGh5UryMI"
 
 export SHORT_COMMIT=$(git log -1 --pretty="%H" | cut -b -8)
 export DOCKER_IMAGE_VERSION="dev_${SHORT_COMMIT}"
