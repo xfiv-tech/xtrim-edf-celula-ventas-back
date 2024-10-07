@@ -479,7 +479,6 @@ def tarea_programada():
                 email_cc,
                 usuario,
             )
-            db.commit()
 
         # return True
 
@@ -540,9 +539,6 @@ def tarea_programada():
 
     except Exception as e:
         logging.error("An error occurred: %s", str(e))
-
-    finally:
-        db.close()
 
 
 async def tarea_Inicial():
