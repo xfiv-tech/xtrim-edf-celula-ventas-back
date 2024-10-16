@@ -32,9 +32,7 @@ app = FastAPI(
     version="1.0.0",
     root_path="/back_celula_prod" if DEV == "PRO" else "/",
     root_path_in_servers=True,
-    authorizations={
-
-    }
+    authorizations={},
 )
 app.add_middleware(
     CORSMiddleware,
@@ -62,6 +60,9 @@ async def shutdown():
     scheduler.shutdown()
     print("Shutdown complete")
 
+
+app.include_router(planform)
+app.include_router(codigo)
 app.include_router(usuarios)
 app.include_router(administradores)
 app.include_router(edificios)
@@ -72,7 +73,5 @@ app.include_router(login)
 app.include_router(registro)
 app.include_router(channel)
 app.include_router(asignacion)
-app.include_router(codigo)
 app.include_router(isla)
 app.include_router(zonal)
-app.include_router(planform)

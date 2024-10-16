@@ -6,16 +6,16 @@ ENV PYTHONUNBUFFERED True
 RUN pip install --upgrade pip
 
 # instalar la version openssl 2.0.0
-RUN apt-get update && apt-get install -y openssl
+# RUN apt-get update && apt-get install -y openssl
 
 # instalar la version libssl-dev 2.0.0
 
-RUN apt-get update && apt-get install -y libssl-dev
+# RUN apt-get update && apt-get install -y libssl-dev
 
 ENV APP_HOME /xtrim
 WORKDIR $APP_HOME
 
-RUN apt-get update && apt-get install -y libpq-dev build-essential
+# RUN apt-get update && apt-get install -y libpq-dev build-essential
 
 COPY ./requirements.txt /xtrim/requirements.txt
 
@@ -37,7 +37,7 @@ RUN cd /usr/share/zoneinfo && \
 
 RUN ls -la
 
-LABEL maintainer="Dario Javier Marret medranda <javier_dario_marret@hotmail.com>" \
+LABEL maintainer="Geampiere Virgilio Jaramillo Maldonado <geampiere.jaramillo@gmail.com>" \
       version="1.0" \
       description="Xtrim API Celulas de ventas"
 
