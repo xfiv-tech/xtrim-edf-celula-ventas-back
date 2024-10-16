@@ -234,7 +234,7 @@ async def ConsultarVendedor(identificationNumber, data):
                     },
                     "sector": res.sector_residencia,
                     "zona": res.sector_residencia,
-                    "gerente_zonal": await ZonalGerente(res.id_gerente_zonal),
+                    "gerente_zonal": await ZonalIdGerente(res.id_gerente_zonal),
                     "gerente_comercial": await SelectGerenteCiudad(
                         res.id_gerente_ciudad
                     ),
