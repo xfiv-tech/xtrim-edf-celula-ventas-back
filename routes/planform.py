@@ -8,6 +8,8 @@ from controller.AdminProyectController import (
     SelectAdminProyectCiudad,
     SelectGerenteCiudad,
     SelectGerenteRegional,
+    ZonalGerente,
+    ZonalIdGerente,
     SelectJefeVenta,
     SelectLiderPeloton,
 )
@@ -42,7 +44,7 @@ class Planform(BaseModel):
     identificationNumber: str
     cargo: str = Field(
         description="Channel",
-        regex="^(vendedor|gerente_regional|gerente_ciudad|jefe_venta|distribuidor)$",
+        regex="^(vendedor|gerente_regional|gerente_ciudad|jefe_venta|distribuidor|jefe_comercial|jefe_ventas_jr|gerente_zonal|gerente_comercial)$",
     )
     externalTransactionId: str
 
@@ -168,7 +170,8 @@ async def ConsultarVendedor(identificationNumber, data):
                 Modalidad.c.modalidad,
                 # crear un alias para RegistroJefeVentas.c.cedula y no se repita el nombre
                 RegistroJefeVentas.c.cedula.label("cedula_jefe_venta"),
-                RegistrarGerenteRegional.c.cedula.label("cedula_gerente_regional"),
+                RegistrarGerenteRegional.c.cedula.label(
+                    "cedula_gerente_regional"),
                 RegistrarGerenteCiudad.c.cedula.label("cedula_gerente_ciudad"),
                 RegistrarVendedor.c.id_sistema_operativo,
                 SistemaOperativo.c.sistema_operativo,
@@ -229,12 +232,25 @@ async def ConsultarVendedor(identificationNumber, data):
                         "Telefonia_volumen": res.meta_volumen_telefonia,
                         "Telefonia_dolar": res.meta_dolares_telefonia,
                     },
+
+                    "sector": res.sector_residencia,
+                    "zona": res.sector_residencia,
+                    "gerente_zonal": await ZonalGerente(res.id_gerente_zonal),
+
+                    "gerente_comercial": await SelectGerenteCiudad(res.id_gerente_ciudad),
+                    "jefe_comercial": await SelectGerenteCiudad(res.id_gerente_ciudad),
+
+                    "gerente_regional": await SelectGerenteRegional(res.id_gerente_regional),
+                    "jefe_ventas": await SelectJefeVenta(res.id_jefe_venta),
+
                     "salesChannel": res.channel,
                     "leader": 1 if res.lider_check == True else 0,
                     "in_boss": res.cedula_jefe_venta,  # cédula del jefe id_jefe_venta
                     "distributor": None,  # cédula / ruc del distribuidor / pasaporte
-                    "in_manager_regional": res.cedula_gerente_regional,  # cédula del gerente regional id_gerente_regional
-                    "id_manager_city": res.cedula_gerente_ciudad,  # cédula del gerente de ciudad id_gerente_ciudad
+                    # cédula del gerente regional id_gerente_regional
+                    "in_manager_regional": res.cedula_gerente_regional,
+                    # cédula del gerente de ciudad id_gerente_ciudad
+                    "id_manager_city": res.cedula_gerente_ciudad,
                 },
                 "externalTransactionId": data.externalTransactionId,
                 "internalTransactionId": uuid.uuid4().hex,
@@ -288,6 +304,10 @@ async def ConsultarJefesVenta(data):
                     "city": res.ciudad,
                     "status": res.estado,
                     "email": res.email,
+
+                    "gerente_comercial": await SelectGerenteCiudad(res.id_gerente_ciudad),
+                    "jefe_ventas": await SelectJefeVenta(res.id_jefe_venta),
+
                     "cellphone": res.telefono,
                     "salesChannel": [i["channel"] for i in channel][0],
                     "id_manager_city": res.cedula,
@@ -326,6 +346,7 @@ async def ConsultarDistribuidor(data):
                     "Telefonia_volumen": None,
                     "Telefonia_dolar": None,
                 },
+
                 "salesChannel": None,
                 "leader": 0,
                 "in_boss": None,  # cédula del jefe
