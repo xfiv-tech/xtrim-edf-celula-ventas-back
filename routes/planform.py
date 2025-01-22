@@ -37,8 +37,7 @@ from model.channel import (
 )
 from database.db import db
 
-# planform = APIRouter(route_class=ValidacionToken)
-planform = APIRouter()
+planform = APIRouter(route_class=ValidacionToken)
 
 
 class Planform(BaseModel):
