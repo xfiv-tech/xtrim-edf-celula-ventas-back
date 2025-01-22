@@ -17,6 +17,13 @@ f = Fernet(key)
 login = APIRouter()
 
 
+def estado_activo(estado):
+    if estado == 2:
+        return True
+    else:
+        return False
+
+
 @login.post("/login", tags=["login"])
 async def ValidacionLogin(datos: Login):
     try:
@@ -59,7 +66,8 @@ async def ValidacionLogin(datos: Login):
         else:
             return {"code": "-1", "data": [], "message": "Usuario no existe"}
     except Exception as e:
-        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
+        raise HTTPException(status_code=400, detail={
+                            "code": "-1", "data": str(e.args)})
 
 
 @login.post("/login_celula", tags=["login"])
@@ -73,6 +81,9 @@ async def ValidacionLoginCelula(datos: Login):
 
         if user is None:
             return {"code": "-1", "data": [], "message": "Usuario no existe"}
+
+        if estado_activo(user.id_estado) == True:
+            return {"code": "-1", "data": [], "message": "Usuario no esta activo"}
 
         # Verifica la contraseña
         decr_data = checkPassword(datos.password, user.password)
@@ -126,7 +137,9 @@ async def ValidacionLoginCelula(datos: Login):
         }
 
     except SQLAlchemyError as e:
-        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e.args)})
+        raise HTTPException(status_code=400, detail={
+                            "code": "-1", "data": str(e.args)})
 
     except Exception as e:
-        raise HTTPException(status_code=400, detail={"code": "-1", "data": str(e)})
+        raise HTTPException(status_code=400, detail={
+                            "code": "-1", "data": str(e)})
