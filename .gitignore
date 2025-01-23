@@ -5,3 +5,5 @@
 *.xlsx
 
 /venv
+/xfiv-edificio-python
+/__pycache__
