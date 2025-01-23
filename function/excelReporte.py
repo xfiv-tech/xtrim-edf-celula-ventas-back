@@ -1,3 +1,14 @@
+from model.channel import (
+    Channel,
+    Ciudad,
+    Estados,
+    Genero,
+    Modalidad,
+    Operador,
+    RegistrarVendedor,
+    SistemaOperativo,
+)
+from database.db import db
 from typing import Optional
 
 # from function.ftp import ftp_close, ftp_connect, ftp_list
@@ -17,17 +28,6 @@ from controller.AdminProyectController import (
 
 load_dotenv()
 
-from database.db import db
-from model.channel import (
-    Channel,
-    Ciudad,
-    Estados,
-    Genero,
-    Modalidad,
-    Operador,
-    RegistrarVendedor,
-    SistemaOperativo,
-)
 
 # HOST = os.getenv("HOST_FTP")
 # USER = os.getenv("USER_FTP")
@@ -67,7 +67,7 @@ class ReporteExcel(BaseModel):
     meta_dolares_telefonia: Optional[float] = 0.0
     meta_volumen_television: Optional[int] = 0
     meta_dolares_television: Optional[float] = 0.0
-    fecha_salida: str = None
+    fecha_salida: Optional[str] = None
     sector_residencia: str
     email: str
     dias_inactivo: int

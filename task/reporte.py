@@ -41,25 +41,25 @@ HOST = os.getenv("HOST_FTP")
 USER = os.getenv("USER_FTP")
 PASS = os.getenv("PASS_FTP")
 
-email = [
-    "vmolina@xtrim.com.ec",
-    "jemendoza@xtrim.com.ec",
-    "rcarcelen@xtrim.com.ec",
-    "dmoran@xtrim.com.ec",
-    "lfromero@xtrim.com.ec",
-    "jcondo@xtrim.com.ec",
-]
+# email = [
+#     "vmolina@xtrim.com.ec",
+#     "jemendoza@xtrim.com.ec",
+#     "rcarcelen@xtrim.com.ec",
+#     "dmoran@xtrim.com.ec",
+#     "lfromero@xtrim.com.ec",
+#     "jcondo@xtrim.com.ec",
+# ]
 
-email_cc = [
-    "nlarrea@xtrim.com.ec",
-    "njijon@xtrim.com.ec",
-    "hola@intelnexo.com",
-    "gjaramillo@intelnexo.com",
-]
-# email_cc = ["gjaramillo@intelnexo.com"]
+# email_cc = [
+#     "nlarrea@xtrim.com.ec",
+#     "njijon@xtrim.com.ec",
+#     "hola@intelnexo.com",
+#     "gjaramillo@intelnexo.com",
+# ]
+email_cc = ["geampierej@gmail.com"]
 
 
-# email = ["gjaramillo@intelnexo.com"]
+email = ["geampierej@gmail.com"]
 
 
 def SelectLiderPeloton(id_lider_peloton: int, id_channel: int):
@@ -317,7 +317,8 @@ def tarea_programada():
 
         logging.info("Query built successfully.")
         res = db.execute(query).fetchall()
-        logging.info("Query executed successfully, fetched %s records.", len(res))
+        logging.info(
+            "Query executed successfully, fetched %s records.", len(res))
 
         dataInfo = []
         for i in res:
